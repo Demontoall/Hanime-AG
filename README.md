@@ -1,2 +1,1 @@
-# Hanime-AG
-This is for posting videos for porn to tract hanime videos aggregator
+welcome to hanime AG a project to track hanime and update content 
