@@ -1,1 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hanime AG</title>
+    <style>
+        :root {
+            --bg: #111827;
+            --panel: #1f2937;
+            --text: #f9fafb;
+            --muted: #d1d5db;
+            --accent: #f472b6;
+        }
 
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(135deg, var(--bg), #1d4ed8);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        main {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem 4rem;
+        }
+
+        .hero {
+            background: rgba(31, 41, 55, 0.9);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 45px rgba(0,0,0,0.25);
+        }
+
+        h1 {
+            margin-top: 0;
+            font-size: 2.5rem;
+        }
+
+        p {
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .grid {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            margin-top: 1.5rem;
+        }
+
+        .card {
+            background: var(--panel);
+            border-radius: 14px;
+            padding: 1rem 1.1rem;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .card h2 {
+            margin-top: 0;
+            font-size: 1.1rem;
+        }
+
+        .tag {
+            display: inline-block;
+            margin-top: 0.6rem;
+            padding: 0.35rem 0.7rem;
+            border-radius: 999px;
+            background: rgba(244, 114, 182, 0.2);
+            color: #fbcfe8;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <section class="hero">
+            <h1>Hanime AG</h1>
+            <p>This project is a simple hub for tracking Hanime content updates, keeping a curated collection organized, and sharing the latest additions in a clean, lightweight page.</p>
+            <div class="tag">Fresh updates • Organized tracking • Lightweight web page</div>
+
+            <div class="grid">
+                <article class="card">
+                    <h2>What this page does</h2>
+                    <p>Provides a clear landing page for the project while the catalog and update system continue to grow.</p>
+                </article>
+                <article class="card">
+                    <h2>Planned focus</h2>
+                    <p>Track new entries, keep content easy to browse, and make future updates simple to maintain.</p>
+                </article>
+                <article class="card">
+                    <h2>Current status</h2>
+                    <p>The site is now set up as a polished starting point for the Hanime AG experience.</p>
+                </article>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
