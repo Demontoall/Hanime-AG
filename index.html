@@ -3,61 +3,366 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hanime-AG Player</title>
+    <title>Anime AG Site</title>
     <style>
+        /* Base Colors & App Theme Variables */
+        :root {
+            --bg-main: #0b0c10;
+            --bg-card: #1f2833;
+            --bg-input: #151a21;
+            --border-color: #2d3748;
+            --accent: #45f3ff;
+            --text-color: #ffffff;
+            --text-muted: #c9d1d9;
+            --star-color: #555;
+            --star-active: #ffd700;
+        }
+
+        /* Light Mode Theme Overrides */
+        [data-theme="light"] {
+            --bg-main: #f4f6f9;
+            --bg-card: #ffffff;
+            --bg-input: #e2e8f0;
+            --border-color: #cbd5e1;
+            --accent: #00b4d8;
+            --text-color: #0f172a;
+            --text-muted: #475569;
+            --star-color: #cbd5e1;
+        }
+
         body {
-            background-color: #0b0c10;
-            color: #ffffff;
+            background-color: var(--bg-main);
+            color: var(--text-color);
             font-family: 'Helvetica Neue', Arial, sans-serif;
             margin: 0;
             padding: 0;
             display: flex;
-            justify-content: center;
-            align-items: center;
+            flex-direction: column;
             min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
         }
-        .player-container {
+
+        /* Fixed Navigation Header */
+        header {
+            background-color: var(--bg-input);
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid var(--accent);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Dark/Light Mode Toggle Switch */
+        .theme-toggle-btn {
+            background: none;
+            border: 1px solid var(--accent);
+            color: var(--text-color);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .theme-toggle-btn:hover {
+            background-color: var(--accent);
+            color: #000;
+        }
+
+        /* Two-Column Website Layout */
+        .site-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
             width: 100%;
-            max-width: 960px;
-            background-color: #1f2833;
+            box-sizing: border-box;
+        }
+
+        @media (min-width: 950px) {
+            .site-container {
+                grid-template-columns: 3fr 1fr;
+            }
+        }
+
+        /* Main Theater Screen Content */
+        .theater-section {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .video-box {
+            background-color: #000;
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-            margin: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            border: 1px solid var(--border-color);
         }
-        .player-header {
-            padding: 15px 20px;
-            background-color: #151a21;
-            border-bottom: 2px solid #45f3ff;
-        }
-        .player-header h1 {
-            margin: 0;
-            font-size: 1.3rem;
-            color: #45f3ff;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+
         video {
             width: 100%;
             display: block;
-            background-color: #000000;
-            outline: none;
         }
-    </style>
-</head>
-<body>
 
-    <div class="player-container">
-        <div class="player-header">
-            <h1>Now Streaming: Dance Showcase</h1>
-        </div>
-        
-        <!-- Standard Streaming Video Player HTML5 Element -->
-        <video controls preload="metadata" poster="https://cloudinary.com">
-            <source src="https://cloudinary.com" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-    </div>
+        /* Video Control Accent Color Modifiers */
+        video::-webkit-media-controls-play-button,
+        video::-webkit-media-controls-volume-slider,
+        video::-webkit-media-controls-timeline {
+            filter: hue-rotate(180deg) saturate(3);
+        }
 
-</body>
-</html>
+        .video-meta {
+            background-color: var(--bg-card);
+            padding: 20px;
+            border-radius: 12px;
+            transition: background-color 0.3s;
+        }
+
+        .video-meta h2 {
+            margin: 0 0 10px 0;
+            font-size: 1.4rem;
+        }
+
+        .video-meta p {
+            color: var(--text-muted);
+            margin: 0;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* Comment Submission Section Layout */
+        .comment-section {
+            background-color: var(--bg-card);
+            padding: 20px;
+            border-radius: 12px;
+            transition: background-color 0.3s;
+        }
+
+        .comment-section h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        .comment-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .comment-input {
+            width: 100%;
+            padding: 10px;
+            background-color: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-color);
+            font-size: 0.9rem;
+            box-sizing: border-box;
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .comment-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .comment-submit-btn {
+            align-self: flex-end;
+            background-color: var(--accent);
+            color: #000;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .comment-submit-btn:hover {
+            opacity: 0.9;
+        }
+
+        .comments-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .comment-item {
+            background-color: var(--bg-input);
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .comment-item .timestamp {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+            display: block;
+        }
+
+        /* Right Side Navigation Menu List */
+        .playlist-sidebar {
+            background-color: var(--bg-card);
+            padding: 20px;
+            border-radius: 12px;
+            height: fit-content;
+            transition: background-color 0.3s;
+        }
+
+        .playlist-sidebar h3 {
+            margin-top: 0;
+            color: var(--accent);
+            font-size: 1.1rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        /* Playlist Actions Row (Filter Button) */
+        .playlist-actions {
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .toggle-favs-btn {
+            width: 100%;
+            background-color: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .toggle-favs-btn.active {
+            border-color: var(--star-active);
+            background-color: rgba(255, 215, 0, 0.1);
+            color: var(--star-active);
+        }
+
+        /* Search Input Wrapper Styles */
+        .search-container {
+            margin-bottom: 15px;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 35px 10px 12px;
+            background-color: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-color);
+            font-size: 0.9rem;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        /* Interactive Clear Button Layout */
+        .clear-btn {
+            position: absolute;
+            right: 10px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            height: 100%;
+            width: 25px;
+        }
+
+        .clear-btn:hover {
+            color: var(--accent);
+        }
+
+        .playlist-items {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* Interactive Clickable Video Selection Item */
+        .playlist-card {
+            display: flex;
+            gap: 10px;
+            background-color: var(--bg-input);
+            padding: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: border-color 0.2s, background-color 0.2s;
+            border: 1px solid transparent;
+            position: relative;
+        }
+
+        .playlist-card:hover {
+            border-color: var(--accent);
+        }
+
+        .playlist-card.active {
+            border-color: var(--accent);
+            background-color: var(--bg-card);
+        }
+
+        .card-thumb {
+            width: 100px;
+            height: 60px;
+            background-color: #000;
+            border-radius: 4px;
+            background-size: cover;
+            background-position: center;
+            flex-shrink: 0;
+        }
+
+        .card-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
