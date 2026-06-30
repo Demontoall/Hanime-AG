@@ -3,62 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hanime-AG</title>
-    
-    <!-- Cloudinary Player Stylesheets -->
-    <link href="https://unpkg.com" rel="stylesheet">
-
+    <title>Hanime-AG Player</title>
     <style>
         body {
-            background-color: #0d1117;
-            color: #c9d1d9;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background-color: #0b0c10;
+            color: #ffffff;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 0;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
+            min-height: 100vh;
         }
-        .container {
-            max-width: 800px;
+        .player-container {
             width: 100%;
-            margin: 0 auto;
-            padding: 20px;
-            text-align: center;
-        }
-        .video-wrapper {
-            width: 100%;
-            margin-top: 20px;
-            border-radius: 8px;
+            max-width: 960px;
+            background-color: #1f2833;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            margin: 20px;
+        }
+        .player-header {
+            padding: 15px 20px;
+            background-color: #151a21;
+            border-bottom: 2px solid #45f3ff;
+        }
+        .player-header h1 {
+            margin: 0;
+            font-size: 1.3rem;
+            color: #45f3ff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        video {
+            width: 100%;
+            display: block;
+            background-color: #000000;
+            outline: none;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Hanime-AG Website Rebuild</h1>
-        <p>Your Cloudinary Video Player stream is configured below:</p>
-        
-        <!-- The Video Player Element Container -->
-        <div class="video-wrapper">
-            <video id="player" controls autoplay muted class="cld-video-player cld-fluid"></video>
+    <div class="player-container">
+        <div class="player-header">
+            <h1>Now Streaming: Dance Showcase</h1>
         </div>
+        
+        <!-- Standard Streaming Video Player HTML5 Element -->
+        <video controls preload="metadata" poster="https://cloudinary.com">
+            <source src="https://cloudinary.com" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
     </div>
-
-    <!-- Cloudinary JavaScript Core Libraries -->
-    <script src="https://unpkg.com"></script>
-    <script src="https://unpkg.com"></script>
-
-    <!-- Your Specific Cloudinary Asset Initialization -->
-    <script>
-      const player = cloudinary.player('player', {
-        cloudName: 'ypmltwfz',
-        publicId: 'samples/dance-2',
-        profile: 'cld-default'
-      });
-    </script>
 
 </body>
 </html>
