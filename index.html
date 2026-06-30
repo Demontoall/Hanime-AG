@@ -1,368 +1,555 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anime AG Site</title>
-    <style>
-        /* Base Colors & App Theme Variables */
-        :root {
-            --bg-main: #0b0c10;
-            --bg-card: #1f2833;
-            --bg-input: #151a21;
-            --border-color: #2d3748;
-            --accent: #45f3ff;
-            --text-color: #ffffff;
-            --text-muted: #c9d1d9;
-            --star-color: #555;
-            --star-active: #ffd700;
-        }
 
-        /* Light Mode Theme Overrides */
-        [data-theme="light"] {
-            --bg-main: #f4f6f9;
-            --bg-card: #ffffff;
-            --bg-input: #e2e8f0;
-            --border-color: #cbd5e1;
-            --accent: #00b4d8;
-            --text-color: #0f172a;
-            --text-muted: #475569;
-            --star-color: #cbd5e1;
-        }
+<meta charset="UTF-8">
 
-        body {
-            background-color: var(--bg-main);
-            color: var(--text-color);
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            transition: background-color 0.3s, color 0.3s;
-        }
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        /* Fixed Navigation Header */
-        header {
-            background-color: var(--bg-input);
-            padding: 15px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 2px solid var(--accent);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            transition: background-color 0.3s, border-color 0.3s;
-        }
+<title>AnimeHub</title>
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--accent);
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-        .header-controls {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
+<link rel="stylesheet"
 
-        /* Dark/Light Mode Toggle Switch */
-        .theme-toggle-btn {
-            background: none;
-            border: 1px solid var(--accent);
-            color: var(--text-color);
-            padding: 6px 12px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: bold;
-            transition: all 0.2s;
-        }
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-        .theme-toggle-btn:hover {
-            background-color: var(--accent);
-            color: #000;
-        }
+<style>
 
-        /* Two-Column Website Layout */
-        .site-container {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-            padding: 20px;
-            max-width: 1400px;
-            margin: 0 auto;
-            width: 100%;
-            box-sizing: border-box;
-        }
+*{
 
-        @media (min-width: 950px) {
-            .site-container {
-                grid-template-columns: 3fr 1fr;
-            }
-        }
+margin:0;
 
-        /* Main Theater Screen Content */
-        .theater-section {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+padding:0;
 
-        .video-box {
-            background-color: #000;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-            border: 1px solid var(--border-color);
-        }
+box-sizing:border-box;
 
-        video {
-            width: 100%;
-            display: block;
-        }
+font-family:Poppins,sans-serif;
 
-        /* Video Control Accent Color Modifiers */
-        video::-webkit-media-controls-play-button,
-        video::-webkit-media-controls-volume-slider,
-        video::-webkit-media-controls-timeline {
-            filter: hue-rotate(180deg) saturate(3);
-        }
+}
 
-        .video-meta {
-            background-color: var(--bg-card);
-            padding: 20px;
-            border-radius: 12px;
-            transition: background-color 0.3s;
-        }
+body{
 
-        .video-meta h2 {
-            margin: 0 0 10px 0;
-            font-size: 1.4rem;
-        }
+background:#1d1d1d;
 
-        .video-meta p {
-            color: var(--text-muted);
-            margin: 0;
-            font-size: 0.95rem;
-            line-height: 1.5;
-        }
+color:white;
 
-        /* Comment Submission Section Layout */
-        .comment-section {
-            background-color: var(--bg-card);
-            padding: 20px;
-            border-radius: 12px;
-            transition: background-color 0.3s;
-        }
+overflow-x:hidden;
 
-        .comment-section h3 {
-            margin-top: 0;
-            margin-bottom: 15px;
-            font-size: 1.1rem;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 8px;
-        }
+}
 
-        .comment-form {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
+header{
 
-        .comment-input {
-            width: 100%;
-            padding: 10px;
-            background-color: var(--bg-input);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            color: var(--text-color);
-            font-size: 0.9rem;
-            box-sizing: border-box;
-            resize: vertical;
-            min-height: 60px;
-        }
+position:fixed;
 
-        .comment-input:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
+top:0;
 
-        .comment-submit-btn {
-            align-self: flex-end;
-            background-color: var(--accent);
-            color: #000;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: opacity 0.2s;
-        }
+left:0;
 
-        .comment-submit-btn:hover {
-            opacity: 0.9;
-        }
+right:0;
 
-        .comments-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            max-height: 300px;
-            overflow-y: auto;
-        }
+height:75px;
 
-        .comment-item {
-            background-color: var(--bg-input);
-            padding: 12px;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            line-height: 1.4;
-        }
+background:#202020;
 
-        .comment-item .timestamp {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-top: 4px;
-            display: block;
-        }
+display:flex;
 
-        /* Right Side Navigation Menu List */
-        .playlist-sidebar {
-            background-color: var(--bg-card);
-            padding: 20px;
-            border-radius: 12px;
-            height: fit-content;
-            transition: background-color 0.3s;
-        }
+align-items:center;
 
-        .playlist-sidebar h3 {
-            margin-top: 0;
-            color: var(--accent);
-            font-size: 1.1rem;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 10px;
-            text-transform: uppercase;
-            margin-bottom: 15px;
-        }
+justify-content:space-between;
 
-        /* Playlist Actions Row (Filter Button) */
-        .playlist-actions {
-            margin-bottom: 15px;
-            display: flex;
-            gap: 10px;
-        }
+padding:15px;
 
-        .toggle-favs-btn {
-            width: 100%;
-            background-color: var(--bg-input);
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
-            padding: 8px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: bold;
-            transition: all 0.2s;
-        }
+z-index:1000;
 
-        .toggle-favs-btn.active {
-            border-color: var(--star-active);
-            background-color: rgba(255, 215, 0, 0.1);
-            color: var(--star-active);
-        }
+}
 
-        /* Search Input Wrapper Styles */
-        .search-container {
-            margin-bottom: 15px;
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
+.menu-btn{
 
-        .search-input {
-            width: 100%;
-            padding: 10px 35px 10px 12px;
-            background-color: var(--bg-input);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            color: var(--text-color);
-            font-size: 0.9rem;
-            box-sizing: border-box;
-            transition: border-color 0.2s;
-        }
+font-size:28px;
 
-        .search-input:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
+cursor:pointer;
 
-        /* Interactive Clear Button Layout */
-        .clear-btn {
-            position: absolute;
-            right: 10px;
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 1.2rem;
-            cursor: pointer;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
-            height: 100%;
-            width: 25px;
-        }
+}
 
-        .clear-btn:hover {
-            color: var(--accent);
-        }
+.profile{
 
-        .playlist-items {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+font-size:30px;
 
-        /* Interactive Clickable Video Selection Item */
-        .playlist-card {
-            display: flex;
-            gap: 10px;
-            background-color: var(--bg-input);
-            padding: 8px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: border-color 0.2s, background-color 0.2s;
-            border: 1px solid transparent;
-            position: relative;
-        }
+}
 
-        .playlist-card:hover {
-            border-color: var(--accent);
-        }
+.search-box{
 
-        .playlist-card.active {
-            border-color: var(--accent);
-            background-color: var(--bg-card);
-        }
+flex:1;
 
-        .card-thumb {
-            width: 100px;
-            height: 60px;
-            background-color: #000;
-            border-radius: 4px;
-            background-size: cover;
-            background-position: center;
-            flex-shrink: 0;
-        }
+margin:0 15px;
 
-        .card-info {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+background:#333;
+
+border-radius:8px;
+
+display:flex;
+
+align-items:center;
+
+padding:12px;
+
+}
+
+.search-box input{
+
+background:none;
+
+border:none;
+
+outline:none;
+
+color:white;
+
+font-size:17px;
+
+width:100%;
+
+margin-left:10px;
+
+}
+
+.sidebar{
+
+position:fixed;
+
+top:0;
+
+left:-270px;
+
+width:260px;
+
+height:100%;
+
+background:#252525;
+
+transition:.35s;
+
+padding-top:80px;
+
+z-index:1500;
+
+}
+
+.sidebar.active{
+
+left:0;
+
+}
+
+.sidebar a{
+
+display:block;
+
+padding:18px 25px;
+
+color:white;
+
+text-decoration:none;
+
+font-size:18px;
+
+border-bottom:1px solid rgba(255,255,255,.05);
+
+}
+
+.sidebar a:hover{
+
+background:#333;
+
+}
+
+.overlay{
+
+position:fixed;
+
+top:0;
+
+left:0;
+
+width:100%;
+
+height:100%;
+
+background:rgba(0,0,0,.45);
+
+display:none;
+
+z-index:1200;
+
+}
+
+.overlay.show{
+
+display:block;
+
+}
+
+.hero{
+
+margin-top:75px;
+
+height:340px;
+
+background:url('https://picsum.photos/900/900') center/cover;
+
+position:relative;
+
+}
+
+.hero::after{
+
+content:"";
+
+position:absolute;
+
+top:0;
+
+left:0;
+
+right:0;
+
+bottom:0;
+
+background:rgba(0,0,0,.55);
+
+}
+
+.hero-content{
+
+position:absolute;
+
+bottom:35px;
+
+left:20px;
+
+right:20px;
+
+z-index:2;
+
+}
+
+.hero h1{
+
+font-size:36px;
+
+margin-bottom:15px;
+
+}
+
+.hero p{
+
+opacity:.85;
+
+line-height:1.6;
+
+}
+
+.section{
+
+padding:20px;
+
+}
+
+.section-title{
+
+font-size:28px;
+
+margin-bottom:15px;
+
+}
+
+.horizontal{
+
+display:flex;
+
+overflow:auto;
+
+gap:15px;
+
+padding-bottom:10px;
+
+}
+
+.horizontal::-webkit-scrollbar{
+
+display:none;
+
+}
+
+.card{
+
+min-width:170px;
+
+background:#292929;
+
+border-radius:12px;
+
+overflow:hidden;
+
+}
+
+.card img{
+
+width:100%;
+
+height:220px;
+
+object-fit:cover;
+
+}
+
+.card h3{
+
+padding:12px;
+
+font-size:17px;
+
+}
+
+.grid{
+
+display:grid;
+
+grid-template-columns:repeat(2,1fr);
+
+gap:15px;
+
+}
+
+.category{
+
+position:relative;
+
+height:260px;
+
+border-radius:15px;
+
+overflow:hidden;
+
+}
+
+.category img{
+
+width:100%;
+
+height:100%;
+
+object-fit:cover;
+
+}
+
+.category::after{
+
+content:"";
+
+position:absolute;
+
+inset:0;
+
+background:linear-gradient(transparent,black);
+
+}
+
+.category h2{
+
+position:absolute;
+
+bottom:20px;
+
+left:15px;
+
+z-index:2;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="sidebar" id="sidebar">
+
+<a href="#"><i class="fa fa-home"></i> Home</a>
+
+<a href="#"><i class="fa fa-fire"></i> Trending</a>
+
+<a href="#"><i class="fa fa-film"></i> Movies</a>
+
+<a href="#"><i class="fa fa-tv"></i> Series</a>
+
+<a href="#"><i class="fa fa-image"></i> Gallery</a>
+
+<a href="#"><i class="fa fa-heart"></i> Favorites</a>
+
+<a href="#"><i class="fa fa-user"></i> Account</a>
+
+</div>
+
+<div class="overlay" id="overlay"></div>
+
+<header>
+
+<div class="menu-btn" id="menu">
+
+<i class="fa fa-bars"></i>
+
+</div>
+
+<div class="search-box">
+
+<i class="fa fa-search"></i>
+
+<input type="text" placeholder="Search...">
+
+</div>
+
+<div class="profile">
+
+<i class="fa fa-circle-user"></i>
+
+</div>
+
+</header>
+
+<section class="hero">
+
+<div class="hero-content">
+
+<h1>Watch Your Favorite Anime</h1>
+
+<p>Browse thousands of anime, movies and shows with a modern streaming experience.</p>
+
+</div>
+
+</section>
+
+<div class="section">
+
+<div class="section-title">
+
+Recent Uploads
+
+</div>
+
+<div class="horizontal">
+
+<div class="card">
+
+<img src="https://picsum.photos/300/450?1">
+
+<h3>Blue Sky</h3>
+
+</div>
+
+<div class="card">
+
+<img src="https://picsum.photos/300/450?2">
+
+<h3>Moon City</h3>
+
+</div>
+
+<div class="card">
+
+<img src="https://picsum.photos/300/450?3">
+
+<h3>Shadow Hero</h3>
+
+</div>
+
+<div class="card">
+
+<img src="https://picsum.photos/300/450?4">
+
+<h3>Night World</h3>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="section">
+
+<div class="section-title">
+
+Browse
+
+</div>
+
+<div class="grid">
+
+<div class="category">
+
+<img src="https://picsum.photos/500/700?5">
+
+<h2>Trending</h2>
+
+</div>
+
+<div class="category">
+
+<img src="https://picsum.photos/500/700?6">
+
+<h2>Seasons</h2>
+
+</div>
+
+<div class="category">
+
+<img src="https://picsum.photos/500/700?7">
+
+<h2>Movies</h2>
+
+</div>
+
+<div class="category">
+
+<img src="https://picsum.photos/500/700?8">
+
+<h2>Collections</h2>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const menu=document.getElementById("menu");
+
+const sidebar=document.getElementById("sidebar");
+
+const overlay=document.getElementById("overlay");
+
+menu.onclick=()=>{
+
+sidebar.classList.toggle("active");
+
+overlay.classList.toggle("show");
+
+}
+
+overlay.onclick=()=>{
+
+sidebar.classList.remove("active");
+
+overlay.classList.remove("show");
+
+}
+
+</script>
+
+</body>
+
+</html>
