@@ -4,10 +4,10 @@ const overlay = document.getElementById("overlay");
 
 menu.onclick = () => {
   sidebar.classList.toggle("active");
-  overlay.classList.toggle("show");
+  overlay.classList.toggle("active");
 };
 
 overlay.onclick = () => {
   sidebar.classList.remove("active");
-  overlay.classList.remove("show");
+  overlay.classList.remove("active");
 };
