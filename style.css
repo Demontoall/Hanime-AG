@@ -104,3 +104,69 @@ ul{
     opacity:1;
     visibility:visible;
 }
+/* ==============================
+   GENRE PAGE STYLES
+============================== */
+
+header{
+    text-align:center;
+    padding:40px 20px;
+    background:#181818;
+}
+
+header h1{
+    color:#ff6b00;
+    font-size:2.3rem;
+    margin-bottom:10px;
+}
+
+header p{
+    color:#bbb;
+    font-size:1rem;
+}
+
+main{
+    width:90%;
+    max-width:1200px;
+    margin:40px auto;
+}
+
+.genre-list{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+    gap:20px;
+}
+
+.genre-list a{
+    background:#222;
+    border-radius:12px;
+    padding:20px;
+    text-align:center;
+    font-weight:bold;
+    color:white;
+    transition:.3s;
+    border:2px solid transparent;
+}
+
+.genre-list a:hover{
+    background:#ff6b00;
+    border-color:#ffb347;
+    transform:translateY(-5px);
+}
+
+.back-home{
+    display:block;
+    width:220px;
+    margin:50px auto;
+    text-align:center;
+    background:#ff6b00;
+    color:white;
+    padding:15px;
+    border-radius:30px;
+    font-weight:bold;
+    transition:.3s;
+}
+
+.back-home:hover{
+    background:#ff8a2a;
+}
