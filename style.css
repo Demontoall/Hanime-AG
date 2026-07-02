@@ -170,3 +170,38 @@ main{
 .back-home:hover{
     background:#ff8a2a;
 }
+/* ==============================
+   FEATURED SERIES CARDS
+============================== */
+
+.card{
+    background:#1a1a1a;
+    border-radius:15px;
+    padding:20px;
+    margin:20px 0;
+    border:1px solid #333;
+    transition:0.3s;
+}
+
+.card:hover{
+    transform:translateY(-5px);
+    border-color:#ff6b00;
+}
+
+.card h3{
+    margin-bottom:15px;
+    color:#fff;
+}
+
+.card a{
+    display:inline-block;
+    background:#ff6b00;
+    color:#fff;
+    padding:10px 20px;
+    border-radius:25px;
+    font-weight:bold;
+}
+
+.card a:hover{
+    background:#ff8a2a;
+}
