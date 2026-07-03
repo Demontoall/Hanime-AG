@@ -1,92 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Donghua - Hanime AG</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Donghua Library - Hanime AG</title>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+
+body{
+    margin:0;
+    background:#111;
+    color:white;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+.hero{
+    text-align:center;
+    padding:70px 20px;
+    background:#1b1b1b;
+}
+
+.hero h1{
+    color:#ff6a00;
+    font-size:58px;
+    margin-bottom:10px;
+}
+
+.hero p{
+    color:#bdbdbd;
+    font-size:26px;
+}
+
+.container{
+    padding:40px;
+}
+
+.container h2{
+    font-size:44px;
+    margin-bottom:30px;
+}
+
+.genre-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:25px;
+}
+
+.genre-card{
+    background:#262626;
+    border-radius:18px;
+    padding:45px 20px;
+    text-align:center;
+    font-size:34px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.genre-card:hover{
+    background:#ff6a00;
+    transform:translateY(-6px);
+}
+
+</style>
+
 </head>
 
 <body>
 
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Watch Chinese Donghua</h1>
-            <p>Browse the best Chinese animation available on Hanime AG.</p>
-        </div>
-    </section>
+<section class="hero">
 
-    <section class="libraries">
+<h1>Donghua Library</h1>
 
-        <h2>Explore Libraries</h2>
+<p>Explore Chinese Animation</p>
 
-        <div class="library-grid">
+</section>
 
-            <a href="anime.html" class="library-card">
-                <h3>🎌 Anime</h3>
-                <p>Japanese Anime</p>
-            </a>
+<div class="container">
 
-            <a href="donghua.html" class="library-card active">
-                <h3>🐉 Donghua</h3>
-                <p>Chinese Animation</p>
-            </a>
+<h2>Genres</h2>
 
-            <a href="hanime.html" class="library-card">
-                <h3>🔞 Hanime</h3>
-                <p>Adult Animation</p>
-            </a>
+<div class="genre-grid">
 
-            <a href="movies.html" class="library-card">
-                <h3>🎬 Movies</h3>
-                <p>Anime Movies</p>
-            </a>
+<div class="genre-card">Cultivation</div>
 
-        </div>
+<div class="genre-card">Martial Arts</div>
 
-    </section>
+<div class="genre-card">Fantasy</div>
 
-    <section class="section">
+<div class="genre-card">Action</div>
 
-        <div class="section-title">
-            Trending Donghua
-        </div>
+<div class="genre-card">Adventure</div>
 
-        <div class="grid">
+<div class="genre-card">Romance</div>
 
-            <a href="#" class="card">
-                <img src="https://picsum.photos/300/450?101" alt="">
-                <h3>Battle Through the Heavens</h3>
-            </a>
+<div class="genre-card">Historical</div>
 
-            <a href="#" class="card">
-                <img src="https://picsum.photos/300/450?102" alt="">
-                <h3>Soul Land</h3>
-            </a>
+<div class="genre-card">Modern</div>
 
-            <a href="#" class="card">
-                <img src="https://picsum.photos/300/450?103" alt="">
-                <h3>Perfect World</h3>
-            </a>
+<div class="genre-card">Comedy</div>
 
-            <a href="#" class="card">
-                <img src="https://picsum.photos/300/450?104" alt="">
-                <h3>Swallowed Star</h3>
-            </a>
+<div class="genre-card">Sci-Fi</div>
 
-            <a href="#" class="card">
-                <img src="https://picsum.photos/300/450?105" alt="">
-                <h3>Throne of Seal</h3>
-            </a>
+<div class="genre-card">Mythology</div>
 
-            <a href="#" class="card">
-                <img src="https://picsum.photos/300/450?106" alt="">
-                <h3>The King's Avatar</h3>
-            </a>
+<div class="genre-card">Supernatural</div>
 
-        </div>
+</div>
 
-    </section>
+</div>
 
 </body>
 </html>
