@@ -1,46 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hanime - Hanime AG</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mature Animation Library - Hanime AG</title>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+body{
+    margin:0;
+    background:#111;
+    color:#fff;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+.hero{
+    text-align:center;
+    padding:70px 20px;
+    background:#1b1b1b;
+}
+
+.hero h1{
+    color:#ff6a00;
+    font-size:58px;
+    margin-bottom:10px;
+}
+
+.hero p{
+    color:#bdbdbd;
+    font-size:26px;
+}
+
+.container{
+    padding:40px;
+}
+
+.container h2{
+    font-size:44px;
+    margin-bottom:30px;
+}
+
+.genre-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:25px;
+}
+
+.genre-card{
+    background:#262626;
+    border-radius:18px;
+    padding:45px 20px;
+    text-align:center;
+    font-size:30px;
+    font-weight:bold;
+    transition:.3s;
+    cursor:pointer;
+}
+
+.genre-card:hover{
+    background:#ff6a00;
+    transform:translateY(-6px);
+}
+</style>
+
 </head>
 
 <body>
 
-<section class="libraries">
-
-    <h2>Explore Libraries</h2>
-
-    <div class="library-grid">
-
-        <a href="anime.html" class="library-card">
-            <h3>🎌 Anime</h3>
-            <p>Japanese Anime</p>
-        </a>
-
-        <a href="donghua.html" class="library-card">
-            <h3>🐉 Donghua</h3>
-            <p>Chinese Animation</p>
-        </a>
-
-        <a href="hanime.html" class="library-card active">
-            <h3>🔞 Hanime</h3>
-            <p>Adult Animation</p>
-        </a>
-
-        <a href="movies.html" class="library-card">
-            <h3>🎬 Movies</h3>
-            <p>Anime Movies</p>
-        </a>
-
-    </div>
-
+<section class="hero">
+    <h1>Mature Animation Library</h1>
+    <p>Explore mature-themed animated stories.</p>
 </section>
 
-<h1>🔞 Hanime Library</h1>
-<p>Browse all Hanime available on Hanime AG.</p>
+<div class="container">
+
+<h2>Categories</h2>
+
+<div class="genre-grid">
+
+<div class="genre-card">Action</div>
+
+<div class="genre-card">Fantasy</div>
+
+<div class="genre-card">Romance</div>
+
+<div class="genre-card">Comedy</div>
+
+<div class="genre-card">Drama</div>
+
+<div class="genre-card">Sci-Fi</div>
+
+<div class="genre-card">Mystery</div>
+
+<div class="genre-card">Horror</div>
+
+<div class="genre-card">Adventure</div>
+
+<div class="genre-card">Historical</div>
+
+<div class="genre-card">Supernatural</div>
+
+<div class="genre-card">Psychological</div>
+
+</div>
+
+</div>
 
 </body>
 </html>
