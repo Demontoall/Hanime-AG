@@ -205,3 +205,42 @@ main{
 .card a:hover{
     background:#ff8a2a;
 }
+/* Explore Libraries */
+
+.libraries{
+    padding:60px 30px;
+}
+
+.libraries h2{
+    font-size:36px;
+    margin-bottom:30px;
+}
+
+.library-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+}
+
+.library-card{
+    background:#1b1b1b;
+    border-radius:20px;
+    padding:35px;
+    text-align:center;
+    transition:.3s;
+    border:1px solid #333;
+}
+
+.library-card:hover{
+    transform:translateY(-8px);
+    background:#ff6b00;
+}
+
+.library-card h3{
+    font-size:28px;
+    margin-bottom:15px;
+}
+
+.library-card p{
+    color:#ddd;
+}
