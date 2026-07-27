@@ -1,15 +1,55 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blue Sky</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Blue Sky — watch episodes of this Donghua xianxia series on Hanime AG.">
+  <title>Blue Sky — Hanime AG</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <h1>Blue Sky</h1>
-    <p>This is the Blue Sky page.</p>
+<header class="topbar" role="banner">
+  <a href="javascript:history.back()" class="back-btn" aria-label="Go back">
+    <i class="fa-solid fa-arrow-left"></i>
+  </a>
+  <h2>Blue Sky</h2>
+  <a href="account.html" class="profile-btn" aria-label="My account">
+    <i class="fa-solid fa-circle-user"></i>
+  </a>
+</header>
 
+<main class="page-content" role="main" style="padding-top:58px">
+
+  <div class="series-hero">
+    <img src="https://picsum.photos/800/400?bluesky" alt="Blue Sky cover" loading="eager">
+    <div class="series-hero-content">
+      <span class="series-tag">Donghua · Xianxia · Adventure</span>
+      <h1>Blue Sky</h1>
+    </div>
+  </div>
+
+  <p class="series-desc">
+    High above the mortal world, above the clouds and storms, lies the legendary Blue Sky Realm —
+    a place where immortals cultivate in peace. A young mortal accidentally ascends and must survive
+    gods, demons and celestial politics with nothing but his wit and a mysterious ancient cultivation manual.
+  </p>
+
+  <p class="episodes-heading">Episodes — Season 1</p>
+  <div class="episodes-list">
+    <a href="watch.html" class="episode-item"><span class="ep-num">Ep 1</span><div class="ep-info"><h4>Above the Clouds</h4><p class="ep-dur">24 min</p></div><i class="fa-solid fa-circle-play ep-play"></i></a>
+    <a href="watch.html" class="episode-item"><span class="ep-num">Ep 2</span><div class="ep-info"><h4>The Manual</h4><p class="ep-dur">24 min</p></div><i class="fa-solid fa-circle-play ep-play"></i></a>
+    <a href="watch.html" class="episode-item"><span class="ep-num">Ep 3</span><div class="ep-info"><h4>Celestial Court</h4><p class="ep-dur">25 min</p></div><i class="fa-solid fa-circle-play ep-play"></i></a>
+    <a href="watch.html" class="episode-item"><span class="ep-num">Ep 4</span><div class="ep-info"><h4>Demon's Bargain</h4><p class="ep-dur">24 min</p></div><i class="fa-solid fa-circle-play ep-play"></i></a>
+    <a href="watch.html" class="episode-item"><span class="ep-num">Ep 5</span><div class="ep-info"><h4>Storm Break</h4><p class="ep-dur">26 min</p></div><i class="fa-solid fa-circle-play ep-play"></i></a>
+  </div>
+
+</main>
+
+<script src="app.js"></script>
 </body>
 </html>

@@ -3,52 +3,57 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Favorites - Hanime AG</title>
-
-  <link rel="stylesheet" href="style.css">
+  <meta name="description" content="Your saved favourites on Hanime AG.">
+  <title>Favourites — Hanime AG</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header class="topbar">
-  <a href="index.html" class="menu-btn">
-    <i class="fas fa-arrow-left"></i>
+<header class="topbar" role="banner">
+  <a href="index.html" class="back-btn" aria-label="Back to home">
+    <i class="fa-solid fa-arrow-left"></i>
   </a>
-
-  <div class="search-box">
-    <i class="fas fa-search"></i>
-    <input type="text" placeholder="Search favorites...">
+  <div class="search-box" role="search">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input type="text" placeholder="Search favourites…" aria-label="Search favourites">
   </div>
-
-  <a href="account.html" class="profile-btn">
-    <i class="fas fa-user-circle"></i>
+  <a href="account.html" class="profile-btn" aria-label="My account">
+    <i class="fa-solid fa-circle-user"></i>
   </a>
 </header>
 
-<main class="page-content">
+<main class="page-content" role="main">
+  <h1><i class="fa-solid fa-heart" style="color:var(--accent);margin-right:10px;font-size:20px"></i>Favourites</h1>
 
-  <h1><i class="fas fa-heart"></i> Favorites</h1>
-
-  <div class="movie-grid">
-
-    <div class="movie-card">
-      <img src="https://picsum.photos/300/450?31" alt="">
-      <h3>Favorite 1</h3>
-    </div>
-
-    <div class="movie-card">
-      <img src="https://picsum.photos/300/450?32" alt="">
-      <h3>Favorite 2</h3>
-    </div>
-
-    <div class="movie-card">
-      <img src="https://picsum.photos/300/450?33" alt="">
-      <h3>Favorite 3</h3>
-    </div>
-
+  <div class="empty-state" id="emptyFav">
+    <i class="fa-regular fa-heart"></i>
+    <h3>No favourites yet</h3>
+    <p>Tap the ♥ on any title to save it here.<br>Your collection will appear on this page.</p>
   </div>
 
+  <div class="movie-grid" id="favGrid" style="display:none"></div>
 </main>
 
+<script src="app.js"></script>
+<script>
+  const favGrid  = document.getElementById('favGrid');
+  const emptyFav = document.getElementById('emptyFav');
+  const saved    = JSON.parse(localStorage.getItem('hag_favourites') || '[]');
+  if (saved.length) {
+    emptyFav.style.display = 'none';
+    favGrid.style.display  = 'grid';
+    saved.forEach(item => {
+      const a = document.createElement('a');
+      a.href      = item.url  || 'watch.html';
+      a.className = 'movie-card';
+      a.innerHTML = `<div class="card-thumb"><img src="${item.img||'https://picsum.photos/300/420?99'}" alt="${item.title}" loading="lazy"><div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div></div><h3>${item.title}</h3>`;
+      favGrid.appendChild(a);
+    });
+  }
+</script>
 </body>
 </html>

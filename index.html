@@ -1,561 +1,329 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-<link rel="stylesheet" href="style.css">
-<meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>AnimeHub</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-<link rel="stylesheet"
-
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
-<style>
-
-*{
-
-margin:0;
-
-padding:0;
-
-box-sizing:border-box;
-
-font-family:Poppins,sans-serif;
-
-}
-
-body{
-    background:#111;
-    color:#fff;
-  overflow-x:hidden;
-   font-family:'Poppins',sans-serif;
-  scroll-behavior:smooth;
-}
-
-header{
-
-    position:fixed;
-    top:0;
-    left:0;
-    right:0;
-    height:75px;
-    background:rgba(20,20,20,.95);
-    backdrop-filter:blur(10px);
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 18px;
-    z-index:1000;
-    box-shadow:0 2px 15px rgba(0,0,0,.4);
-}
-
-.menu-btn{
-
-font-size:28px;
-
-cursor:pointer;
-
-}
-
-.profile{
-
-font-size:30px;
-
-}
-
-.search-box{
-
-flex:1;
-
-margin:0 15px;
-
-background:#333;
-
-border-radius:8px;
-
-display:flex;
-
-align-items:center;
-
-padding:12px;
-
-}
-
-.search-box{
-    flex:1;
-    margin:0 15px;
-    background:rgba(255,255,255,.08);
-    border:1px solid rgba(255,255,255,.08);
-    border-radius:50px;
-    display:flex;
-    align-items:center;
-    padding:12px 18px;
-    transition:.3s;
-
-}
-.search-box input{
-    background:none;
-    border:none;
-    outline:none;
-    color:white;
-    font-size:17px;
-    width:100%;
-    margin-left:10px;
-}
-
-.search-box:focus-within{
-    background:rgba(255,255,255,.12);
-    border-color:#4f8cff;
-}
-.sidebar{
-
-position:fixed;
-
-top:0;
-
-left:-270px;
-
-width:260px;
-
-height:100%;
-
-background:#252525;
-
-transition:.35s;
-
-padding-top:80px;
-
-z-index:1500;
-
-}
-
-.sidebar.active{
-
-left:0;
-
-}
-
-.sidebar a{
-
-display:block;
-
-padding:18px 25px;
-
-color:white;
-
-text-decoration:none;
-
-font-size:18px;
-
-border-bottom:1px solid rgba(255,255,255,.05);
-
-}
-
-.sidebar a:hover{
-
-background:#333;
-
-}
-
-.overlay{
-
-position:fixed;
-
-top:0;
-
-left:0;
-
-width:100%;
-
-height:100%;
-
-background:rgba(0,0,0,.45);
-
-display:none;
-
-z-index:1200;
-
-}
-
-.overlay.active{
-
-display:block;
-
-}
-
-.hero{
-
-margin-top:75px;
-
-height:340px;
-
-background:url('https://picsum.photos/900/900') center/cover;
-
-position:relative;
-
-}
-
-.hero::after{
-
-content:"";
-
-position:absolute;
-
-top:0;
-
-left:0;
-
-right:0;
-
-bottom:0;
-
-background:rgba(0,0,0,.55);
-
-}
-
-.hero-content{
-
-position:absolute;
-
-bottom:35px;
-
-left:20px;
-
-right:20px;
-
-z-index:2;
-
-}
-
-.hero h1{
-
-font-size:36px;
-
-margin-bottom:15px;
-
-}
-
-.hero p{
-
-opacity:.85;
-
-line-height:1.6;
-
-}
-
-.section{
-
-padding:20px;
-
-}
-
-.section-title{
-
-font-size:28px;
-
-margin-bottom:15px;
-
-}
-
-.horizontal{
-
-display:flex;
-
-overflow:auto;
-
-gap:15px;
-
-padding-bottom:10px;
-
-}
-
-.horizontal::-webkit-scrollbar{
-
-display:none;
-
-}
-
-.card{
-
-    min-width:180px;
-    background:#252525;
-    border-radius:18px;
-    overflow:hidden;
-    transition:.3s;
-    cursor:pointer;
-    box-shadow:0 8px 20px rgba(0,0,0,.35);
-}
-
-.card:hover{
-    transform:translateY(-8px);
-    box-shadow:0 15px 35px rgba(0,0,0,.5);
-}
-
-.card:hover img{
-    transform:scale(1.06);
-}
-.card img{
-
-width:100%;
-
-height:220px;
-
-object-fit:cover;
-
-}
-
-.card h3{
-
-padding:12px;
-
-font-size:17px;
-
-}
-
-.grid{
-
-display:grid;
-
-grid-template-columns:repeat(2,1fr);
-
-gap:15px;
-
-}
-
-.category{
-
-    position:relative;
-    height:260px;
-    border-radius:18px;
-    overflow:hidden;
-    cursor:pointer;
-    transition:.3s;
-    box-shadow:0 8px 20px rgba(0,0,0,.35);
-}
-
-.category:hover{
-    transform:translateY(-8px);
-    box-shadow:0 15px 35px rgba(0,0,0,.5);
-}
-
-.category img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    transition:.4s;
-}
-
-.category:hover img{
-    transform:scale(1.06);
-}
-
-.category::after{
-
-content:"";
-
-position:absolute;
-
-inset:0;
-
-background:linear-gradient(transparent,black);
-
-}
-
-.category h2{
-
-position:absolute;
-
-bottom:20px;
-
-left:15px;
-
-z-index:2;
-
-}
-
-</style>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Hanime AG — Stream anime, donghua, movies and more. Your premium destination for Asian animation.">
+  <meta name="theme-color" content="#0d0d0d">
+  <title>Hanime AG — Watch Anime, Donghua &amp; More</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<div class="sidebar" id="sidebar">
+<!-- ── Sidebar ────────────────────────────────────────────── -->
+<nav class="sidebar" id="sidebar" aria-label="Main navigation">
+  <div class="sidebar-logo">
+    <div class="logo-icon">H</div>
+    Hanime AG
+  </div>
+  <div class="sidebar-section">Browse</div>
+  <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+  <a href="trending.html"><i class="fa-solid fa-fire-flame-curved"></i> Trending</a>
+  <a href="anime.html"><i class="fa-solid fa-dragon"></i> Anime</a>
+  <a href="donghua.html"><i class="fa-solid fa-yin-yang"></i> Donghua</a>
+  <a href="hanime.html"><i class="fa-solid fa-star"></i> Hanime</a>
+  <a href="movies.html"><i class="fa-solid fa-film"></i> Movies</a>
+  <a href="series.html"><i class="fa-solid fa-tv"></i> Series</a>
+  <div class="sidebar-section">Your Stuff</div>
+  <a href="gallery.html"><i class="fa-solid fa-images"></i> Gallery</a>
+  <a href="favorite.html"><i class="fa-solid fa-heart"></i> Favourites</a>
+  <a href="account.html"><i class="fa-solid fa-circle-user"></i> Account</a>
+  <div class="sidebar-footer">Hanime AG &copy; 2025</div>
+</nav>
 
-<a href="#"><i class="fa fa-home"></i> Home</a>
+<div class="overlay" id="overlay" aria-hidden="true"></div>
 
-<a href="#"><i class="fa fa-fire"></i> Trending</a>
-
-<a href="#"><i class="fa fa-film"></i> Movies</a>
-
-<a href="#"><i class="fa fa-tv"></i> Series</a>
-
-<a href="#"><i class="fa fa-image"></i> Gallery</a>
-
-<a href="#"><i class="fa fa-heart"></i> Favorites</a>
-
-<a href="#"><i class="fa fa-user"></i> Account</a>
-
+<!-- ── Search overlay ─────────────────────────────────────── -->
+<div class="search-overlay" id="searchOverlay" role="dialog" aria-label="Search">
+  <div class="search-overlay-header">
+    <div class="search-overlay-box">
+      <i class="fa-solid fa-magnifying-glass" style="color:var(--text-dim)"></i>
+      <input type="text" id="searchInput" placeholder="Search anime, movies, series…" autocomplete="off">
+    </div>
+    <button class="search-close-btn" id="searchClose">Cancel</button>
+  </div>
+  <div class="search-results">
+    <div class="search-results-grid" id="searchGrid"></div>
+  </div>
 </div>
 
-<div class="overlay" id="overlay"></div>
-
-<header>
-
-<div class="menu-btn" id="menu">
-
-<i class="fa fa-bars"></i>
-
-</div>
-
-<div class="search-box">
-
-<i class="fa fa-search"></i>
-
-<input type="text" placeholder="Search...">
-
-</div>
-
-<div class="profile">
-
-<i class="fa fa-circle-user"></i>
-
-</div>
-
+<!-- ── Header ─────────────────────────────────────────────── -->
+<header class="home-header" role="banner">
+  <button class="menu-btn" id="menu" aria-label="Open navigation" aria-expanded="false">
+    <i class="fa-solid fa-bars"></i>
+  </button>
+  <button class="search-box" data-search-open style="border:none;cursor:text;text-align:left;" aria-label="Search">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span style="color:var(--text-dim);font-size:14px;font-family:inherit;">Search anime, movies…</span>
+  </button>
+  <a href="account.html" class="profile-icon-btn" aria-label="My account">
+    <i class="fa-solid fa-circle-user"></i>
+  </a>
 </header>
 
-<section class="hero">
-
-<div class="hero-content">
-
-<h1>Watch Your Favorite Anime</h1>
-
-<p>Browse thousands of anime, movies and shows with a modern streaming experience.</p>
-
-</div>
-
+<!-- ── Hero ───────────────────────────────────────────────── -->
+<section class="hero" aria-label="Featured: Solo Leveling">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-badges">
+      <span class="badge badge-orange"><i class="fa-solid fa-fire"></i> Trending #1</span>
+      <span class="badge badge-glass">Anime · Action</span>
+      <span class="badge badge-green"><i class="fa-solid fa-circle" style="font-size:8px"></i> New Episode</span>
+    </div>
+    <h1>Solo Leveling</h1>
+    <p>In a world where hunters — humans with special abilities — must battle deadly monsters to protect humanity, the weakest hunter of all begins an unlikely journey to reach the very top.</p>
+    <div class="hero-actions">
+      <a href="watch.html" class="btn-play"><i class="fa-solid fa-play"></i> Watch Now</a>
+      <a href="anime.html" class="btn-info"><i class="fa-solid fa-circle-info"></i> More Info</a>
+    </div>
+  </div>
+  <div class="hero-dots" aria-hidden="true">
+    <div class="hero-dot active"></div>
+    <div class="hero-dot"></div>
+    <div class="hero-dot"></div>
+  </div>
 </section>
 
-<!-- Paste the new section HERE -->
-
-<section class="libraries">
-
-    <h2>Explore Libraries</h2>
-
-    <div class="library-grid">
-
-        <a href="anime.html" class="library-card">
-            <h3>🎌 Anime</h3>
-            <p>Browse Japanese Anime</p>
-        </a>
-
-        <a href="donghua.html" class="library-card">
-            <h3>🐉 Donghua</h3>
-            <p>Chinese Animation</p>
-        </a>
-
-        <a href="hanime.html" class="library-card">
-            <h3>🔞 Hanime</h3>
-            <p>Adult Animation</p>
-        </a>
-
-        <a href="movies.html" class="library-card">
-            <h3>🎬 Movies</h3>
-            <p>Anime Movies</p>
-        </a>
-
-    </div>
-
+<!-- ── Explore Libraries ───────────────────────────────────── -->
+<section class="libraries reveal" aria-labelledby="lib-heading" style="padding:28px 16px 8px;">
+  <h2 class="libraries-title" id="lib-heading">Explore Libraries</h2>
+  <div class="library-grid">
+    <a href="anime.html" class="library-card" aria-label="Browse Anime">
+      <span class="lib-icon">🎌</span>
+      <span class="lib-name">Anime</span>
+    </a>
+    <a href="donghua.html" class="library-card" aria-label="Browse Donghua">
+      <span class="lib-icon">🐉</span>
+      <span class="lib-name">Donghua</span>
+    </a>
+    <a href="hanime.html" class="library-card" aria-label="Browse Hanime">
+      <span class="lib-icon">🔞</span>
+      <span class="lib-name">Hanime</span>
+    </a>
+    <a href="movies.html" class="library-card" aria-label="Browse Movies">
+      <span class="lib-icon">🎬</span>
+      <span class="lib-name">Movies</span>
+    </a>
+  </div>
 </section>
 
-<div class="section">
+<!-- ── Trending Now ────────────────────────────────────────── -->
+<section class="section reveal" aria-labelledby="trending-heading">
+  <div class="section-header">
+    <h2 class="section-title" id="trending-heading">
+      <i class="fa-solid fa-fire-flame-curved" style="color:var(--accent)"></i> Trending Now
+    </h2>
+    <a href="trending.html" class="section-see-all">See all →</a>
+  </div>
+  <div class="horizontal" role="list">
 
-    <div class="section-title">
-        Browse
-    </div>
+    <a href="watch.html" class="card" role="listitem" aria-label="Solo Leveling">
+      <div class="card-thumb">
+        <img src="https://picsum.photos/300/420?101" alt="Solo Leveling" loading="lazy">
+        <div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
+        <span class="card-badge card-badge-hot">🔥 HOT</span>
+        <span class="card-rating"><i class="fa-solid fa-star"></i> 9.2</span>
+      </div>
+      <div class="card-info"><h3>Solo Leveling</h3><p class="card-meta">Anime · Ep 12</p></div>
+    </a>
 
-    ...
+    <a href="watch.html" class="card" role="listitem" aria-label="Jujutsu Kaisen">
+      <div class="card-thumb">
+        <img src="https://picsum.photos/300/420?102" alt="Jujutsu Kaisen" loading="lazy">
+        <div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
+        <span class="card-badge card-badge-new">NEW</span>
+        <span class="card-rating"><i class="fa-solid fa-star"></i> 8.9</span>
+      </div>
+      <div class="card-info"><h3>Jujutsu Kaisen</h3><p class="card-meta">Anime · Ep 24</p></div>
+    </a>
 
-<div class="section-title">
+    <a href="watch.html" class="card" role="listitem" aria-label="Demon Slayer">
+      <div class="card-thumb">
+        <img src="https://picsum.photos/300/420?103" alt="Demon Slayer" loading="lazy">
+        <div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
+        <span class="card-rating"><i class="fa-solid fa-star"></i> 8.7</span>
+      </div>
+      <div class="card-info"><h3>Demon Slayer</h3><p class="card-meta">Anime · Ep 26</p></div>
+    </a>
 
-Recent Uploads
+    <a href="watch.html" class="card" role="listitem" aria-label="Attack on Titan">
+      <div class="card-thumb">
+        <img src="https://picsum.photos/300/420?104" alt="Attack on Titan" loading="lazy">
+        <div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
+        <span class="card-rating"><i class="fa-solid fa-star"></i> 9.0</span>
+      </div>
+      <div class="card-info"><h3>Attack on Titan</h3><p class="card-meta">Anime · Ep 87</p></div>
+    </a>
 
-</div>
+    <a href="watch.html" class="card" role="listitem" aria-label="Vinland Saga">
+      <div class="card-thumb">
+        <img src="https://picsum.photos/300/420?105" alt="Vinland Saga" loading="lazy">
+        <div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
+        <span class="card-rating"><i class="fa-solid fa-star"></i> 8.8</span>
+      </div>
+      <div class="card-info"><h3>Vinland Saga</h3><p class="card-meta">Anime · Ep 48</p></div>
+    </a>
 
-<a href="bluesky.html" class="card">
-    <img src="https://picsum.photos/300/450?1">
-    <h3>Blue Sky</h3>
-</a>
+    <a href="watch.html" class="card" role="listitem" aria-label="Bleach TYBW">
+      <div class="card-thumb">
+        <img src="https://picsum.photos/300/420?106" alt="Bleach: TYBW" loading="lazy">
+        <div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
+        <span class="card-badge card-badge-new">NEW</span>
+        <span class="card-rating"><i class="fa-solid fa-star"></i> 9.1</span>
+      </div>
+      <div class="card-info"><h3>Bleach: TYBW</h3><p class="card-meta">Anime · Ep 52</p></div>
+    </a>
 
-<a href="watch.html" class="card">
-    <img src="https://picsum.photos/300/450?2">
-    <h3>Moon City</h3>
-</a>
+  </div>
+</section>
 
- <a href="shadowhero.html" class="card">
-    <img src="https://picsum.photos/300/450?3">
-    <h3>Shadow Hero</h3>
-</a>
+<!-- ── Recent Uploads ──────────────────────────────────────── -->
+<section class="section reveal" aria-labelledby="recent-heading">
+  <div class="section-header">
+    <h2 class="section-title" id="recent-heading">
+      <i class="fa-solid fa-clock-rotate-left" style="color:var(--accent)"></i> Recent Uploads
+    </h2>
+    <a href="series.html" class="section-see-all">See all →</a>
+  </div>
+  <div class="horizontal" role="list">
 
-<a href="nightworld.html" class="card">
-    <img src="https://picsum.photos/300/450?4">
-    <h3>Night World</h3>
-</a>
+    <a href="nightworld.html" class="card" role="listitem" aria-label="Night World">
+      <div class="card-thumb">
+        <img src="https://picsum.photos/300/420?107" alt="Night World" loading="lazy">
+        <div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
+        <span class="card-badge card-badge-new">NEW</span>
+      </div>
+      <div class="card-info"><h3>Night World</h3><p class="card-meta">Anime · Ep 1</p></div>
+    </a>
 
-</div>
+    <a href="shadowhero.html" class="card" role="listitem" aria-label="Shadow Hero">
+      <div class="card-thumb">
+        <img src="https://picsum.photos/300/420?108" alt="Shadow Hero" loading="lazy">
+        <div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
+        <span class="card-badge card-badge-new">NEW</span>
+      </div>
+      <div class="card-info"><h3>Shadow Hero</h3><p class="card-meta">Anime · Ep 1</p></div>
+    </a>
 
-<div class="section">
+    <a href="bluesky.html" class="card" role="listitem" aria-label="Blue Sky">
+      <div class="card-thumb">
+        <img src="https://picsum.photos/300/420?109" alt="Blue Sky" loading="lazy">
+        <div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
+        <span class="card-badge card-badge-new">NEW</span>
+      </div>
+      <div class="card-info"><h3>Blue Sky</h3><p class="card-meta">Donghua · Ep 1</p></div>
+    </a>
 
-<div class="section-title">
+    <a href="watch.html" class="card" role="listitem" aria-label="Chainsaw Man">
+      <div class="card-thumb">
+        <img src="https://picsum.photos/300/420?110" alt="Chainsaw Man" loading="lazy">
+        <div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
+        <span class="card-rating"><i class="fa-solid fa-star"></i> 8.5</span>
+      </div>
+      <div class="card-info"><h3>Chainsaw Man</h3><p class="card-meta">Anime · Ep 12</p></div>
+    </a>
 
-Browse
+    <a href="watch.html" class="card" role="listitem" aria-label="Overflow">
+      <div class="card-thumb">
+        <img src="https://picsum.photos/300/420?111" alt="Overflow" loading="lazy">
+        <div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
+      </div>
+      <div class="card-info"><h3>Overflow</h3><p class="card-meta">Hanime · Ep 8</p></div>
+    </a>
 
-</div>
+  </div>
+</section>
 
-<div class="grid">
+<!-- ── Top Movies ──────────────────────────────────────────── -->
+<section class="section reveal" aria-labelledby="movies-heading">
+  <div class="section-header">
+    <h2 class="section-title" id="movies-heading">
+      <i class="fa-solid fa-film" style="color:var(--accent)"></i> Top Movies
+    </h2>
+    <a href="movies.html" class="section-see-all">See all →</a>
+  </div>
+  <div class="horizontal" role="list">
 
-<div class="category">
+    <a href="watch.html" class="card" role="listitem">
+      <div class="card-thumb">
+        <img src="https://picsum.photos/300/420?116" alt="Your Name" loading="lazy">
+        <div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
+        <span class="card-rating"><i class="fa-solid fa-star"></i> 9.0</span>
+      </div>
+      <div class="card-info"><h3>Your Name</h3><p class="card-meta">Movie · 2016</p></div>
+    </a>
 
-<img src="https://picsum.photos/500/700?5">
+    <a href="watch.html" class="card" role="listitem">
+      <div class="card-thumb">
+        <img src="https://picsum.photos/300/420?117" alt="Suzume" loading="lazy">
+        <div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
+        <span class="card-rating"><i class="fa-solid fa-star"></i> 8.6</span>
+      </div>
+      <div class="card-info"><h3>Suzume</h3><p class="card-meta">Movie · 2022</p></div>
+    </a>
 
-<h2>Trending</h2>
+    <a href="watch.html" class="card" role="listitem">
+      <div class="card-thumb">
+        <img src="https://picsum.photos/300/420?118" alt="A Silent Voice" loading="lazy">
+        <div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
+        <span class="card-rating"><i class="fa-solid fa-star"></i> 9.1</span>
+      </div>
+      <div class="card-info"><h3>A Silent Voice</h3><p class="card-meta">Movie · 2016</p></div>
+    </a>
 
-</div>
+    <a href="watch.html" class="card" role="listitem">
+      <div class="card-thumb">
+        <img src="https://picsum.photos/300/420?119" alt="Spirited Away" loading="lazy">
+        <div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
+        <span class="card-rating"><i class="fa-solid fa-star"></i> 9.4</span>
+      </div>
+      <div class="card-info"><h3>Spirited Away</h3><p class="card-meta">Movie · 2001</p></div>
+    </a>
 
-<div class="category">
+    <a href="watch.html" class="card" role="listitem">
+      <div class="card-thumb">
+        <img src="https://picsum.photos/300/420?120" alt="Princess Mononoke" loading="lazy">
+        <div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
+        <span class="card-rating"><i class="fa-solid fa-star"></i> 8.9</span>
+      </div>
+      <div class="card-info"><h3>Princess Mononoke</h3><p class="card-meta">Movie · 1997</p></div>
+    </a>
 
-<img src="https://picsum.photos/500/700?6">
+  </div>
+</section>
 
-<h2>Seasons</h2>
+<!-- ── Browse Categories ───────────────────────────────────── -->
+<section class="section reveal" aria-labelledby="browse-heading">
+  <div class="section-header">
+    <h2 class="section-title" id="browse-heading">Browse</h2>
+  </div>
+  <div class="grid">
+    <a href="trending.html" class="category" aria-label="Trending">
+      <img src="https://picsum.photos/500/300?201" alt="" loading="lazy">
+      <span class="category-label">🔥 Trending</span>
+    </a>
+    <a href="series.html" class="category" aria-label="Series">
+      <img src="https://picsum.photos/500/300?202" alt="" loading="lazy">
+      <span class="category-label">📺 Series</span>
+    </a>
+    <a href="movies.html" class="category" aria-label="Movies">
+      <img src="https://picsum.photos/500/300?203" alt="" loading="lazy">
+      <span class="category-label">🎬 Movies</span>
+    </a>
+    <a href="favorite.html" class="category" aria-label="Favourites">
+      <img src="https://picsum.photos/500/300?204" alt="" loading="lazy">
+      <span class="category-label">❤️ Favourites</span>
+    </a>
+  </div>
+</section>
 
-</div>
-
-<div class="category">
-
-<img src="https://picsum.photos/500/700?7">
-
-<h2>Movies</h2>
-
-</div>
-
-<div class="category">
-
-<img src="https://picsum.photos/500/700?8">
-
-<h2>Collections</h2>
-
-</div>
-
-</div>
-
-</div>
+<div style="height:32px"></div>
 
 <script src="app.js"></script>
-
-  </body>
+</body>
 </html>

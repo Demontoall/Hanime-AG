@@ -1,61 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Donghua Library - Hanime AG</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Browse Donghua — Chinese Animation. Stream cultivation, xianxia and wuxia titles on Hanime AG.">
+  <title>Donghua Library — Hanime AG</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<header>
-<h1>Donghua Library</h1>
-<p>Explore Chinese Animation</p>
+<header class="genre-header" role="banner">
+  <a href="index.html" class="back-btn-inline" aria-label="Back to home">
+    <i class="fa-solid fa-arrow-left"></i> Back
+  </a>
+  <h1>🐉 Donghua <span class="accent">Library</span></h1>
+  <p>Explore Chinese Animation</p>
 </header>
 
-<main>
+<main class="genre-main" role="main">
 
-<h2 style="margin-bottom:20px;">Genres</h2>
+  <p class="genre-section-label">Browse by Genre</p>
+  <div class="genre-list">
+    <a href="#">Cultivation</a><a href="#">Xianxia</a><a href="#">Wuxia</a>
+    <a href="#">Fantasy</a><a href="#">Action</a><a href="#">Adventure</a>
+    <a href="#">Romance</a><a href="#">Comedy</a><a href="#">Historical</a>
+    <a href="#">Modern</a><a href="#">Sci-Fi</a><a href="#">Supernatural</a>
+  </div>
 
-<div class="genre-list">
-    <a href="#">Cultivation</a>
-    <a href="#">Xianxia</a>
-    <a href="#">Wuxia</a>
-    <a href="#">Fantasy</a>
-    <a href="#">Action</a>
-    <a href="#">Adventure</a>
-    <a href="#">Romance</a>
-    <a href="#">Comdey</a>
-    <a href="#">Historicial</a>
-    <a href="#">Modern</a>
-    <a href="#">Sci-Fi</a>
-    <a href="#">Supernatural</a>
-</div>
+  <p class="genre-section-label" style="margin-top:32px">Featured Series</p>
+  <div class="featured-grid">
+    <div class="featured-card">
+      <div class="featured-card-info"><h3>Battle Through the Heavens</h3><p class="meta">Cultivation · Action · 156 eps</p></div>
+      <a href="watch.html" class="watch-btn"><i class="fa-solid fa-play"></i> Watch</a>
+    </div>
+    <div class="featured-card">
+      <div class="featured-card-info"><h3>Soul Land</h3><p class="meta">Fantasy · Adventure · 170 eps</p></div>
+      <a href="watch.html" class="watch-btn"><i class="fa-solid fa-play"></i> Watch</a>
+    </div>
+    <div class="featured-card">
+      <div class="featured-card-info"><h3>Perfect World</h3><p class="meta">Cultivation · Fantasy · 100 eps</p></div>
+      <a href="watch.html" class="watch-btn"><i class="fa-solid fa-play"></i> Watch</a>
+    </div>
+    <div class="featured-card">
+      <div class="featured-card-info"><h3>The King's Avatar</h3><p class="meta">Action · Modern · 40 eps</p></div>
+      <a href="watch.html" class="watch-btn"><i class="fa-solid fa-play"></i> Watch</a>
+    </div>
+    <div class="featured-card">
+      <div class="featured-card-info"><h3>Stellar Transformations</h3><p class="meta">Xianxia · Fantasy · 90 eps</p></div>
+      <a href="watch.html" class="watch-btn"><i class="fa-solid fa-play"></i> Watch</a>
+    </div>
+    <div class="featured-card">
+      <div class="featured-card-info"><h3>Tales of Demons and Gods</h3><p class="meta">Cultivation · Action · 300+ eps</p></div>
+      <a href="watch.html" class="watch-btn"><i class="fa-solid fa-play"></i> Watch</a>
+    </div>
+  </div>
 
-<h2 style="margin:40px 0 20px;">Featured Series</h2>
-
-<div class="card">
-    <h3>Battle Through the Heavens</h3>
-    <a href="bluesky.html">Watch Now</a>
-</div>
-
-<div class="card">
-    <h3>Soul Land</h3>
-    <a href="mooncity.html">Watch Now</a>
-</div>
-
-<div class="card">
-    <h3>Perfeft World</h3>
-    <a href="shadowhero.html">Watch Now</a>
-</div>
-
-<div class="card">
-    <h3>The King avatar</h3>
-    <a href="nightworld.html">Watch Now</a>
-</div>
-
+  <a href="index.html" class="back-home">← Back to Home</a>
 </main>
 
+<script src="app.js"></script>
 </body>
 </html>

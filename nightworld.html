@@ -1,15 +1,55 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Night World</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Night World — watch episodes of this dark fantasy anime series on Hanime AG.">
+  <title>Night World — Hanime AG</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h1>Night World</h1>
-<p>This is the Night World page.</p>
+<header class="topbar" role="banner">
+  <a href="javascript:history.back()" class="back-btn" aria-label="Go back">
+    <i class="fa-solid fa-arrow-left"></i>
+  </a>
+  <h2>Night World</h2>
+  <a href="account.html" class="profile-btn" aria-label="My account">
+    <i class="fa-solid fa-circle-user"></i>
+  </a>
+</header>
 
+<main class="page-content" role="main" style="padding-top:58px">
+
+  <div class="series-hero">
+    <img src="https://picsum.photos/800/400?nightworld" alt="Night World cover" loading="eager">
+    <div class="series-hero-content">
+      <span class="series-tag">Anime · Dark Fantasy</span>
+      <h1>Night World</h1>
+    </div>
+  </div>
+
+  <p class="series-desc">
+    In a world where the sun never rises, ancient creatures rule the darkness. A lone hunter
+    must navigate the treacherous Night World to uncover the truth behind his lost memories
+    and the cursed power within him. Each night brings new dangers — and new allies.
+  </p>
+
+  <p class="episodes-heading">Episodes — Season 1</p>
+  <div class="episodes-list">
+    <a href="watch.html" class="episode-item"><span class="ep-num">Ep 1</span><div class="ep-info"><h4>Into the Dark</h4><p class="ep-dur">24 min</p></div><i class="fa-solid fa-circle-play ep-play"></i></a>
+    <a href="watch.html" class="episode-item"><span class="ep-num">Ep 2</span><div class="ep-info"><h4>The First Hunt</h4><p class="ep-dur">24 min</p></div><i class="fa-solid fa-circle-play ep-play"></i></a>
+    <a href="watch.html" class="episode-item"><span class="ep-num">Ep 3</span><div class="ep-info"><h4>Shadows Speak</h4><p class="ep-dur">25 min</p></div><i class="fa-solid fa-circle-play ep-play"></i></a>
+    <a href="watch.html" class="episode-item"><span class="ep-num">Ep 4</span><div class="ep-info"><h4>The Cursed Blade</h4><p class="ep-dur">23 min</p></div><i class="fa-solid fa-circle-play ep-play"></i></a>
+    <a href="watch.html" class="episode-item"><span class="ep-num">Ep 5</span><div class="ep-info"><h4>Forgotten Faces</h4><p class="ep-dur">24 min</p></div><i class="fa-solid fa-circle-play ep-play"></i></a>
+  </div>
+
+</main>
+
+<script src="app.js"></script>
 </body>
 </html>

@@ -3,57 +3,43 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gallery - Hanime AG</title>
-
-  <link rel="stylesheet" href="style.css">
+  <meta name="description" content="Anime wallpapers and artwork gallery on Hanime AG.">
+  <title>Gallery — Hanime AG</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header class="topbar">
-  <a href="index.html" class="menu-btn">
-    <i class="fas fa-arrow-left"></i>
+<header class="topbar" role="banner">
+  <a href="index.html" class="back-btn" aria-label="Back to home">
+    <i class="fa-solid fa-arrow-left"></i>
   </a>
-
-  <div class="search-box">
-    <i class="fas fa-search"></i>
-    <input type="text" placeholder="Search gallery...">
+  <div class="search-box" role="search">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input type="text" placeholder="Search gallery…" aria-label="Search gallery">
   </div>
-
-  <a href="account.html" class="profile-btn">
-    <i class="fas fa-user-circle"></i>
+  <a href="account.html" class="profile-btn" aria-label="My account">
+    <i class="fa-solid fa-circle-user"></i>
   </a>
 </header>
 
-<main class="page-content">
-
-  <h1>Gallery</h1>
-
+<main class="page-content" role="main">
+  <h1><i class="fa-solid fa-images" style="color:var(--accent);margin-right:10px;font-size:20px"></i>Gallery</h1>
   <div class="movie-grid">
-
-    <div class="movie-card">
-      <img src="https://picsum.photos/300/450?21" alt="">
-      <h3>Wallpaper 1</h3>
-    </div>
-
-    <div class="movie-card">
-      <img src="https://picsum.photos/300/450?22" alt="">
-      <h3>Wallpaper 2</h3>
-    </div>
-
-    <div class="movie-card">
-      <img src="https://picsum.photos/300/450?23" alt="">
-      <h3>Wallpaper 3</h3>
-    </div>
-
-    <div class="movie-card">
-      <img src="https://picsum.photos/300/450?24" alt="">
-      <h3>Wallpaper 4</h3>
-    </div>
-
+    <div class="movie-card"><div class="card-thumb"><img src="https://picsum.photos/300/420?41" alt="Night World" loading="lazy"><div class="card-play-overlay"><i class="fa-solid fa-expand"></i></div></div><h3>Night World</h3></div>
+    <div class="movie-card"><div class="card-thumb"><img src="https://picsum.photos/300/420?42" alt="Shadow Hero" loading="lazy"><div class="card-play-overlay"><i class="fa-solid fa-expand"></i></div></div><h3>Shadow Hero</h3></div>
+    <div class="movie-card"><div class="card-thumb"><img src="https://picsum.photos/300/420?43" alt="Blue Sky" loading="lazy"><div class="card-play-overlay"><i class="fa-solid fa-expand"></i></div></div><h3>Blue Sky</h3></div>
+    <div class="movie-card"><div class="card-thumb"><img src="https://picsum.photos/300/420?44" alt="Lone Warrior" loading="lazy"><div class="card-play-overlay"><i class="fa-solid fa-expand"></i></div></div><h3>Lone Warrior</h3></div>
+    <div class="movie-card"><div class="card-thumb"><img src="https://picsum.photos/300/420?45" alt="Dragon Realm" loading="lazy"><div class="card-play-overlay"><i class="fa-solid fa-expand"></i></div></div><h3>Dragon Realm</h3></div>
+    <div class="movie-card"><div class="card-thumb"><img src="https://picsum.photos/300/420?46" alt="Sakura Storm" loading="lazy"><div class="card-play-overlay"><i class="fa-solid fa-expand"></i></div></div><h3>Sakura Storm</h3></div>
+    <div class="movie-card"><div class="card-thumb"><img src="https://picsum.photos/300/420?47" alt="Crimson Sky" loading="lazy"><div class="card-play-overlay"><i class="fa-solid fa-expand"></i></div></div><h3>Crimson Sky</h3></div>
+    <div class="movie-card"><div class="card-thumb"><img src="https://picsum.photos/300/420?48" alt="Void Gate" loading="lazy"><div class="card-play-overlay"><i class="fa-solid fa-expand"></i></div></div><h3>Void Gate</h3></div>
   </div>
-
 </main>
 
+<script src="app.js"></script>
 </body>
 </html>

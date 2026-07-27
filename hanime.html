@@ -1,61 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hanime Library - Hanime AG</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Browse Hanime — Adult Animation Library on Hanime AG.">
+  <title>Hanime Library — Hanime AG</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<header>
-<h1>Hanime Library</h1>
-<p>Explore Adult Animation</p>
+<header class="genre-header" role="banner">
+  <a href="index.html" class="back-btn-inline" aria-label="Back to home">
+    <i class="fa-solid fa-arrow-left"></i> Back
+  </a>
+  <h1>🔞 Hanime <span class="accent">Library</span></h1>
+  <p>Adult Animation — 18+ content</p>
 </header>
 
-<main>
+<main class="genre-main" role="main">
 
-<h2 style="margin-bottom:20px;">Genres</h2>
+  <p class="genre-section-label">Browse by Genre</p>
+  <div class="genre-list">
+    <a href="#">Romance</a><a href="#">Fantasy</a><a href="#">School</a>
+    <a href="#">Comedy</a><a href="#">MILF</a><a href="#">Elf</a>
+    <a href="#">Monster Girl</a><a href="#">Succubus</a><a href="#">Harem</a>
+    <a href="#">BDSM</a><a href="#">Ninja</a><a href="#">Sci-Fi</a>
+  </div>
 
-<div class="genre-list">
-    <a href="#">Romance</a>
-    <a href="#">Fantasy</a>
-    <a href="#">School</a>
-    <a href="#">Comedy</a>
-    <a href="#">MILF</a>
-    <a href="#">Elf</a>
-    <a href="#">Monster Girl</a>
-    <a href="#">Succubus</a>
-    <a href="#">Harem</a>
-    <a href="#">BDSM</a>
-    <a href="#">Ninja</a>
-    <a href="#">Sci-Fi</a>
-</div>
+  <p class="genre-section-label" style="margin-top:32px">Featured Hanime</p>
+  <div class="featured-grid">
+    <div class="featured-card">
+      <div class="featured-card-info"><h3>Overflow</h3><p class="meta">Romance · School · 8 eps</p></div>
+      <a href="watch.html" class="watch-btn"><i class="fa-solid fa-play"></i> Watch</a>
+    </div>
+    <div class="featured-card">
+      <div class="featured-card-info"><h3>Redo of Healer</h3><p class="meta">Fantasy · Action · 12 eps</p></div>
+      <a href="watch.html" class="watch-btn"><i class="fa-solid fa-play"></i> Watch</a>
+    </div>
+    <div class="featured-card">
+      <div class="featured-card-info"><h3>Isekai Harem Monogatari</h3><p class="meta">Fantasy · Harem · 6 eps</p></div>
+      <a href="watch.html" class="watch-btn"><i class="fa-solid fa-play"></i> Watch</a>
+    </div>
+    <div class="featured-card">
+      <div class="featured-card-info"><h3>Boku no Pico</h3><p class="meta">Romance · 3 eps</p></div>
+      <a href="watch.html" class="watch-btn"><i class="fa-solid fa-play"></i> Watch</a>
+    </div>
+  </div>
 
-<h2 style="margin:40px 0 20px;">Featured Hanime</h2>
-
-<div class="card">
-    <h3>Overflow</h3>
-    <a href="watch.html">Watch Now</a>
-</div>
-
-<div class="card">
-    <h3>Redo of Healer</h3>
-    <a href="watch.html">Watch Now</a>
-</div>
-
-<div class="card">
-    <h3>Isekai Harem Monogatari</h3>
-    <a href="watch.html">Watch Now</a>
-</div>
-
-<div class="card">
-    <h3>Boku no Pico</h3>
-    <a href="watch.html">Watch Now</a>
-</div>
-
+  <a href="index.html" class="back-home">← Back to Home</a>
 </main>
 
+<script src="app.js"></script>
 </body>
 </html>

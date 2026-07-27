@@ -3,54 +3,132 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Watch - Hanime AG</title>
-
+  <meta name="description" content="Watch anime episodes on Hanime AG.">
+  <title>Watch — Hanime AG</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
 
-<header class="topbar">
-  <a href="index.html" class="menu-btn">
-    <i class="fas fa-arrow-left"></i>
+<header class="topbar" role="banner">
+  <a href="javascript:history.back()" class="back-btn" aria-label="Go back">
+    <i class="fa-solid fa-arrow-left"></i>
   </a>
-
   <h2>Hanime AG</h2>
-
-  <a href="account.html" class="profile-btn">
-    <i class="fas fa-user-circle"></i>
+  <a href="account.html" class="profile-btn" aria-label="My account">
+    <i class="fa-solid fa-circle-user"></i>
   </a>
 </header>
 
-<main class="page-content">
+<main class="watch-page" role="main">
 
-  <h1>Moon City</h1>
-
-  <div class="video-player">
+  <!-- Video Player -->
+  <div class="video-container">
+    <div class="video-placeholder" id="videoPlaceholder" role="button" tabindex="0" aria-label="Play video">
+      <div class="play-ring">
+        <i class="fa-solid fa-play"></i>
+      </div>
+      <p>Tap to play</p>
+    </div>
     <iframe
-      width="100%"
-      height="250"
-      src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-      title="Anime Player"
-      frameborder="0"
-      allowfullscreen>
+      id="videoFrame"
+      data-src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1"
+      src=""
+      title="Video Player"
+      allowfullscreen
+      allow="autoplay; fullscreen"
+      style="display:none">
     </iframe>
   </div>
 
+  <!-- Info -->
   <div class="watch-info">
-    <h3>Episode 1</h3>
-    <p>
-      Welcome to Moon City. This is a sample player page.
-      Later we'll replace this with real streaming links.
+    <p class="watch-series-name">Now Watching</p>
+    <h1 class="watch-title">Moon City</h1>
+    <p class="watch-episode-label" id="epLabel">Episode 1</p>
+    <p class="watch-desc">
+      Stream links will be connected to real sources as the project progresses.
+      This player page is ready to receive embedded content.
     </p>
   </div>
 
-  <div class="watch-buttons">
-    <button>Previous</button>
-    <button>Next Episode</button>
+  <!-- Navigation Buttons -->
+  <div class="watch-actions">
+    <button class="btn-prev-ep" id="btnPrev" aria-label="Previous episode">
+      <i class="fa-solid fa-backward-step"></i> Previous
+    </button>
+    <button class="btn-next-ep" id="btnNext" aria-label="Next episode">
+      Next <i class="fa-solid fa-forward-step"></i>
+    </button>
+  </div>
+
+  <!-- Episode List -->
+  <div class="episode-section">
+    <h3 class="episode-section-title">Episodes — Season 1</h3>
+
+    <a href="#" class="episode-item active" onclick="return false">
+      <span class="ep-num">Ep 1</span>
+      <div class="ep-info"><h4>The Beginning</h4><p class="ep-dur">24 min</p></div>
+      <i class="fa-solid fa-circle-play ep-play"></i>
+    </a>
+
+    <a href="#" class="episode-item" onclick="return false">
+      <span class="ep-num">Ep 2</span>
+      <div class="ep-info"><h4>Into the Unknown</h4><p class="ep-dur">24 min</p></div>
+      <i class="fa-regular fa-circle-play ep-play" style="color:var(--text-dim)"></i>
+    </a>
+
+    <a href="#" class="episode-item" onclick="return false">
+      <span class="ep-num">Ep 3</span>
+      <div class="ep-info"><h4>Shadows and Light</h4><p class="ep-dur">25 min</p></div>
+      <i class="fa-regular fa-circle-play ep-play" style="color:var(--text-dim)"></i>
+    </a>
+
+    <a href="#" class="episode-item" onclick="return false">
+      <span class="ep-num">Ep 4</span>
+      <div class="ep-info"><h4>The Awakening</h4><p class="ep-dur">22 min</p></div>
+      <i class="fa-regular fa-circle-play ep-play" style="color:var(--text-dim)"></i>
+    </a>
+
+    <a href="#" class="episode-item" onclick="return false">
+      <span class="ep-num">Ep 5</span>
+      <div class="ep-info"><h4>Final Confrontation</h4><p class="ep-dur">28 min</p></div>
+      <i class="fa-regular fa-circle-play ep-play" style="color:var(--text-dim)"></i>
+    </a>
   </div>
 
 </main>
 
+<script src="app.js"></script>
+<script>
+  // Show iframe and hide placeholder on play
+  const placeholder = document.getElementById('videoPlaceholder');
+  const frame       = document.getElementById('videoFrame');
+  function startPlay() {
+    placeholder.style.display = 'none';
+    frame.style.display       = 'block';
+    frame.src                 = frame.dataset.src;
+  }
+  placeholder.addEventListener('click', startPlay);
+  placeholder.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') startPlay(); });
+
+  // Episode click highlights
+  document.querySelectorAll('.episode-item').forEach((item, i) => {
+    item.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelectorAll('.episode-item').forEach(el => el.classList.remove('active'));
+      item.classList.add('active');
+      const epLabel = document.getElementById('epLabel');
+      if (epLabel) epLabel.textContent = `Episode ${i + 1}`;
+      // Reset player
+      frame.style.display = 'none';
+      frame.src = '';
+      placeholder.style.display = 'flex';
+    });
+  });
+</script>
 </body>
 </html>

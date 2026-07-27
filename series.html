@@ -3,57 +3,67 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Series - Hanime AG</title>
-
-  <link rel="stylesheet" href="style.css">
+  <meta name="description" content="Browse all anime and donghua series on Hanime AG.">
+  <title>Series — Hanime AG</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header class="topbar">
-  <a href="index.html" class="menu-btn">
-    <i class="fas fa-arrow-left"></i>
+<header class="topbar" role="banner">
+  <a href="index.html" class="back-btn" aria-label="Back to home">
+    <i class="fa-solid fa-arrow-left"></i>
   </a>
-
-  <div class="search-box">
-    <i class="fas fa-search"></i>
-    <input type="text" placeholder="Search series...">
+  <div class="search-box" role="search">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input type="text" placeholder="Search series…" aria-label="Search series">
   </div>
-
-  <a href="account.html" class="profile-btn">
-    <i class="fas fa-user-circle"></i>
+  <a href="account.html" class="profile-btn" aria-label="My account">
+    <i class="fa-solid fa-circle-user"></i>
   </a>
 </header>
 
-<main class="page-content">
-
+<main class="page-content" role="main">
   <h1>Series</h1>
-
   <div class="movie-grid">
-
-    <div class="movie-card">
-      <img src="https://picsum.photos/300/450?11" alt="">
-      <h3>Series One</h3>
-    </div>
-
-    <div class="movie-card">
-      <img src="https://picsum.photos/300/450?12" alt="">
-      <h3>Series Two</h3>
-    </div>
-
-    <div class="movie-card">
-      <img src="https://picsum.photos/300/450?13" alt="">
-      <h3>Series Three</h3>
-    </div>
-
-    <div class="movie-card">
-      <img src="https://picsum.photos/300/450?14" alt="">
-      <h3>Series Four</h3>
-    </div>
-
+    <a href="watch.html" class="movie-card">
+      <div class="card-thumb"><img src="https://picsum.photos/300/420?31" alt="Solo Leveling" loading="lazy"><div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div><span class="card-rating"><i class="fa-solid fa-star"></i> 9.2</span></div>
+      <h3>Solo Leveling</h3>
+    </a>
+    <a href="watch.html" class="movie-card">
+      <div class="card-thumb"><img src="https://picsum.photos/300/420?32" alt="Jujutsu Kaisen" loading="lazy"><div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div><span class="card-rating"><i class="fa-solid fa-star"></i> 8.9</span></div>
+      <h3>Jujutsu Kaisen</h3>
+    </a>
+    <a href="watch.html" class="movie-card">
+      <div class="card-thumb"><img src="https://picsum.photos/300/420?33" alt="Demon Slayer" loading="lazy"><div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div><span class="card-rating"><i class="fa-solid fa-star"></i> 8.7</span></div>
+      <h3>Demon Slayer</h3>
+    </a>
+    <a href="watch.html" class="movie-card">
+      <div class="card-thumb"><img src="https://picsum.photos/300/420?34" alt="Attack on Titan" loading="lazy"><div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div><span class="card-rating"><i class="fa-solid fa-star"></i> 9.0</span></div>
+      <h3>Attack on Titan</h3>
+    </a>
+    <a href="nightworld.html" class="movie-card">
+      <div class="card-thumb"><img src="https://picsum.photos/300/420?35" alt="Night World" loading="lazy"><div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div><span class="card-badge card-badge-new">NEW</span></div>
+      <h3>Night World</h3>
+    </a>
+    <a href="shadowhero.html" class="movie-card">
+      <div class="card-thumb"><img src="https://picsum.photos/300/420?36" alt="Shadow Hero" loading="lazy"><div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div><span class="card-badge card-badge-new">NEW</span></div>
+      <h3>Shadow Hero</h3>
+    </a>
+    <a href="watch.html" class="movie-card">
+      <div class="card-thumb"><img src="https://picsum.photos/300/420?37" alt="Chainsaw Man" loading="lazy"><div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div><span class="card-rating"><i class="fa-solid fa-star"></i> 8.5</span></div>
+      <h3>Chainsaw Man</h3>
+    </a>
+    <a href="watch.html" class="movie-card">
+      <div class="card-thumb"><img src="https://picsum.photos/300/420?38" alt="My Hero Academia" loading="lazy"><div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div><span class="card-rating"><i class="fa-solid fa-star"></i> 8.4</span></div>
+      <h3>My Hero Academia</h3>
+    </a>
   </div>
-
 </main>
 
+<script src="app.js"></script>
 </body>
 </html>

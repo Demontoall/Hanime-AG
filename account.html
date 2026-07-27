@@ -3,64 +3,54 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Account - Hanime AG</title>
-
+  <title>My Account — Hanime AG</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-
 <body>
 
-<header class="topbar">
-  <a href="index.html" class="menu-btn">
-    <i class="fas fa-arrow-left"></i>
+<header class="topbar" role="banner">
+  <a href="index.html" class="back-btn" aria-label="Back to home">
+    <i class="fa-solid fa-arrow-left"></i>
   </a>
-
   <h2>My Account</h2>
-
-  <div></div>
+  <div style="width:38px"></div>
 </header>
 
-<main class="page-content">
-
+<main class="page-content" role="main">
   <div class="account-card">
-    <i class="fas fa-user-circle profile-icon"></i>
-
+    <div class="profile-avatar" aria-hidden="true">
+      <i class="fa-solid fa-user"></i>
+    </div>
     <h2>Guest User</h2>
     <p>Welcome to Hanime AG</p>
 
-    <div class="account-menu">
-
-      <a href="favorites.html" class="account-item">
-        <i class="fas fa-heart"></i>
-        Favorites
+    <nav class="account-menu" aria-label="Account navigation">
+      <a href="favorite.html" class="account-item">
+        <i class="fa-solid fa-heart"></i> Favourites
       </a>
-
+      <a href="trending.html" class="account-item">
+        <i class="fa-solid fa-fire-flame-curved"></i> Trending
+      </a>
       <a href="movies.html" class="account-item">
-        <i class="fas fa-film"></i>
-        Movies
+        <i class="fa-solid fa-film"></i> Movies
       </a>
-
       <a href="series.html" class="account-item">
-        <i class="fas fa-tv"></i>
-        Series
+        <i class="fa-solid fa-tv"></i> Series
       </a>
-
       <a href="gallery.html" class="account-item">
-        <i class="fas fa-images"></i>
-        Gallery
+        <i class="fa-solid fa-images"></i> Gallery
       </a>
-
       <a href="index.html" class="account-item">
-        <i class="fas fa-home"></i>
-        Home
+        <i class="fa-solid fa-house"></i> Home
       </a>
-
-    </div>
-
+    </nav>
   </div>
-
 </main>
 
+<script src="app.js"></script>
 </body>
 </html>

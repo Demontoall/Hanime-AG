@@ -1,71 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anime Library - Hanime AG</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Browse Japanese anime by genre. Stream action, adventure, isekai, romance and more on Hanime AG.">
+  <title>Anime Library — Hanime AG</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<header>
-<h1>Anime Library</h1>
-<p>Explore Japanese Animation</p>
+<header class="genre-header" role="banner">
+  <a href="index.html" class="back-btn-inline" aria-label="Back to home">
+    <i class="fa-solid fa-arrow-left"></i> Back
+  </a>
+  <h1>🎌 Anime <span class="accent">Library</span></h1>
+  <p>Explore Japanese Animation</p>
 </header>
 
-<main>
+<main class="genre-main" role="main">
 
-<h2 style="margin-bottom:20px;">Genres</h2>
+  <p class="genre-section-label">Browse by Genre</p>
+  <div class="genre-list">
+    <a href="#">Action</a><a href="#">Adventure</a><a href="#">Fantasy</a>
+    <a href="#">Romance</a><a href="#">Comedy</a><a href="#">Drama</a>
+    <a href="#">Slice of Life</a><a href="#">Sci-Fi</a><a href="#">Isekai</a>
+    <a href="#">Supernatural</a><a href="#">Sports</a><a href="#">Psychological</a>
+    <a href="#">Mecha</a><a href="#">Horror</a>
+  </div>
 
-<div class="genre-list">
-    <a href="#">Action</a>
-    <a href="#">Adventure</a>
-    <a href="#">Fantasy</a>
-    <a href="#">Romance</a>
-    <a href="#">Comedy</a>
-    <a href="#">Drama</a>
-    <a href="#">Slice of Life</a>
-    <a href="#">Sci-Fi</a>
-    <a href="#">Isekai</a>
-    <a href="#">Supernatural</a>
-    <a href="#">Sports</a>
-    <a href="#">Psychological</a>
-</div>
+  <p class="genre-section-label" style="margin-top:32px">Featured Anime</p>
+  <div class="featured-grid">
+    <div class="featured-card">
+      <div class="featured-card-info"><h3>Solo Leveling</h3><p class="meta">Action · Fantasy · 12 eps</p></div>
+      <a href="watch.html" class="watch-btn"><i class="fa-solid fa-play"></i> Watch</a>
+    </div>
+    <div class="featured-card">
+      <div class="featured-card-info"><h3>Jujutsu Kaisen</h3><p class="meta">Action · Supernatural · 24 eps</p></div>
+      <a href="watch.html" class="watch-btn"><i class="fa-solid fa-play"></i> Watch</a>
+    </div>
+    <div class="featured-card">
+      <div class="featured-card-info"><h3>Demon Slayer</h3><p class="meta">Action · Drama · 26 eps</p></div>
+      <a href="watch.html" class="watch-btn"><i class="fa-solid fa-play"></i> Watch</a>
+    </div>
+    <div class="featured-card">
+      <div class="featured-card-info"><h3>Attack on Titan</h3><p class="meta">Action · Drama · 87 eps</p></div>
+      <a href="watch.html" class="watch-btn"><i class="fa-solid fa-play"></i> Watch</a>
+    </div>
+    <div class="featured-card">
+      <div class="featured-card-info"><h3>One Piece</h3><p class="meta">Adventure · Comedy · 1000+ eps</p></div>
+      <a href="watch.html" class="watch-btn"><i class="fa-solid fa-play"></i> Watch</a>
+    </div>
+    <div class="featured-card">
+      <div class="featured-card-info"><h3>Naruto Shippuden</h3><p class="meta">Action · Adventure · 500 eps</p></div>
+      <a href="watch.html" class="watch-btn"><i class="fa-solid fa-play"></i> Watch</a>
+    </div>
+    <div class="featured-card">
+      <div class="featured-card-info"><h3>Bleach: TYBW</h3><p class="meta">Action · Supernatural · 52 eps</p></div>
+      <a href="watch.html" class="watch-btn"><i class="fa-solid fa-play"></i> Watch</a>
+    </div>
+    <div class="featured-card">
+      <div class="featured-card-info"><h3>Vinland Saga</h3><p class="meta">Action · Historical · 48 eps</p></div>
+      <a href="watch.html" class="watch-btn"><i class="fa-solid fa-play"></i> Watch</a>
+    </div>
+    <div class="featured-card">
+      <div class="featured-card-info"><h3>Chainsaw Man</h3><p class="meta">Action · Horror · 12 eps</p></div>
+      <a href="watch.html" class="watch-btn"><i class="fa-solid fa-play"></i> Watch</a>
+    </div>
+    <div class="featured-card">
+      <div class="featured-card-info"><h3>My Hero Academia</h3><p class="meta">Action · School · 113 eps</p></div>
+      <a href="watch.html" class="watch-btn"><i class="fa-solid fa-play"></i> Watch</a>
+    </div>
+  </div>
 
-<h2 style="margin:40px 0 20px;">Featured Anime</h2>
-
-<div class="card">
-    <h3>Solo Leveling</h3>
-    <a href="watch.html">Watch Now</a>
-</div>
-
-<div class="card">
-    <h3>Jujutsu Kaisen</h3>
-    <a href="watch.html">Watch Now</a>
-</div>
-
-<div class="card">
-    <h3>Demon Slayer</h3>
-    <a href="watch.html">Watch Now</a>
-</div>
-
-<div class="card">
-    <h3>Attack on Titan</h3>
-    <a href="watch.html">Watch Now</a>
-</div>
-
-<div class="card">
-    <h3>One Piece</h3>
-    <a href="watch.html">Watch Now</a>
-</div>
-
-<div class="card">
-    <h3>Naruto Shippuden</h3>
-    <a href="watch.html">Watch Now</a>
-</div>
-
+  <a href="index.html" class="back-home">← Back to Home</a>
 </main>
 
+<script src="app.js"></script>
 </body>
 </html>
