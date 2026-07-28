@@ -1,19 +1,561 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+<link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AnimeHub</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style>
+
+*{
+
+margin:0;
+
+padding:0;
+
+box-sizing:border-box;
+
+font-family:Poppins,sans-serif;
+
+}
+
+body{
+    background:#111;
+    color:#fff;
+  overflow-x:hidden;
+   font-family:'Poppins',sans-serif;
+  scroll-behavior:smooth;
+}
+
+header{
+
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    height:75px;
+    background:rgba(20,20,20,.95);
+    backdrop-filter:blur(10px);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 18px;
+    z-index:1000;
+    box-shadow:0 2px 15px rgba(0,0,0,.4);
+}
+
+.menu-btn{
+
+font-size:28px;
+
+cursor:pointer;
+
+}
+
+.profile{
+
+font-size:30px;
+
+}
+
+.search-box{
+
+flex:1;
+
+margin:0 15px;
+
+background:#333;
+
+border-radius:8px;
+
+display:flex;
+
+align-items:center;
+
+padding:12px;
+
+}
+
+.search-box{
+    flex:1;
+    margin:0 15px;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:50px;
+    display:flex;
+    align-items:center;
+    padding:12px 18px;
+    transition:.3s;
+
+}
+.search-box input{
+    background:none;
+    border:none;
+    outline:none;
+    color:white;
+    font-size:17px;
+    width:100%;
+    margin-left:10px;
+}
+
+.search-box:focus-within{
+    background:rgba(255,255,255,.12);
+    border-color:#4f8cff;
+}
+.sidebar{
+
+position:fixed;
+
+top:0;
+
+left:-270px;
+
+width:260px;
+
+height:100%;
+
+background:#252525;
+
+transition:.35s;
+
+padding-top:80px;
+
+z-index:1500;
+
+}
+
+.sidebar.active{
+
+left:0;
+
+}
+
+.sidebar a{
+
+display:block;
+
+padding:18px 25px;
+
+color:white;
+
+text-decoration:none;
+
+font-size:18px;
+
+border-bottom:1px solid rgba(255,255,255,.05);
+
+}
+
+.sidebar a:hover{
+
+background:#333;
+
+}
+
+.overlay{
+
+position:fixed;
+
+top:0;
+
+left:0;
+
+width:100%;
+
+height:100%;
+
+background:rgba(0,0,0,.45);
+
+display:none;
+
+z-index:1200;
+
+}
+
+.overlay.active{
+
+display:block;
+
+}
+
+.hero{
+
+margin-top:75px;
+
+height:340px;
+
+background:url('https://picsum.photos/900/900') center/cover;
+
+position:relative;
+
+}
+
+.hero::after{
+
+content:"";
+
+position:absolute;
+
+top:0;
+
+left:0;
+
+right:0;
+
+bottom:0;
+
+background:rgba(0,0,0,.55);
+
+}
+
+.hero-content{
+
+position:absolute;
+
+bottom:35px;
+
+left:20px;
+
+right:20px;
+
+z-index:2;
+
+}
+
+.hero h1{
+
+font-size:36px;
+
+margin-bottom:15px;
+
+}
+
+.hero p{
+
+opacity:.85;
+
+line-height:1.6;
+
+}
+
+.section{
+
+padding:20px;
+
+}
+
+.section-title{
+
+font-size:28px;
+
+margin-bottom:15px;
+
+}
+
+.horizontal{
+
+display:flex;
+
+overflow:auto;
+
+gap:15px;
+
+padding-bottom:10px;
+
+}
+
+.horizontal::-webkit-scrollbar{
+
+display:none;
+
+}
+
+.card{
+
+    min-width:180px;
+    background:#252525;
+    border-radius:18px;
+    overflow:hidden;
+    transition:.3s;
+    cursor:pointer;
+    box-shadow:0 8px 20px rgba(0,0,0,.35);
+}
+
+.card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 15px 35px rgba(0,0,0,.5);
+}
+
+.card:hover img{
+    transform:scale(1.06);
+}
+.card img{
+
+width:100%;
+
+height:220px;
+
+object-fit:cover;
+
+}
+
+.card h3{
+
+padding:12px;
+
+font-size:17px;
+
+}
+
+.grid{
+
+display:grid;
+
+grid-template-columns:repeat(2,1fr);
+
+gap:15px;
+
+}
+
+.category{
+
+    position:relative;
+    height:260px;
+    border-radius:18px;
+    overflow:hidden;
+    cursor:pointer;
+    transition:.3s;
+    box-shadow:0 8px 20px rgba(0,0,0,.35);
+}
+
+.category:hover{
+    transform:translateY(-8px);
+    box-shadow:0 15px 35px rgba(0,0,0,.5);
+}
+
+.category img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    transition:.4s;
+}
+
+.category:hover img{
+    transform:scale(1.06);
+}
+
+.category::after{
+
+content:"";
+
+position:absolute;
+
+inset:0;
+
+background:linear-gradient(transparent,black);
+
+}
+
+.category h2{
+
+position:absolute;
+
+bottom:20px;
+
+left:15px;
+
+z-index:2;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="sidebar" id="sidebar">
+
+<a href="#"><i class="fa fa-home"></i> Home</a>
+
+<a href="#"><i class="fa fa-fire"></i> Trending</a>
+
+<a href="#"><i class="fa fa-film"></i> Movies</a>
+
+<a href="#"><i class="fa fa-tv"></i> Series</a>
+
+<a href="#"><i class="fa fa-image"></i> Gallery</a>
+
+<a href="#"><i class="fa fa-heart"></i> Favorites</a>
+
+<a href="#"><i class="fa fa-user"></i> Account</a>
+
+</div>
+
+<div class="overlay" id="overlay"></div>
+
+<header>
+
+<div class="menu-btn" id="menu">
+
+<i class="fa fa-bars"></i>
+
+</div>
+
+<div class="search-box">
+
+<i class="fa fa-search"></i>
+
+<input type="text" placeholder="Search...">
+
+</div>
+
+<div class="profile">
+
+<i class="fa fa-circle-user"></i>
+
+</div>
+
+</header>
+
+<section class="hero">
+
+<div class="hero-content">
+
+<h1>Watch Your Favorite Anime</h1>
+
+<p>Browse thousands of anime, movies and shows with a modern streaming experience.</p>
+
+</div>
+
+</section>
+
+<!-- Paste the new section HERE -->
+
+<section class="libraries">
+
+    <h2>Explore Libraries</h2>
+
+    <div class="library-grid">
+
+        <a href="anime.html" class="library-card">
+            <h3>🎌 Anime</h3>
+            <p>Browse Japanese Anime</p>
+        </a>
+
+        <a href="donghua.html" class="library-card">
+            <h3>🐉 Donghua</h3>
+            <p>Chinese Animation</p>
+        </a>
+
+        <a href="hanime.html" class="library-card">
+            <h3>🔞 Hanime</h3>
+            <p>Adult Animation</p>
+        </a>
+
+        <a href="movies.html" class="library-card">
+            <h3>🎬 Movies</h3>
+            <p>Anime Movies</p>
+        </a>
+
+    </div>
+
+</section>
+
+<div class="section">
+
+    <div class="section-title">
+        Browse
+    </div>
+
+    ...
+
+<div class="section-title">
+
+Recent Uploads
+
+</div>
+
 <a href="bluesky.html" class="card">
-    <img src="https://cdn.myanimelist.net/images/anime/1015/138006.jpg" alt="Blue Sky cover">
+    <img src="https://picsum.photos/300/450?1">
     <h3>Blue Sky</h3>
 </a>
 
 <a href="watch.html" class="card">
-    <img src="https://cdn.myanimelist.net/images/anime/1171/109222.jpg" alt="Moon City cover">
+    <img src="https://picsum.photos/300/450?2">
     <h3>Moon City</h3>
 </a>
 
  <a href="shadowhero.html" class="card">
-    <img src="https://cdn.myanimelist.net/images/anime/1286/99889.jpg" alt="Shadow Hero cover">
+    <img src="https://picsum.photos/300/450?3">
     <h3>Shadow Hero</h3>
 </a>
 
 <a href="nightworld.html" class="card">
-    <img src="https://cdn.myanimelist.net/images/anime/6/73245.jpg" alt="Night World cover">
+    <img src="https://picsum.photos/300/450?4">
     <h3>Night World</h3>
 </a>
+
+</div>
+
+<div class="section">
+
+<div class="section-title">
+
+Browse
+
+</div>
+
+<div class="grid">
+
+<div class="category">
+
+<img src="https://picsum.photos/500/700?5">
+
+<h2>Trending</h2>
+
+</div>
+
+<div class="category">
+
+<img src="https://picsum.photos/500/700?6">
+
+<h2>Seasons</h2>
+
+</div>
+
+<div class="category">
+
+<img src="https://picsum.photos/500/700?7">
+
+<h2>Movies</h2>
+
+</div>
+
+<div class="category">
+
+<img src="https://picsum.photos/500/700?8">
+
+<h2>Collections</h2>
+
+</div>
+
+</div>
+
+</div>
+
+<script src="app.js"></script>
+
+  </body>
+</html>
