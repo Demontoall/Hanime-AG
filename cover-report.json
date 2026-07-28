@@ -1,0 +1,23 @@
+{
+  "updated": [
+    {
+      "file": "index.html",
+      "title": "Blue Sky",
+      "provider": "manual-preview",
+      "providerId": null,
+      "old": "https://picsum.photos/300/450?1",
+      "new": "https://cdn.myanimelist.net/images/anime/1015/138006.jpg"
+    },
+    {
+      "file": "index.html",
+      "title": "Moon City",
+      "provider": "manual-preview",
+      "providerId": null,
+      "old": "https://picsum.photos/300/450?2",
+      "new": "https://cdn.myanimelist.net/images/anime/1171/109222.jpg"
+    }
+  ],
+  "missing": [],
+  "duplicates": [],
+  "placeholders": []
+}
