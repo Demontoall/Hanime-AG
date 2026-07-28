@@ -50,7 +50,7 @@
       const a = document.createElement('a');
       a.href      = item.url  || 'watch.html';
       a.className = 'movie-card';
-      a.innerHTML = `<div class="card-thumb"><img src="${item.img||'https://picsum.photos/300/420?99'}" alt="${item.title}" loading="lazy"><div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div></div><h3>${item.title}</h3>`;
+      a.innerHTML = `<div class="card-thumb"><img src="${item.img||'https://picsum.photos/seed/hagfav/300/420'}" alt="${item.title}" loading="lazy"><div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div></div><h3>${item.title}</h3>`;
       favGrid.appendChild(a);
     });
   }

@@ -57,28 +57,34 @@
 
   /* ── 5. Search overlay ───────────────────────────────────── */
   // All searchable content — titles come from data-title attributes on cards/rows
+  // animeSlug must match a key in MAL map inside anime-images.js
+  // img is the seed-based picsum fallback shown while/if Jikan loads
   const ALL_TITLES = [
-    { title:'Solo Leveling',           meta:'Anime · Action',       url:'watch.html',      img:'https://picsum.photos/300/420?101' },
-    { title:'Jujutsu Kaisen',          meta:'Anime · Supernatural', url:'watch.html',      img:'https://picsum.photos/300/420?102' },
-    { title:'Demon Slayer',            meta:'Anime · Action',       url:'watch.html',      img:'https://picsum.photos/300/420?103' },
-    { title:'Attack on Titan',         meta:'Anime · Drama',        url:'watch.html',      img:'https://picsum.photos/300/420?104' },
-    { title:'One Piece',               meta:'Anime · Adventure',    url:'watch.html',      img:'https://picsum.photos/300/420?105' },
-    { title:'Naruto Shippuden',        meta:'Anime · Action',       url:'watch.html',      img:'https://picsum.photos/300/420?106' },
-    { title:'Bleach: TYBW',            meta:'Anime · Action',       url:'watch.html',      img:'https://picsum.photos/300/420?107' },
-    { title:'Vinland Saga',            meta:'Anime · Historical',   url:'watch.html',      img:'https://picsum.photos/300/420?108' },
-    { title:'Blue Sky',                meta:'Donghua · Xianxia',    url:'bluesky.html',    img:'https://picsum.photos/300/420?109' },
-    { title:'Night World',             meta:'Anime · Dark Fantasy', url:'nightworld.html', img:'https://picsum.photos/300/420?110' },
-    { title:'Shadow Hero',             meta:'Anime · Action',       url:'shadowhero.html', img:'https://picsum.photos/300/420?111' },
-    { title:'Battle Through the Heavens', meta:'Donghua · Cultivation', url:'watch.html', img:'https://picsum.photos/300/420?112' },
-    { title:'Soul Land',               meta:'Donghua · Fantasy',    url:'watch.html',      img:'https://picsum.photos/300/420?113' },
-    { title:'Perfect World',           meta:'Donghua · Xianxia',    url:'watch.html',      img:'https://picsum.photos/300/420?114' },
-    { title:"The King's Avatar",       meta:'Donghua · Modern',     url:'watch.html',      img:'https://picsum.photos/300/420?115' },
-    { title:'Your Name',               meta:'Movie · Romance',      url:'watch.html',      img:'https://picsum.photos/300/420?116' },
-    { title:'Suzume',                  meta:'Movie · Adventure',    url:'watch.html',      img:'https://picsum.photos/300/420?117' },
-    { title:'A Silent Voice',          meta:'Movie · Drama',        url:'watch.html',      img:'https://picsum.photos/300/420?118' },
-    { title:'Spirited Away',           meta:'Movie · Fantasy',      url:'watch.html',      img:'https://picsum.photos/300/420?119' },
-    { title:'Overflow',                meta:'Hanime · Romance',     url:'watch.html',      img:'https://picsum.photos/300/420?120' },
-    { title:'Chainsaw Man',            meta:'Anime · Action',       url:'watch.html',      img:'https://picsum.photos/300/420?121' },
+    { title:'Solo Leveling',              meta:'Anime · Action',          url:'watch.html',      animeSlug:'solo-leveling',         img:'https://picsum.photos/seed/sl2024/300/420' },
+    { title:'Jujutsu Kaisen',             meta:'Anime · Supernatural',    url:'watch.html',      animeSlug:'jujutsu-kaisen',        img:'https://picsum.photos/seed/jjk2024/300/420' },
+    { title:'Demon Slayer',               meta:'Anime · Action',          url:'watch.html',      animeSlug:'demon-slayer',          img:'https://picsum.photos/seed/demonslayer/300/420' },
+    { title:'Attack on Titan',            meta:'Anime · Drama',           url:'watch.html',      animeSlug:'attack-on-titan',       img:'https://picsum.photos/seed/aot2024/300/420' },
+    { title:'One Piece',                  meta:'Anime · Adventure',       url:'watch.html',      animeSlug:'one-piece',             img:'https://picsum.photos/seed/onepiece/300/420' },
+    { title:'Naruto Shippuden',           meta:'Anime · Action',          url:'watch.html',      animeSlug:'naruto-shippuden',      img:'https://picsum.photos/seed/naruto/300/420' },
+    { title:'Bleach: TYBW',               meta:'Anime · Action',          url:'watch.html',      animeSlug:'bleach-tybw',           img:'https://picsum.photos/seed/bleachtybw/300/420' },
+    { title:'Vinland Saga',               meta:'Anime · Historical',      url:'watch.html',      animeSlug:'vinland-saga',          img:'https://picsum.photos/seed/vinland/300/420' },
+    { title:'Chainsaw Man',               meta:'Anime · Action',          url:'watch.html',      animeSlug:'chainsaw-man',          img:'https://picsum.photos/seed/chainsawman/300/420' },
+    { title:'My Hero Academia',           meta:'Anime · Action',          url:'watch.html',      animeSlug:'my-hero-academia',      img:'https://picsum.photos/seed/mha2024/300/420' },
+    { title:'Battle Through the Heavens', meta:'Donghua · Cultivation',   url:'watch.html',      animeSlug:'battle-through-heavens',img:'https://picsum.photos/seed/bttoh/300/420' },
+    { title:'Soul Land',                  meta:'Donghua · Fantasy',       url:'watch.html',      animeSlug:'soul-land',             img:'https://picsum.photos/seed/soulland/300/420' },
+    { title:'Perfect World',              meta:'Donghua · Xianxia',       url:'watch.html',      animeSlug:'perfect-world',         img:'https://picsum.photos/seed/perfectworld/300/420' },
+    { title:"The King's Avatar",          meta:'Donghua · Modern',        url:'watch.html',      animeSlug:'kings-avatar',          img:'https://picsum.photos/seed/kingsavatar/300/420' },
+    { title:'Your Name',                  meta:'Movie · Romance',         url:'watch.html',      animeSlug:'your-name',             img:'https://picsum.photos/seed/yourname2016/300/420' },
+    { title:'Suzume',                     meta:'Movie · Adventure',       url:'watch.html',      animeSlug:'suzume',                img:'https://picsum.photos/seed/suzume2022/300/420' },
+    { title:'A Silent Voice',             meta:'Movie · Drama',           url:'watch.html',      animeSlug:'a-silent-voice',        img:'https://picsum.photos/seed/silentvoice/300/420' },
+    { title:'Spirited Away',              meta:'Movie · Fantasy',         url:'watch.html',      animeSlug:'spirited-away',         img:'https://picsum.photos/seed/spiritedaway/300/420' },
+    { title:'Princess Mononoke',          meta:'Movie · Fantasy',         url:'watch.html',      animeSlug:'princess-mononoke',     img:'https://picsum.photos/seed/mononoke/300/420' },
+    { title:'Weathering With You',        meta:'Movie · Romance',         url:'watch.html',      animeSlug:'weathering-with-you',   img:'https://picsum.photos/seed/weathering/300/420' },
+    { title:'Overflow',                   meta:'Hanime · Romance',        url:'watch.html',      animeSlug:'overflow',              img:'https://picsum.photos/seed/overflow-anime/300/420' },
+    // Fictional originals — no animeSlug (picsum seed fallback only, never wrong cover)
+    { title:'Night World',                meta:'Anime · Dark Fantasy',    url:'nightworld.html',                                    img:'https://picsum.photos/seed/nightworld-dark/300/420' },
+    { title:'Shadow Hero',                meta:'Anime · Action',          url:'shadowhero.html',                                    img:'https://picsum.photos/seed/shadowhero-action/300/420' },
+    { title:'Blue Sky',                   meta:'Donghua · Xianxia',       url:'bluesky.html',                                       img:'https://picsum.photos/seed/bluesky-xianxia/300/420' },
   ];
 
   const searchOverlay = document.getElementById('searchOverlay');
@@ -119,9 +125,9 @@
       return;
     }
     searchGrid.innerHTML = matches.map(t => `
-      <a href="${t.url}" class="card" onclick="closeSearch && window._searchClose && window._searchClose()">
+      <a href="${t.url}" class="card" onclick="window._searchClose&&window._searchClose()">
         <div class="card-thumb">
-          <img src="${t.img}" alt="${t.title}" loading="lazy">
+          <img ${t.animeSlug ? `data-anime="${t.animeSlug}"` : ''} src="${t.img}" alt="${t.title}" loading="lazy">
           <div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
         </div>
         <div class="card-info">
@@ -129,6 +135,9 @@
           <p class="card-meta">${t.meta}</p>
         </div>
       </a>`).join('');
+
+    // Trigger real image loading for search results
+    if (window._animeImagesRun) window._animeImagesRun();
   }
 
   if (searchInput) {
