@@ -57,8 +57,8 @@
 
   /* ── 5. Search overlay ───────────────────────────────────── */
   // All searchable content — titles come from data-title attributes on cards/rows
-  // animeSlug must match a key in MAL map inside anime-images.js
-  // img is the seed-based picsum fallback shown while/if Jikan loads
+  // animeSlug must match a key in the AL map inside anime-images.js (AniList IDs)
+  // img is the seed-based picsum fallback shown while AniList cover loads
   const ALL_TITLES = [
     { title:'Solo Leveling',              meta:'Anime · Action',          url:'watch.html',      animeSlug:'solo-leveling',         img:'https://picsum.photos/seed/sl2024/300/420' },
     { title:'Jujutsu Kaisen',             meta:'Anime · Supernatural',    url:'watch.html',      animeSlug:'jujutsu-kaisen',        img:'https://picsum.photos/seed/jjk2024/300/420' },
@@ -81,6 +81,9 @@
     { title:'Princess Mononoke',          meta:'Movie · Fantasy',         url:'watch.html',      animeSlug:'princess-mononoke',     img:'https://picsum.photos/seed/mononoke/300/420' },
     { title:'Weathering With You',        meta:'Movie · Romance',         url:'watch.html',      animeSlug:'weathering-with-you',   img:'https://picsum.photos/seed/weathering/300/420' },
     { title:'Overflow',                   meta:'Hanime · Romance',        url:'watch.html',      animeSlug:'overflow',              img:'https://picsum.photos/seed/overflow-anime/300/420' },
+    { title:'Stellar Transformations',     meta:'Donghua · Xianxia',       url:'watch.html',      animeSlug:'stellar-transformations',     img:'https://picsum.photos/seed/stellar-xingchen/300/420' },
+    { title:'Tales of Demons and Gods',   meta:'Donghua · Cultivation',   url:'watch.html',      animeSlug:'tales-of-demons-and-gods',     img:'https://picsum.photos/seed/tales-demons-gods/300/420' },
+    { title:'Isekai Harem Monogatari',    meta:'Hanime · Fantasy',        url:'watch.html',      animeSlug:'isekai-harem-monogatari',       img:'https://picsum.photos/seed/isekai-harem-mono/300/420' },
     // Fictional originals — no animeSlug (picsum seed fallback only, never wrong cover)
     { title:'Night World',                meta:'Anime · Dark Fantasy',    url:'nightworld.html',                                    img:'https://picsum.photos/seed/nightworld-dark/300/420' },
     { title:'Shadow Hero',                meta:'Anime · Action',          url:'shadowhero.html',                                    img:'https://picsum.photos/seed/shadowhero-action/300/420' },

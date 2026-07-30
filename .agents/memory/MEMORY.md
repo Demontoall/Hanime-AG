@@ -1,0 +1,1 @@
+- [AniList migration](anilist-migration.md) — Jikan replaced with AniList GraphQL; all slug→ID mappings and cache key prefix changed.
