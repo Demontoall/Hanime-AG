@@ -1,80 +1,107 @@
 /* ============================================================
-   Hanime AG — AniList Image & Metadata Loader  v4
+   Hanime AG — AniList Image & Metadata Loader  v5
    ============================================================
    DATA SOURCE : AniList GraphQL API (https://graphql.anilist.co)
-                 No API key required. Replaces Jikan v3.
-   FAST PATH   : Known AniList IDs resolved with a single query
-   DYNAMIC     : Unknown slugs searched by title via AniList search
-   CACHE       : sessionStorage — instant on repeat page visits
-   RATE LIMIT  : AniList allows 90 req/min; 700ms gate + shared
-                 cross-page timestamp keeps us well under the limit
-   RETRY       : Single auto-retry after 2.5s on 429 / 5xx
-   METADATA    : window._anilistData[slug] holds full metadata
-                 (title, description, genres, score, banner, etc.)
-   BANNER      : Applied to [data-anime-banner="slug"] elements;
-                 falls back to cover image when no banner exists
+                 No API key required.
+
+   STRATEGY
+   ────────
+   1. On page load, collect every unique slug from img[data-anime]
+      and [data-anime-banner] elements.
+   2. Slugs that map to a known AniList ID (the AL map below) are
+      fetched in ONE batched Page query (id_in:[…]).  A single
+      network call delivers all covers simultaneously instead of
+      one call per image.
+   3. Slugs NOT in the AL map (rare dynamic entries) are resolved
+      via individual title-search queries, processed in sequence.
+   4. All results are cached in sessionStorage so repeat visits /
+      cross-page navigation are instant (zero API calls).
+   5. Images are applied directly via img.src — no new Image()
+      preload wrapper that can lose its reference before onload.
+
+   CACHE KEY PREFIX : hag2_   (changed from hag_ to drop Jikan data)
+   RATE LIMIT       : AniList allows 90 req/min; the batch approach
+                      typically uses ≤2 requests per page.
+   METADATA         : window._anilistData[slug] holds the full
+                      object (title, description, genres, score,
+                      episodes, status, season, year, studio,
+                      cover, banner).
+   BANNER           : [data-anime-banner="slug"] elements receive
+                      the wide banner (falls back to cover).
    ============================================================ */
 
 /* ── AniList endpoint ───────────────────────────────────────── */
 const AL_URL = 'https://graphql.anilist.co';
 
-/* ── Known AniList IDs (fast path — no search call needed) ──── */
+/* ── Known AniList IDs — fast-path, included in batch query ─── */
 const AL = {
   /* Anime */
-  'solo-leveling':          151807,
-  'jujutsu-kaisen':         113415,
-  'demon-slayer':           101922,
-  'attack-on-titan':        16498,
-  'one-piece':              21,
-  'naruto-shippuden':       1735,
-  'bleach-tybw':            116674,
-  'vinland-saga':           101348,
-  'chainsaw-man':           127230,
-  'my-hero-academia':       21459,
+  'solo-leveling':           151807,
+  'jujutsu-kaisen':          113415,
+  'demon-slayer':            101922,
+  'attack-on-titan':         16498,
+  'one-piece':               21,
+  'naruto-shippuden':        1735,
+  'bleach-tybw':             116674,
+  'vinland-saga':            101348,
+  'chainsaw-man':            127230,
+  'my-hero-academia':        21459,
   /* Movies */
-  'your-name':              21519,
-  'suzume':                 142770,
-  'a-silent-voice':         20954,
-  'spirited-away':          199,
-  'princess-mononoke':      164,
-  'howls-moving-castle':    431,
-  'weathering-with-you':    106286,
-  'boy-and-the-heron':      109979,
+  'your-name':               21519,
+  'suzume':                  142770,
+  'a-silent-voice':          20954,
+  'spirited-away':           199,
+  'princess-mononoke':       164,
+  'howls-moving-castle':     431,
+  'weathering-with-you':     106286,
+  'boy-and-the-heron':       109979,
   /* Hanime */
-  'overflow':               113417,
-  'redo-of-healer':         113425,
+  'overflow':                113417,
+  'redo-of-healer':          113425,
   /* Donghua */
-  'soul-land':              101920,
-  'kings-avatar':           98861,
+  'soul-land':               101920,
+  'kings-avatar':            98861,
   'stellar-transformations': 105626,
-  'tales-of-demons-and-gods': 101916,
+  'tales-of-demons-and-gods':101916,
   'isekai-harem-monogatari': 118166,
-  /* battle-through-heavens / perfect-world: not on AniList →
-     falls through to dynamic title search (picsum fallback on miss) */
+  /* battle-through-heavens / perfect-world : not on AniList —
+     will fall through to title-search (picsum on miss)          */
 };
 
-/* ── Cache key prefixes (hag2_ prefix avoids stale Jikan keys) ─ */
+/* ── sessionStorage helpers ─────────────────────────────────── */
 const PFX      = 'hag2_';
-const IMG_PFX  = PFX + 'img_';   // IMG_PFX + alId  → cover URL
-const BAN_PFX  = PFX + 'ban_';   // BAN_PFX + alId  → banner URL
-const MID_PFX  = PFX + 'mid_';   // MID_PFX + slug  → alId (searched)
-const META_PFX = PFX + 'met_';   // META_PFX + alId → JSON metadata
-const LAST_KEY = PFX + 'last';   // last API call timestamp (ms)
-
-const MIN_GAP  = 700;    // ms between any AniList request
-const RETRY_MS = 2500;   // ms to wait before retry on 429/5xx
-
-/* ── Metadata store (slug → object) exposed globally ───────── */
-window._anilistData = window._anilistData || {};
-
-const wait = ms => new Promise(r => setTimeout(r, ms));
+const IMG_PFX  = PFX + 'img_';   // + alId  → cover URL
+const BAN_PFX  = PFX + 'ban_';   // + alId  → banner URL
+const MID_PFX  = PFX + 'mid_';   // + slug  → alId (searched slugs)
+const META_PFX = PFX + 'met_';   // + alId  → JSON metadata blob
 
 const ss = {
   get: k      => { try { return sessionStorage.getItem(k) || null; } catch { return null; } },
   set: (k, v) => { try { sessionStorage.setItem(k, String(v));     } catch {} },
 };
 
-/* ── Slug → human-readable title override map ───────────────── */
+/* ── Metadata store exposed globally ─────────────────────────── */
+window._anilistData = window._anilistData || {};
+
+const wait = ms => new Promise(r => setTimeout(r, ms));
+
+/* ── GraphQL fields requested for every media entry ────────── */
+const FIELDS = `
+  id
+  title { english romaji native }
+  coverImage { extraLarge large }
+  bannerImage
+  description(asHtml: false)
+  genres
+  averageScore
+  episodes
+  status
+  season
+  seasonYear
+  studios(isMain: true) { nodes { name isAnimationStudio } }
+`;
+
+/* ── Slug → search title overrides ─────────────────────────── */
 const TITLE_OVERRIDES = {
   'bleach-tybw':               'Bleach Thousand Year Blood War',
   'a-silent-voice':            'Koe no Katachi',
@@ -99,194 +126,144 @@ function slugToTitle(slug) {
     || slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 }
 
-/* ── Rate gate ───────────────────────────────────────────────── */
-async function rateGate() {
-  const sinceMs = Date.now() - (+ss.get(LAST_KEY) || 0);
-  if (sinceMs < MIN_GAP) await wait(MIN_GAP - sinceMs);
-  ss.set(LAST_KEY, Date.now());
-}
-
-/* ── Core AniList GraphQL fetch ─────────────────────────────── */
-const MEDIA_FIELDS = `
-  id
-  title { english romaji native }
-  coverImage { extraLarge large }
-  bannerImage
-  description(asHtml: false)
-  genres
-  averageScore
-  episodes
-  status
-  season
-  seasonYear
-  studios(isMain: true) { nodes { name isAnimationStudio } }
-`;
-
-async function alFetch(body, retry = true) {
+/* ── Low-level GraphQL POST ─────────────────────────────────── */
+async function gqlFetch(query, variables, retry = true) {
   try {
-    await rateGate();
     const r = await fetch(AL_URL, {
-      method: 'POST',
+      method:  'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify(body),
-      signal: AbortSignal.timeout(10000),
+      body:    JSON.stringify({ query, variables }),
+      signal:  AbortSignal.timeout(12000),
     });
     if (r.status === 429 || r.status >= 500) {
-      if (retry) { await wait(RETRY_MS); return alFetch(body, false); }
+      if (retry) { await wait(2500); return gqlFetch(query, variables, false); }
       return null;
     }
     if (!r.ok) return null;
     const json = await r.json();
-    if (json.errors) return null;
-    return json.data?.Media || null;
+    /* Return data even when there are partial errors */
+    return json.data || null;
   } catch { return null; }
 }
 
-/* ── Fetch by AniList ID ─────────────────────────────────────── */
-async function fetchById(alId) {
-  /* Check image cache first */
-  const cachedImg = ss.get(IMG_PFX + alId);
-  if (cachedImg) return buildFromCache(alId, cachedImg);
-
-  const data = await alFetch({
-    query: `query($id:Int){Media(id:$id,type:ANIME){${MEDIA_FIELDS}}}`,
-    variables: { id: alId },
-  });
-  if (!data) return null;
-  return storeAndReturn(data);
-}
-
-/* ── Search AniList by title → returns alId or null ─────────── */
-async function searchAlId(title) {
-  const data = await alFetch({
-    query: `query($s:String){Media(search:$s,type:ANIME,sort:SEARCH_MATCH){${MEDIA_FIELDS}}}`,
-    variables: { s: title },
-  });
-  if (!data) return null;
-  storeAndReturn(data);
-  return data.id;
-}
-
-/* ── Persist media data to sessionStorage & metadata store ───── */
-function storeAndReturn(data) {
-  const alId  = data.id;
-  const cover = data.coverImage?.extraLarge || data.coverImage?.large || null;
-  /* Banner falls back to cover when absent */
-  const banner = data.bannerImage || cover;
+/* ── Persist one media object → sessionStorage + metadata map ─ */
+function ingest(mediaObj) {
+  if (!mediaObj?.id) return null;
+  const alId  = mediaObj.id;
+  const cover = mediaObj.coverImage?.extraLarge
+             || mediaObj.coverImage?.large
+             || null;
+  const banner = mediaObj.bannerImage || cover;
 
   if (cover)  ss.set(IMG_PFX + alId, cover);
   if (banner) ss.set(BAN_PFX + alId, banner);
 
-  /* Build metadata object */
-  const studio = (data.studios?.nodes || [])
+  const studio = (mediaObj.studios?.nodes || [])
     .find(n => n.isAnimationStudio)?.name
-    || data.studios?.nodes?.[0]?.name
+    || mediaObj.studios?.nodes?.[0]?.name
     || null;
 
   const meta = {
-    id:          alId,
-    titleEn:     data.title?.english  || null,
-    titleRomaji: data.title?.romaji   || null,
-    titleNative: data.title?.native   || null,
+    id: alId,
+    titleEn:     mediaObj.title?.english  || null,
+    titleRomaji: mediaObj.title?.romaji   || null,
+    titleNative: mediaObj.title?.native   || null,
     cover,
     banner,
-    description: data.description     || null,
-    genres:      data.genres          || [],
-    score:       data.averageScore    || null,
-    episodes:    data.episodes        || null,
-    status:      data.status          || null,
-    season:      data.season          || null,
-    year:        data.seasonYear      || null,
+    description: mediaObj.description    || null,
+    genres:      mediaObj.genres         || [],
+    score:       mediaObj.averageScore   || null,
+    episodes:    mediaObj.episodes       || null,
+    status:      mediaObj.status         || null,
+    season:      mediaObj.season         || null,
+    year:        mediaObj.seasonYear     || null,
     studio,
   };
 
-  /* Cache serialised metadata */
   try { ss.set(META_PFX + alId, JSON.stringify(meta)); } catch {}
-
   return meta;
 }
 
-/* ── Rebuild metadata from cache (image only path) ───────────── */
-function buildFromCache(alId, cachedImg) {
+/* ── Rebuild metadata from sessionStorage cache ─────────────── */
+function fromCache(alId) {
   try {
     const raw = ss.get(META_PFX + alId);
     if (raw) return JSON.parse(raw);
   } catch {}
-  /* Partial cache hit — at least return cover */
-  return {
-    id: alId, cover: cachedImg,
-    banner: ss.get(BAN_PFX + alId) || cachedImg,
-    titleEn: null, titleRomaji: null, titleNative: null,
-    description: null, genres: [], score: null,
-    episodes: null, status: null, season: null, year: null, studio: null,
-  };
+  const cover  = ss.get(IMG_PFX + alId) || null;
+  const banner = ss.get(BAN_PFX + alId) || cover;
+  return cover ? { id: alId, cover, banner, titleEn: null, titleRomaji: null,
+    titleNative: null, description: null, genres: [], score: null,
+    episodes: null, status: null, season: null, year: null, studio: null } : null;
 }
 
-/* ── Resolve slug → full metadata object ────────────────────── */
-async function resolveSlug(slug) {
-  /* 1. Fast path — known AniList ID */
-  let alId = AL[slug] || null;
+/* ── BATCH fetch: all known IDs in one Page query ─────────────
+   AniList Page query with id_in returns up to 50 entries.
+   We split into chunks of 50 just in case future AL map grows. */
+async function batchFetchIds(ids) {
+  const results = new Map(); // alId → meta
+  const CHUNK   = 50;
 
-  /* 2. Previously searched + cached */
-  if (!alId) {
-    const hit = ss.get(MID_PFX + slug);
-    if (hit) alId = +hit;
+  for (let i = 0; i < ids.length; i += CHUNK) {
+    const chunk = ids.slice(i, i + CHUNK);
+    const data  = await gqlFetch(
+      `query($ids:[Int]){Page(perPage:${CHUNK}){media(id_in:$ids,type:ANIME){${FIELDS}}}}`,
+      { ids: chunk }
+    );
+    const mediaList = data?.Page?.media || [];
+    mediaList.forEach(m => {
+      const meta = ingest(m);
+      if (meta) results.set(m.id, meta);
+    });
+    if (i + CHUNK < ids.length) await wait(700); // only delay if more chunks remain
   }
+  return results;
+}
 
-  /* 3. Serve from full metadata cache (covers repeated calls) */
-  if (alId) {
-    const cachedImg = ss.get(IMG_PFX + alId);
-    if (cachedImg) return buildFromCache(alId, cachedImg);
-  }
-
-  /* 4. Fetch by known ID */
-  if (alId) {
-    const meta = await fetchById(alId);
-    return meta;
-  }
-
-  /* 5. Dynamic title search */
+/* ── Single title-search → ingest → return meta or null ─────── */
+async function searchOne(slug) {
   const title = slugToTitle(slug);
-  const foundId = await searchAlId(title);
-  if (foundId) {
-    ss.set(MID_PFX + slug, foundId);
-    const cachedImg = ss.get(IMG_PFX + foundId);
-    if (cachedImg) return buildFromCache(foundId, cachedImg);
-  }
-  return null;
+  const data  = await gqlFetch(
+    `query($s:String){Media(search:$s,type:ANIME,sort:SEARCH_MATCH){${FIELDS}}}`,
+    { s: title }
+  );
+  const m = data?.Media;
+  if (!m) return null;
+  const meta = ingest(m);
+  if (meta) ss.set(MID_PFX + slug, m.id);
+  return meta;
 }
 
-/* ── Apply resolved metadata to DOM ─────────────────────────── */
+/* ── Apply metadata to DOM elements for one slug ─────────────── */
 function applyMeta(slug, meta) {
   if (!meta) return;
-
-  /* Cover images */
-  document.querySelectorAll(`img[data-anime="${slug}"]`).forEach(img => {
-    if (!meta.cover) { img.classList.remove('img-loading'); return; }
-    const tmp    = new window.Image();
-    tmp.onload   = () => { img.src = meta.cover; img.classList.remove('img-loading'); };
-    tmp.onerror  = () => img.classList.remove('img-loading');
-    tmp.src      = meta.cover;
-  });
-
-  /* Banner images (data-anime-banner="slug") */
-  document.querySelectorAll(`[data-anime-banner="${slug}"]`).forEach(el => {
-    const url = meta.banner || meta.cover;
-    if (!url) return;
-    if (el.tagName === 'IMG') {
-      el.src = url;
-    } else {
-      el.style.backgroundImage = `url('${url}')`;
-    }
-  });
-
-  /* Expose metadata globally */
   window._anilistData[slug] = meta;
+
+  /* Cover images — set src directly; picsum placeholder visible until load */
+  if (meta.cover) {
+    document.querySelectorAll(`img[data-anime="${CSS.escape(slug)}"]`).forEach(img => {
+      img.src = meta.cover;
+      img.classList.remove('img-loading');
+    });
+  } else {
+    document.querySelectorAll(`img[data-anime="${CSS.escape(slug)}"]`).forEach(img => {
+      img.classList.remove('img-loading');
+    });
+  }
+
+  /* Banner images */
+  const bannerUrl = meta.banner || meta.cover;
+  if (bannerUrl) {
+    document.querySelectorAll(`[data-anime-banner="${CSS.escape(slug)}"]`).forEach(el => {
+      if (el.tagName === 'IMG') { el.src = bannerUrl; }
+      else { el.style.backgroundImage = `url('${bannerUrl}')`; }
+    });
+  }
 }
 
 /* ── Main entry point ────────────────────────────────────────── */
 async function run() {
-  /* Collect all unique slugs from both cover and banner targets */
+  /* 1. Collect unique slugs from the page */
   const slugSet = new Set();
   document.querySelectorAll('img[data-anime], [data-anime-banner]').forEach(el => {
     const slug = el.dataset.anime || el.dataset.animeBanner;
@@ -297,23 +274,76 @@ async function run() {
   });
   if (!slugSet.size) return;
 
+  /* 2. Partition: cached | known-id (batch) | unknown (search) */
+  const toFetch   = [];   // alIds to fetch in batch
+  const toSearch  = [];   // slugs needing title-search
+  const slugToId  = {};   // slug → alId (for mapping results back)
+
   for (const slug of slugSet) {
-    /* Quick full-cache check — skip async resolveSlug entirely */
     const alId = AL[slug] || (+ss.get(MID_PFX + slug) || null);
+
     if (alId) {
-      const cachedImg = ss.get(IMG_PFX + alId);
-      if (cachedImg) {
-        applyMeta(slug, buildFromCache(alId, cachedImg));
-        continue;
+      const cached = fromCache(alId);
+      if (cached) {
+        applyMeta(slug, cached);          // instant — no network needed
+      } else {
+        toFetch.push(alId);
+        slugToId[alId] = slugToId[alId] || [];
+        slugToId[alId].push(slug);
+      }
+    } else {
+      toSearch.push(slug);
+    }
+  }
+
+  /* 3. Batch-fetch all known IDs in one (or two) requests */
+  if (toFetch.length) {
+    const idSet    = [...new Set(toFetch)];   // dedupe
+    const fetched  = await batchFetchIds(idSet);
+
+    /* Map results back to slugs */
+    for (const [alId, meta] of fetched) {
+      const slugs = slugToId[alId] || [];
+      /* Also handle slugs that share the same alId */
+      for (const slug of slugSet) {
+        if ((AL[slug] || +ss.get(MID_PFX + slug)) === alId) {
+          applyMeta(slug, meta);
+        }
       }
     }
-    const meta = await resolveSlug(slug);
-    applyMeta(slug, meta);
+
+    /* Slugs whose ID was in toFetch but got no result → clear shimmer */
+    for (const alId of idSet) {
+      if (!fetched.has(alId)) {
+        (slugToId[alId] || []).forEach(slug => {
+          document.querySelectorAll(`img[data-anime="${CSS.escape(slug)}"]`)
+            .forEach(img => img.classList.remove('img-loading'));
+        });
+      }
+    }
+  }
+
+  /* 4. Search for unknown slugs one at a time (rare) */
+  for (const slug of toSearch) {
+    const cached = ss.get(MID_PFX + slug)
+      ? fromCache(+ss.get(MID_PFX + slug)) : null;
+
+    if (cached) {
+      applyMeta(slug, cached);
+    } else {
+      const meta = await searchOne(slug);
+      applyMeta(slug, meta);             // applyMeta handles null gracefully
+      if (!meta) {
+        /* Clear shimmer for this slug so picsum fallback shows cleanly */
+        document.querySelectorAll(`img[data-anime="${CSS.escape(slug)}"]`)
+          .forEach(img => img.classList.remove('img-loading'));
+      }
+      await wait(700);                   // rate-gate between individual searches
+    }
   }
 }
 
 /* ── Public API ─────────────────────────────────────────────── */
-/* Re-trigger after injecting dynamic cards (search overlay etc.) */
 window._animeImagesRun = run;
 
 if (document.readyState === 'loading') {
