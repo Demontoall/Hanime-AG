@@ -46,8 +46,13 @@
 
   <!-- Info -->
   <div class="watch-info">
-    <p class="watch-series-name">Now Watching</p>
-    <h1 class="watch-title">Moon City</h1>
+    <p class="watch-series-name" id="watchSeriesLabel">Now Watching</p>
+    <div class="watch-title-row">
+      <h1 class="watch-title" id="watchTitle">Solo Leveling</h1>
+      <button class="watch-fav-btn" id="watchFavBtn" aria-label="Add to favourites">
+        <i class="fa-regular fa-heart"></i>
+      </button>
+    </div>
     <p class="watch-episode-label" id="epLabel">Episode 1</p>
     <p class="watch-desc">
       Stream links will be connected to real sources as the project progresses.
@@ -103,19 +108,120 @@
 </main>
 
 <script src="app.js"></script>
-<script>
-  // Show iframe and hide placeholder on play
+<script src="anime-images.js"></script>
+<script type="module" src="auth-ui.js"></script>
+
+<script type="module">
+  import { auth, onAuthStateChanged } from './auth.js';
+  import { addFavourite, removeFavourite, getFavouriteSlugs, addToHistory } from './favorites-client.js';
+
+  // ── Slug → title map (compact) ──────────────────────────
+  const TITLES = {
+    'solo-leveling':          'Solo Leveling',
+    'jujutsu-kaisen':         'Jujutsu Kaisen',
+    'demon-slayer':           'Demon Slayer',
+    'attack-on-titan':        'Attack on Titan',
+    'vinland-saga':           'Vinland Saga',
+    'bleach-tybw':            'Bleach: TYBW',
+    'chainsaw-man':           'Chainsaw Man',
+    'overflow':               'Overflow',
+    'your-name':              'Your Name',
+    'suzume':                 'Suzume',
+    'a-silent-voice':         'A Silent Voice',
+    'spirited-away':          'Spirited Away',
+    'princess-mononoke':      'Princess Mononoke',
+    'one-piece':              'One Piece',
+    'naruto-shippuden':       'Naruto Shippuden',
+    'my-hero-academia':       'My Hero Academia',
+    'weathering-with-you':    'Weathering with You',
+  };
+
+  // ── Read slug from URL ──────────────────────────────────
+  const slug  = new URLSearchParams(location.search).get('slug') || 'solo-leveling';
+  const title = TITLES[slug] || slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+
+  document.getElementById('watchTitle').textContent = title;
+  document.title = `${title} — Hanime AG`;
+
+  // ── Auth state: fav button + history ───────────────────
+  let _user = null;
+  let _isFav = false;
+
+  const favBtn = document.getElementById('watchFavBtn');
+
+  onAuthStateChanged(auth, async user => {
+    _user = user;
+    if (user) {
+      try {
+        const slugSet = await getFavouriteSlugs(user.uid);
+        _isFav = slugSet.has(slug);
+        updateFavBtn();
+      } catch (_) {}
+    } else {
+      _isFav = false;
+      updateFavBtn();
+    }
+  });
+
+  function updateFavBtn() {
+    favBtn.innerHTML = _isFav
+      ? '<i class="fa-solid fa-heart" style="color:var(--accent)"></i>'
+      : '<i class="fa-regular fa-heart"></i>';
+    favBtn.setAttribute('aria-label', _isFav ? 'Remove from favourites' : 'Add to favourites');
+  }
+
+  favBtn.addEventListener('click', async () => {
+    if (!_user) {
+      window._hagToast?.('Sign in to save favourites ✨');
+      setTimeout(() => { window.location.href = `login.html?returnTo=${encodeURIComponent(location.pathname + location.search)}`; }, 900);
+      return;
+    }
+    const wasOn = _isFav;
+    _isFav = !wasOn;
+    updateFavBtn();
+    try {
+      if (wasOn) {
+        await removeFavourite(_user.uid, slug);
+        window._hagToast?.('Removed from favourites');
+      } else {
+        const img = document.querySelector(`img[data-anime="${slug}"]`)?.src
+                 || `https://picsum.photos/seed/${slug}/300/420`;
+        await addFavourite(_user.uid, slug, { title, img, url: `watch.html?slug=${slug}` });
+        window._hagToast?.('Added to favourites ❤');
+      }
+    } catch (err) {
+      console.error('[HAG] Fav error:', err);
+      _isFav = wasOn;
+      updateFavBtn();
+    }
+  });
+
+  // ── Player ──────────────────────────────────────────────
   const placeholder = document.getElementById('videoPlaceholder');
   const frame       = document.getElementById('videoFrame');
+
+  let historyLogged = false;
+
   function startPlay() {
     placeholder.style.display = 'none';
     frame.style.display       = 'block';
     frame.src                 = frame.dataset.src;
-  }
-  placeholder.addEventListener('click', startPlay);
-  placeholder.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') startPlay(); });
 
-  // Episode click highlights
+    // Log to watch history once per page load
+    if (!historyLogged && _user) {
+      historyLogged = true;
+      const img = `https://picsum.photos/seed/${slug}/300/420`;
+      addToHistory(_user.uid, slug, { title, img, url: `watch.html?slug=${slug}` })
+        .catch(e => console.error('[HAG] History error:', e));
+    }
+  }
+
+  placeholder.addEventListener('click', startPlay);
+  placeholder.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') startPlay();
+  });
+
+  // ── Episode list ────────────────────────────────────────
   document.querySelectorAll('.episode-item').forEach((item, i) => {
     item.addEventListener('click', e => {
       e.preventDefault();
@@ -123,7 +229,6 @@
       item.classList.add('active');
       const epLabel = document.getElementById('epLabel');
       if (epLabel) epLabel.textContent = `Episode ${i + 1}`;
-      // Reset player
       frame.style.display = 'none';
       frame.src = '';
       placeholder.style.display = 'flex';

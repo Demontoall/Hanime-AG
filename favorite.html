@@ -17,10 +17,7 @@
   <a href="index.html" class="back-btn" aria-label="Back to home">
     <i class="fa-solid fa-arrow-left"></i>
   </a>
-  <div class="search-box" role="search">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <input type="text" placeholder="Search favourites…" aria-label="Search favourites">
-  </div>
+  <h2>Favourites</h2>
   <a href="account.html" class="profile-btn" aria-label="My account">
     <i class="fa-solid fa-circle-user"></i>
   </a>
@@ -29,29 +26,120 @@
 <main class="page-content" role="main">
   <h1><i class="fa-solid fa-heart" style="color:var(--accent);margin-right:10px;font-size:20px"></i>Favourites</h1>
 
-  <div class="empty-state" id="emptyFav">
+  <!-- Auth gate — shown while checking auth -->
+  <div id="loadingState" class="empty-state">
+    <i class="fa-solid fa-circle-notch fa-spin" style="color:var(--accent)"></i>
+  </div>
+
+  <!-- Not signed in -->
+  <div class="empty-state" id="authGate" hidden>
+    <i class="fa-regular fa-heart"></i>
+    <h3>Sign in to view favourites</h3>
+    <p>Create a free account to save your favourite titles<br>and access them from any device.</p>
+    <div class="auth-cta-btns" style="margin-top:20px;justify-content:center">
+      <a href="login.html?returnTo=favorite.html" class="auth-btn-cta">
+        <i class="fa-solid fa-right-to-bracket"></i> Sign In
+      </a>
+      <a href="signup.html" class="auth-btn-cta auth-btn-cta-outline">
+        <i class="fa-solid fa-user-plus"></i> Create Account
+      </a>
+    </div>
+  </div>
+
+  <!-- Signed in, no favourites -->
+  <div class="empty-state" id="emptyFav" hidden>
     <i class="fa-regular fa-heart"></i>
     <h3>No favourites yet</h3>
     <p>Tap the ♥ on any title to save it here.<br>Your collection will appear on this page.</p>
+    <a href="index.html" class="back-home" style="display:inline-flex;margin-top:20px">
+      <i class="fa-solid fa-house"></i> Browse titles
+    </a>
   </div>
 
-  <div class="movie-grid" id="favGrid" style="display:none"></div>
+  <!-- Favourites grid -->
+  <div class="movie-grid" id="favGrid" hidden></div>
+
 </main>
 
 <script src="app.js"></script>
-<script>
-  const favGrid  = document.getElementById('favGrid');
-  const emptyFav = document.getElementById('emptyFav');
-  const saved    = JSON.parse(localStorage.getItem('hag_favourites') || '[]');
-  if (saved.length) {
-    emptyFav.style.display = 'none';
-    favGrid.style.display  = 'grid';
-    saved.forEach(item => {
+<script type="module">
+  import { auth, onAuthStateChanged } from './auth.js';
+  import { getAllFavourites, removeFavourite } from './favorites-client.js';
+  import { auth as _a } from './firebase-config.js';  // ensure same instance
+
+  const loadingEl = document.getElementById('loadingState');
+  const authGate  = document.getElementById('authGate');
+  const emptyFav  = document.getElementById('emptyFav');
+  const favGrid   = document.getElementById('favGrid');
+
+  onAuthStateChanged(auth, async user => {
+    loadingEl.hidden = true;
+
+    if (!user) {
+      authGate.hidden = false;
+      return;
+    }
+
+    // Load favourites from Firestore
+    try {
+      const items = await getAllFavourites(user.uid);
+      if (!items.length) {
+        emptyFav.hidden = false;
+        return;
+      }
+      favGrid.hidden = false;
+      renderGrid(user.uid, items);
+    } catch (err) {
+      console.error('[HAG] Favourites load error:', err);
+      emptyFav.hidden = false;
+    }
+  });
+
+  function renderGrid(uid, items) {
+    favGrid.innerHTML = '';
+    items.forEach(item => {
       const a = document.createElement('a');
-      a.href      = item.url  || 'watch.html';
+      a.href      = item.url || 'watch.html';
       a.className = 'movie-card';
-      a.innerHTML = `<div class="card-thumb"><img src="${item.img||'https://picsum.photos/seed/hagfav/300/420'}" alt="${item.title}" loading="lazy"><div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div></div><h3>${item.title}</h3>`;
+      a.innerHTML = `
+        <div class="card-thumb">
+          <img src="${item.img || 'https://picsum.photos/seed/hagfav/300/420'}"
+               alt="${item.title}" loading="lazy">
+          <div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
+          <button class="fav-remove-btn" data-slug="${item.slug}" aria-label="Remove from favourites" title="Remove">
+            <i class="fa-solid fa-heart-crack"></i>
+          </button>
+        </div>
+        <h3>${item.title}</h3>`;
       favGrid.appendChild(a);
+    });
+
+    // Remove buttons
+    favGrid.querySelectorAll('.fav-remove-btn').forEach(btn => {
+      btn.addEventListener('click', async e => {
+        e.preventDefault();
+        e.stopPropagation();
+        const slug = btn.dataset.slug;
+        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
+        try {
+          const user = (await import('./firebase-config.js')).auth.currentUser;
+          if (user) await removeFavourite(user.uid, slug);
+          const card = btn.closest('.movie-card');
+          card.style.transition = 'opacity .3s, transform .3s';
+          card.style.opacity = '0';
+          card.style.transform = 'scale(.9)';
+          setTimeout(() => {
+            card.remove();
+            if (!favGrid.querySelector('.movie-card')) {
+              favGrid.hidden = true;
+              emptyFav.hidden = false;
+            }
+          }, 300);
+        } catch (err) {
+          console.error('[HAG] Remove favourite error:', err);
+          btn.innerHTML = '<i class="fa-solid fa-heart-crack"></i>';
+        }
+      });
     });
   }
 </script>
