@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Your watch history on Hanime AG.">
+  <title>Watch History — Hanime AG</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar" role="banner">
+  <a href="account.html" class="back-btn" aria-label="Back to account">
+    <i class="fa-solid fa-arrow-left"></i>
+  </a>
+  <h2>Watch History</h2>
+  <a href="account.html" class="profile-btn" aria-label="My account">
+    <i class="fa-solid fa-circle-user"></i>
+  </a>
+</header>
+
+<main class="page-content" role="main">
+  <h1>
+    <i class="fa-solid fa-clock-rotate-left" style="color:var(--accent);margin-right:10px;font-size:20px"></i>
+    Watch History
+  </h1>
+
+  <!-- Loading -->
+  <div class="empty-state" id="loadingState">
+    <i class="fa-solid fa-circle-notch fa-spin" style="color:var(--accent)"></i>
+  </div>
+
+  <!-- Not signed in -->
+  <div class="empty-state" id="authGate" hidden>
+    <i class="fa-regular fa-clock"></i>
+    <h3>Sign in to view history</h3>
+    <p>Your watch history is saved to your account<br>and synced across all your devices.</p>
+    <div class="auth-cta-btns" style="margin-top:20px;justify-content:center">
+      <a href="login.html?returnTo=history.html" class="auth-btn-cta">
+        <i class="fa-solid fa-right-to-bracket"></i> Sign In
+      </a>
+      <a href="signup.html" class="auth-btn-cta auth-btn-cta-outline">
+        <i class="fa-solid fa-user-plus"></i> Create Account
+      </a>
+    </div>
+  </div>
+
+  <!-- Signed in, no history -->
+  <div class="empty-state" id="emptyHistory" hidden>
+    <i class="fa-regular fa-clock"></i>
+    <h3>Nothing watched yet</h3>
+    <p>Titles you watch will appear here automatically.<br>Start streaming to build your history.</p>
+    <a href="index.html" class="back-home" style="display:inline-flex;margin-top:20px">
+      <i class="fa-solid fa-house"></i> Browse titles
+    </a>
+  </div>
+
+  <!-- History grid -->
+  <div class="movie-grid" id="historyGrid" hidden></div>
+
+</main>
+
+<script src="app.js"></script>
+<script type="module" src="auth-ui.js"></script>
+<script type="module">
+  import { auth, onAuthStateChanged } from './auth.js';
+  import { getAllHistory } from './favorites-client.js';
+
+  const loadingEl    = document.getElementById('loadingState');
+  const authGate     = document.getElementById('authGate');
+  const emptyHistory = document.getElementById('emptyHistory');
+  const historyGrid  = document.getElementById('historyGrid');
+
+  onAuthStateChanged(auth, async user => {
+    loadingEl.hidden = true;
+
+    if (!user) {
+      authGate.hidden = false;
+      return;
+    }
+
+    try {
+      const items = await getAllHistory(user.uid);
+      if (!items.length) {
+        emptyHistory.hidden = false;
+        return;
+      }
+      historyGrid.hidden = false;
+      renderGrid(items);
+    } catch (err) {
+      console.error('[HAG] History load error:', err);
+      emptyHistory.hidden = false;
+    }
+  });
+
+  function timeAgo(ts) {
+    if (!ts?.toMillis) return '';
+    const diff = Date.now() - ts.toMillis();
+    const m = Math.floor(diff / 60000);
+    if (m < 1)  return 'just now';
+    if (m < 60) return `${m}m ago`;
+    const h = Math.floor(m / 60);
+    if (h < 24) return `${h}h ago`;
+    return `${Math.floor(h / 24)}d ago`;
+  }
+
+  function renderGrid(items) {
+    historyGrid.innerHTML = '';
+    items.forEach(item => {
+      const a = document.createElement('a');
+      a.href      = item.url || 'watch.html';
+      a.className = 'movie-card';
+      a.innerHTML = `
+        <div class="card-thumb">
+          <img src="${item.img || 'https://picsum.photos/seed/haghist/300/420'}"
+               alt="${item.title}" loading="lazy">
+          <div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
+          ${item.lastWatched ? `<span class="card-badge card-badge-ep" style="top:auto;bottom:8px;left:8px;">${timeAgo(item.lastWatched)}</span>` : ''}
+        </div>
+        <h3>${item.title}</h3>`;
+      historyGrid.appendChild(a);
+    });
+  }
+</script>
+</body>
+</html>
