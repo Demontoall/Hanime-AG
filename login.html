@@ -73,12 +73,7 @@
 </div>
 
 <script type="module">
-  import { loginWithEmail, loginWithGoogle, auth, onAuthStateChanged, friendlyError } from './auth.js';
-
-  // If already signed in, go to returnTo or home
-  onAuthStateChanged(auth, user => {
-    if (user) window.location.replace(returnTo() || 'index.html');
-  });
+  import { loginWithEmail, loginWithGoogle, handleGoogleRedirect, auth, onAuthStateChanged, friendlyError } from './auth.js';
 
   function returnTo() {
     return new URLSearchParams(location.search).get('returnTo') || '';
@@ -100,6 +95,17 @@
     btn.querySelector('.auth-spinner').hidden  = !on;
     document.getElementById('googleBtn').disabled = on;
   }
+
+  // Handle Google redirect result on page load (fires after returning from Google).
+  // onAuthStateChanged below handles the actual redirect to home once signed in.
+  handleGoogleRedirect().catch(err => {
+    showError(friendlyError(err.code));
+  });
+
+  // If already signed in (or just completed Google redirect), go to returnTo or home
+  onAuthStateChanged(auth, user => {
+    if (user) window.location.replace(returnTo() || 'index.html');
+  });
 
   // Toggle password visibility
   document.querySelector('.auth-eye').addEventListener('click', function () {
@@ -131,13 +137,14 @@
     }
   });
 
-  // Google sign-in
+  // Google sign-in — tries popup, falls back to redirect if popup is blocked
   document.getElementById('googleBtn').addEventListener('click', async () => {
     clearError();
     setLoading(true);
     try {
-      await loginWithGoogle();
-      window.location.replace(returnTo() || 'index.html');
+      const user = await loginWithGoogle();
+      // user is null when a redirect was initiated — page is navigating away
+      if (user) window.location.replace(returnTo() || 'index.html');
     } catch (err) {
       showError(friendlyError(err.code));
       setLoading(false);

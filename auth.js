@@ -4,6 +4,8 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
   signOut as fbSignOut,
   sendPasswordResetEmail,
   updateProfile,
@@ -37,17 +39,45 @@ export async function loginWithEmail(email, password) {
 }
 
 // ── Google Sign-In ────────────────────────────────────────
+// Tries popup first (fast UX). If the browser blocks it (common inside iframes
+// like Replit's preview pane), falls back to a full-page redirect.
 export async function loginWithGoogle() {
-  const cred = await signInWithPopup(auth, googleProvider);
-  const snap = await getDoc(doc(db, 'users', cred.user.uid));
+  try {
+    const cred = await signInWithPopup(auth, googleProvider);
+    await _afterGoogle(cred.user);
+    return cred.user;
+  } catch (err) {
+    if (err.code === 'auth/popup-blocked' || err.code === 'auth/popup-blocked-by-browser') {
+      // Popup was blocked — fall back to redirect flow.
+      // handleGoogleRedirect() on the next page load will finish the sign-in.
+      await signInWithRedirect(auth, googleProvider);
+      return null; // page navigates away; no return value needed
+    }
+    throw err; // re-throw real errors (wrong domain, user closed popup, etc.)
+  }
+}
+
+// Call this on page load for any page that has a Google sign-in button.
+// Handles the result when the browser returns from the Google redirect page.
+// Returns the signed-in user, or null if there was no pending redirect.
+export async function handleGoogleRedirect() {
+  const cred = await getRedirectResult(auth);
+  if (cred?.user) {
+    await _afterGoogle(cred.user);
+    return cred.user;
+  }
+  return null;
+}
+
+async function _afterGoogle(user) {
+  const snap = await getDoc(doc(db, 'users', user.uid));
   if (!snap.exists()) {
-    await upsertUserDoc(cred.user.uid, {
-      displayName: cred.user.displayName,
-      email:       cred.user.email,
-      photoURL:    cred.user.photoURL
+    await upsertUserDoc(user.uid, {
+      displayName: user.displayName,
+      email:       user.email,
+      photoURL:    user.photoURL
     });
   }
-  return cred.user;
 }
 
 // ── Sign Out ──────────────────────────────────────────────
@@ -63,15 +93,20 @@ export async function resetPassword(email) {
 // ── Friendly error messages ───────────────────────────────
 export function friendlyError(code) {
   const map = {
-    'auth/user-not-found':          'No account found with this email.',
-    'auth/wrong-password':          'Incorrect password. Please try again.',
-    'auth/invalid-credential':      'Incorrect email or password.',
-    'auth/email-already-in-use':    'An account with this email already exists.',
-    'auth/weak-password':           'Password must be at least 6 characters.',
-    'auth/invalid-email':           'Please enter a valid email address.',
-    'auth/too-many-requests':       'Too many attempts. Please try again later.',
-    'auth/popup-closed-by-user':    'Sign-in window was closed. Please try again.',
-    'auth/network-request-failed':  'Network error. Check your connection.',
+    'auth/user-not-found':            'No account found with this email.',
+    'auth/wrong-password':            'Incorrect password. Please try again.',
+    'auth/invalid-credential':        'Incorrect email or password.',
+    'auth/email-already-in-use':      'An account with this email already exists.',
+    'auth/weak-password':             'Password must be at least 6 characters.',
+    'auth/invalid-email':             'Please enter a valid email address.',
+    'auth/too-many-requests':         'Too many attempts. Please try again later.',
+    'auth/popup-closed-by-user':      'Sign-in window was closed. Please try again.',
+    'auth/cancelled-popup-request':   'Sign-in cancelled. Please try again.',
+    'auth/popup-blocked':             'Popup was blocked by your browser. Trying redirect…',
+    'auth/popup-blocked-by-browser':  'Popup was blocked by your browser. Trying redirect…',
+    'auth/unauthorized-domain':       'This domain is not authorised in Firebase. Add it under Authentication → Authorized Domains.',
+    'auth/network-request-failed':    'Network error. Check your connection.',
+    'auth/internal-error':            'An internal error occurred. Please try again.',
   };
   return map[code] || 'Something went wrong. Please try again.';
 }

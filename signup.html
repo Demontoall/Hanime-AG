@@ -85,8 +85,14 @@
 </div>
 
 <script type="module">
-  import { registerWithEmail, loginWithGoogle, auth, onAuthStateChanged, friendlyError } from './auth.js';
+  import { registerWithEmail, loginWithGoogle, handleGoogleRedirect, auth, onAuthStateChanged, friendlyError } from './auth.js';
 
+  // Handle Google redirect result on page load (fires after returning from Google).
+  handleGoogleRedirect().catch(err => {
+    showError(friendlyError(err.code));
+  });
+
+  // If already signed in (or just completed Google redirect), go home
   onAuthStateChanged(auth, user => {
     if (user) window.location.replace('index.html');
   });
@@ -158,8 +164,9 @@
     clearAlerts();
     setLoading(true);
     try {
-      await loginWithGoogle();
-      window.location.replace('index.html');
+      const user = await loginWithGoogle();
+      // user is null when a redirect was initiated — page is navigating away
+      if (user) window.location.replace('index.html');
     } catch (err) {
       showError(friendlyError(err.code));
       setLoading(false);
