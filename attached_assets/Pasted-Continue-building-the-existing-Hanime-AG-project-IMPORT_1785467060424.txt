@@ -1,0 +1,96 @@
+Continue building the existing Hanime AG project.
+
+IMPORTANT:
+Do NOT redesign or replace the existing UI. Keep the current dark orange/black theme, layout, routing, Firebase authentication, homepage, anime pages, search, profile, and navigation exactly as they are.
+
+The current video player page is only a placeholder. Replace it with a fully functional streaming player.
+
+Implement the following:
+
+1. Video Player
+- Replace the placeholder player with a modern HTML5 video player.
+- Support MP4 and HLS (.m3u8) streams.
+- Responsive on desktop and mobile.
+- Fullscreen support.
+- Loading spinner.
+- Play/Pause.
+- Seek bar.
+- Volume control.
+- Playback speed (0.5x–2x).
+- Picture-in-picture if supported.
+- Auto-hide controls.
+
+2. Episode Playback
+- Clicking an episode immediately loads that episode.
+- Previous Episode button.
+- Next Episode button.
+- Automatically highlight the currently playing episode.
+- Automatically play the next episode when one finishes.
+
+3. Watch Progress
+Using Firebase Firestore:
+- Save current playback position every few seconds.
+- Resume playback when the user returns.
+- Save last watched episode.
+- Save completed episodes.
+
+4. Continue Watching
+Create a Continue Watching section on the homepage showing:
+- Poster
+- Anime title
+- Episode number
+- Progress bar
+- Resume button
+
+5. Favorites
+Connect the heart button so users can:
+- Add to Favorites
+- Remove from Favorites
+- Sync with Firebase
+- Show Favorites in the user profile
+
+6. Streaming Architecture
+Do NOT hardcode video URLs.
+
+Each episode should support:
+
+{
+  title,
+  episodeNumber,
+  duration,
+  thumbnail,
+  videoUrl,
+  subtitles,
+  quality,
+  server
+}
+
+The player should read the video URL dynamically.
+
+7. Error Handling
+If a video cannot load:
+- Show a friendly error message.
+- Display a Retry button.
+- Allow switching to another server if available.
+
+8. Performance
+- Lazy load images.
+- Preload the next episode.
+- Keep scrolling smooth.
+- Optimize for mobile.
+
+9. Preserve Existing Features
+Do NOT remove or break:
+- Firebase Authentication
+- Google Sign-In
+- Search
+- Homepage
+- Anime pages
+- Movies
+- Donghua
+- Series
+- User profile
+- Existing routing
+- Existing styling
+
+Build this feature into the current project instead of replacing existing pages.
