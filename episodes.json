@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "anime": {
+    "solo-leveling": {
+      "title": "Solo Leveling",
+      "season": 1,
+      "episodes": [
+        { "episodeNumber": 1, "title": "The Beginning", "duration": "24 min", "thumbnail": null, "videoUrl": null, "subtitles": [], "quality": [], "server": null },
+        { "episodeNumber": 2, "title": "Into the Unknown", "duration": "24 min", "thumbnail": null, "videoUrl": null, "subtitles": [], "quality": [], "server": null },
+        { "episodeNumber": 3, "title": "Shadows and Light", "duration": "25 min", "thumbnail": null, "videoUrl": null, "subtitles": [], "quality": [], "server": null },
+        { "episodeNumber": 4, "title": "The Awakening", "duration": "22 min", "thumbnail": null, "videoUrl": null, "subtitles": [], "quality": [], "server": null },
+        { "episodeNumber": 5, "title": "Final Confrontation", "duration": "28 min", "thumbnail": null, "videoUrl": null, "subtitles": [], "quality": [], "server": null }
+      ]
+    },
+    "jujutsu-kaisen": { "title": "Jujutsu Kaisen", "season": 1, "episodeCount": 5, "episodes": [] },
+    "demon-slayer": { "title": "Demon Slayer", "season": 1, "episodeCount": 5, "episodes": [] },
+    "attack-on-titan": { "title": "Attack on Titan", "season": 1, "episodeCount": 5, "episodes": [] },
+    "vinland-saga": { "title": "Vinland Saga", "season": 1, "episodeCount": 5, "episodes": [] },
+    "bleach-tybw": { "title": "Bleach: TYBW", "season": 1, "episodeCount": 5, "episodes": [] },
+    "chainsaw-man": { "title": "Chainsaw Man", "season": 1, "episodeCount": 5, "episodes": [] },
+    "one-piece": { "title": "One Piece", "season": 1, "episodeCount": 5, "episodes": [] },
+    "naruto-shippuden": { "title": "Naruto Shippuden", "season": 1, "episodeCount": 5, "episodes": [] },
+    "my-hero-academia": { "title": "My Hero Academia", "season": 1, "episodeCount": 5, "episodes": [] },
+    "overflow": { "title": "Overflow", "season": 1, "episodeCount": 5, "episodes": [] },
+    "your-name": { "title": "Your Name", "season": 1, "episodeCount": 1, "episodes": [] },
+    "suzume": { "title": "Suzume", "season": 1, "episodeCount": 1, "episodes": [] },
+    "a-silent-voice": { "title": "A Silent Voice", "season": 1, "episodeCount": 1, "episodes": [] },
+    "spirited-away": { "title": "Spirited Away", "season": 1, "episodeCount": 1, "episodes": [] },
+    "princess-mononoke": { "title": "Princess Mononoke", "season": 1, "episodeCount": 1, "episodes": [] },
+    "weathering-with-you": { "title": "Weathering with You", "season": 1, "episodeCount": 1, "episodes": [] },
+    "boy-and-the-heron": { "title": "The Boy and the Heron", "season": 1, "episodeCount": 1, "episodes": [] },
+    "battle-through-heavens": { "title": "Battle Through the Heavens", "season": 1, "episodeCount": 5, "episodes": [] },
+    "soul-land": { "title": "Soul Land", "season": 1, "episodeCount": 5, "episodes": [] },
+    "perfect-world": { "title": "Perfect World", "season": 1, "episodeCount": 5, "episodes": [] },
+    "kings-avatar": { "title": "The King's Avatar", "season": 1, "episodeCount": 5, "episodes": [] },
+    "stellar-transformations": { "title": "Stellar Transformations", "season": 1, "episodeCount": 5, "episodes": [] },
+    "tales-of-demons-and-gods": { "title": "Tales of Demons and Gods", "season": 1, "episodeCount": 5, "episodes": [] },
+    "isekai-harem-monogatari": { "title": "Isekai Harem Monogatari", "season": 1, "episodeCount": 5, "episodes": [] },
+    "night-world": {
+      "title": "Night World",
+      "season": 1,
+      "episodes": [
+        { "episodeNumber": 1, "title": "Into the Dark", "duration": "24 min", "videoUrl": null },
+        { "episodeNumber": 2, "title": "The First Hunt", "duration": "24 min", "videoUrl": null },
+        { "episodeNumber": 3, "title": "Shadows Speak", "duration": "25 min", "videoUrl": null },
+        { "episodeNumber": 4, "title": "The Cursed Blade", "duration": "23 min", "videoUrl": null },
+        { "episodeNumber": 5, "title": "Forgotten Faces", "duration": "24 min", "videoUrl": null }
+      ]
+    },
+    "shadow-hero": {
+      "title": "Shadow Hero",
+      "season": 1,
+      "episodes": [
+        { "episodeNumber": 1, "title": "Awakening", "duration": "24 min", "videoUrl": null },
+        { "episodeNumber": 2, "title": "The Shadow Realm", "duration": "24 min", "videoUrl": null },
+        { "episodeNumber": 3, "title": "First Blood", "duration": "26 min", "videoUrl": null },
+        { "episodeNumber": 4, "title": "Rise of the Phantom Army", "duration": "25 min", "videoUrl": null },
+        { "episodeNumber": 5, "title": "The Clan's Reckoning", "duration": "28 min", "videoUrl": null }
+      ]
+    },
+    "blue-sky": {
+      "title": "Blue Sky",
+      "season": 1,
+      "episodes": [
+        { "episodeNumber": 1, "title": "Above the Clouds", "duration": "24 min", "videoUrl": null },
+        { "episodeNumber": 2, "title": "The Manual", "duration": "24 min", "videoUrl": null },
+        { "episodeNumber": 3, "title": "Celestial Court", "duration": "25 min", "videoUrl": null },
+        { "episodeNumber": 4, "title": "Demon's Bargain", "duration": "24 min", "videoUrl": null },
+        { "episodeNumber": 5, "title": "Storm Break", "duration": "26 min", "videoUrl": null }
+      ]
+    }
+  }
+}

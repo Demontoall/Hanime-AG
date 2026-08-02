@@ -25,23 +25,13 @@
 
 <main class="watch-page" role="main">
 
-  <!-- Video Player -->
-  <div class="video-container">
-    <div class="video-placeholder" id="videoPlaceholder" role="button" tabindex="0" aria-label="Play video">
-      <div class="play-ring">
-        <i class="fa-solid fa-play"></i>
-      </div>
-      <p>Tap to play</p>
+  <!-- Video Player: source and episode metadata come from episodes.json. -->
+  <div class="video-container" id="videoContainer">
+    <video id="videoPlayer" controls playsinline preload="metadata" aria-label="Anime episode video"></video>
+    <div class="video-state" id="videoState" role="status" aria-live="polite">
+      <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+      <p>Loading episode…</p>
     </div>
-    <iframe
-      id="videoFrame"
-      data-src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1"
-      src=""
-      title="Video Player"
-      allowfullscreen
-      allow="autoplay; fullscreen"
-      style="display:none">
-    </iframe>
   </div>
 
   <!-- Info -->
@@ -54,10 +44,7 @@
       </button>
     </div>
     <p class="watch-episode-label" id="epLabel">Episode 1</p>
-    <p class="watch-desc">
-      Stream links will be connected to real sources as the project progresses.
-      This player page is ready to receive embedded content.
-    </p>
+    <p class="watch-desc" id="watchDesc">Choose an episode to start watching.</p>
   </div>
 
   <!-- Navigation Buttons -->
@@ -72,37 +59,8 @@
 
   <!-- Episode List -->
   <div class="episode-section">
-    <h3 class="episode-section-title">Episodes — Season 1</h3>
-
-    <a href="#" class="episode-item active" onclick="return false">
-      <span class="ep-num">Ep 1</span>
-      <div class="ep-info"><h4>The Beginning</h4><p class="ep-dur">24 min</p></div>
-      <i class="fa-solid fa-circle-play ep-play"></i>
-    </a>
-
-    <a href="#" class="episode-item" onclick="return false">
-      <span class="ep-num">Ep 2</span>
-      <div class="ep-info"><h4>Into the Unknown</h4><p class="ep-dur">24 min</p></div>
-      <i class="fa-regular fa-circle-play ep-play" style="color:var(--text-dim)"></i>
-    </a>
-
-    <a href="#" class="episode-item" onclick="return false">
-      <span class="ep-num">Ep 3</span>
-      <div class="ep-info"><h4>Shadows and Light</h4><p class="ep-dur">25 min</p></div>
-      <i class="fa-regular fa-circle-play ep-play" style="color:var(--text-dim)"></i>
-    </a>
-
-    <a href="#" class="episode-item" onclick="return false">
-      <span class="ep-num">Ep 4</span>
-      <div class="ep-info"><h4>The Awakening</h4><p class="ep-dur">22 min</p></div>
-      <i class="fa-regular fa-circle-play ep-play" style="color:var(--text-dim)"></i>
-    </a>
-
-    <a href="#" class="episode-item" onclick="return false">
-      <span class="ep-num">Ep 5</span>
-      <div class="ep-info"><h4>Final Confrontation</h4><p class="ep-dur">28 min</p></div>
-      <i class="fa-regular fa-circle-play ep-play" style="color:var(--text-dim)"></i>
-    </a>
+    <h3 class="episode-section-title" id="episodeSectionTitle">Episodes — Season 1</h3>
+    <div id="episodeList" aria-label="Episodes"></div>
   </div>
 
 </main>
@@ -138,7 +96,9 @@
   };
 
   // ── Read slug from URL ──────────────────────────────────
-  const slug  = new URLSearchParams(location.search).get('slug') || 'solo-leveling';
+  const params = new URLSearchParams(location.search);
+  const slug  = params.get('slug') || 'solo-leveling';
+  const requestedEpisode = Number.parseInt(params.get('episode') || '1', 10);
   const title = TITLES[slug] || slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 
   document.getElementById('watchTitle').textContent = title;
@@ -195,49 +155,171 @@
     }
   });
 
-  // ── Player ──────────────────────────────────────────────
-  const placeholder = document.getElementById('videoPlaceholder');
-  const frame       = document.getElementById('videoFrame');
-
+  // ── Manifest-driven player ─────────────────────────────
+  const video = document.getElementById('videoPlayer');
+  const videoState = document.getElementById('videoState');
+  const episodeList = document.getElementById('episodeList');
+  const epLabel = document.getElementById('epLabel');
+  const watchDesc = document.getElementById('watchDesc');
+  const sectionTitle = document.getElementById('episodeSectionTitle');
+  const btnPrev = document.getElementById('btnPrev');
+  const btnNext = document.getElementById('btnNext');
+  let manifestEntry = null;
+  let episodes = [];
+  let currentEpisode = 1;
   let historyLogged = false;
 
-  function startPlay() {
-    placeholder.style.display = 'none';
-    frame.style.display       = 'block';
-    frame.src                 = frame.dataset.src;
+  function showVideoState(message, icon = 'fa-circle-exclamation', action = '') {
+    videoState.innerHTML = `<i class="fa-solid ${icon}" aria-hidden="true"></i><p>${message}</p>${action}`;
+    videoState.style.display = 'flex';
+  }
 
-    // Log to watch history once per page load
-    if (!historyLogged && _user) {
-      historyLogged = true;
-      buildFavouriteRecord(slug, { title }).then(record =>
-        addToHistory(_user.uid, slug, {
-          title: record.title,
-          img: record.cover,
-          url: record.url
-        })
-      )
-        .catch(e => console.error('[HAG] History error:', e));
+  function clearVideo() {
+    video.pause();
+    video.removeAttribute('src');
+    video.load();
+    video.style.display = 'none';
+  }
+
+  function episodeFor(number) {
+    return episodes.find(ep => ep.episodeNumber === number) || null;
+  }
+
+  function updateUrl(number) {
+    const next = new URL(location.href);
+    next.pathname = next.pathname.replace(/\/?watch(?:\.html)?$/, '/watch');
+    next.searchParams.set('slug', slug);
+    next.searchParams.set('episode', String(number));
+    history.replaceState({ slug, episode: number }, '', next);
+  }
+
+  function renderEpisodeList() {
+    episodeList.innerHTML = episodes.map(ep => `
+      <button type="button" class="episode-item${ep.episodeNumber === currentEpisode ? ' active' : ''}"
+              data-episode="${ep.episodeNumber}" aria-pressed="${ep.episodeNumber === currentEpisode}">
+        <span class="ep-num">Ep ${ep.episodeNumber}</span>
+        <span class="ep-info"><h4>${ep.title || `Episode ${ep.episodeNumber}`}</h4><span class="ep-dur">${ep.duration || 'Duration unavailable'}</span></span>
+        <i class="fa-${ep.episodeNumber === currentEpisode ? 'solid' : 'regular'} fa-circle-play ep-play" aria-hidden="true"></i>
+      </button>`).join('');
+
+    episodeList.querySelectorAll('[data-episode]').forEach(item => {
+      item.addEventListener('click', () => loadEpisode(Number(item.dataset.episode), true));
+    });
+  }
+
+  function updateEpisodeControls() {
+    document.querySelectorAll('.episode-item').forEach(item => {
+      const active = Number(item.dataset.episode) === currentEpisode;
+      item.classList.toggle('active', active);
+      item.setAttribute('aria-pressed', String(active));
+      const icon = item.querySelector('.ep-play');
+      if (icon) icon.className = `fa-${active ? 'solid' : 'regular'} fa-circle-play ep-play`;
+    });
+    epLabel.textContent = `Episode ${currentEpisode}${episodeFor(currentEpisode)?.title ? ` — ${episodeFor(currentEpisode).title}` : ''}`;
+    btnPrev.disabled = currentEpisode <= 1;
+    btnNext.disabled = currentEpisode >= episodes.length;
+  }
+
+  function logHistory() {
+    if (!_user || historyLogged) return;
+    historyLogged = true;
+    buildFavouriteRecord(slug, { title }).then(record =>
+      addToHistory(_user.uid, slug, {
+        title: record.title,
+        img: record.cover,
+        url: `watch?slug=${encodeURIComponent(slug)}&episode=${currentEpisode}`
+      })
+    ).catch(error => console.error('[HAG] History error:', error));
+  }
+
+  function loadEpisode(number, autoplay = false) {
+    const episode = episodeFor(number);
+    if (!episode) return;
+    currentEpisode = number;
+    updateUrl(number);
+    updateEpisodeControls();
+    clearVideo();
+    videoState.style.display = 'none';
+
+    if (!episode.videoUrl) {
+      showVideoState('Video unavailable', 'fa-video-slash');
+      watchDesc.textContent = 'This episode does not have a streaming source yet.';
+      return;
+    }
+
+    watchDesc.textContent = episode.server ? `Streaming from ${episode.server}.` : 'Ready to play.';
+    video.type = episode.type || (String(episode.videoUrl).includes('.m3u8') ? 'application/x-mpegURL' : 'video/mp4');
+    video.src = episode.videoUrl;
+    video.style.display = 'block';
+    video.load();
+    if (autoplay) video.play().catch(() => {});
+    logHistory();
+  }
+
+  async function loadManifest() {
+    try {
+      const response = await fetch('episodes.json', { cache: 'no-store' });
+      if (!response.ok) throw new Error(`Manifest request failed: ${response.status}`);
+      const manifest = await response.json();
+      manifestEntry = manifest.anime?.[slug] || null;
+      if (!manifestEntry) {
+        episodes = [];
+        episodeList.innerHTML = '<p class="video-manifest-message">No episodes are configured for this title.</p>';
+        clearVideo();
+        showVideoState('Video unavailable', 'fa-video-slash');
+        btnPrev.disabled = true;
+        btnNext.disabled = true;
+        return;
+      }
+
+      const configured = Array.isArray(manifestEntry.episodes) ? manifestEntry.episodes : [];
+      const episodeCount = manifestEntry.episodeCount || configured.length || 1;
+      const byNumber = new Map(configured.map(ep => [Number(ep.episodeNumber), ep]));
+      episodes = Array.from({ length: episodeCount }, (_, index) => ({
+        episodeNumber: index + 1,
+        title: `Episode ${index + 1}`,
+        duration: null,
+        thumbnail: null,
+        videoUrl: null,
+        subtitles: [],
+        quality: [],
+        server: null,
+        ...(byNumber.get(index + 1) || {})
+      }));
+      currentEpisode = Math.min(Math.max(Number.isFinite(requestedEpisode) ? requestedEpisode : 1, 1), episodes.length);
+      sectionTitle.textContent = `Episodes — Season ${manifestEntry.season || 1}`;
+      renderEpisodeList();
+      updateEpisodeControls();
+      loadEpisode(currentEpisode);
+      if (manifestEntry.title) {
+        document.getElementById('watchTitle').textContent = manifestEntry.title;
+        document.title = `${manifestEntry.title} — Hanime AG`;
+      }
+    } catch (error) {
+      console.error('[HAG] Episode manifest error:', error);
+      episodes = [];
+      episodeList.innerHTML = '<p class="video-manifest-message">Episode data could not be loaded.</p>';
+      clearVideo();
+      showVideoState('Video unavailable', 'fa-video-slash');
     }
   }
 
-  placeholder.addEventListener('click', startPlay);
-  placeholder.addEventListener('keydown', e => {
-    if (e.key === 'Enter' || e.key === ' ') startPlay();
+  btnPrev.addEventListener('click', () => {
+    if (currentEpisode > 1) loadEpisode(currentEpisode - 1, true);
+  });
+  btnNext.addEventListener('click', () => {
+    if (currentEpisode < episodes.length) loadEpisode(currentEpisode + 1, true);
+  });
+  video.addEventListener('error', () => {
+    video.style.display = 'none';
+    showVideoState('Video unavailable', 'fa-video-slash', '<button type="button" class="video-retry" id="videoRetry">Retry</button>');
+    document.getElementById('videoRetry')?.addEventListener('click', () => loadEpisode(currentEpisode, true));
+  });
+  video.addEventListener('ended', () => {
+    if (currentEpisode < episodes.length) loadEpisode(currentEpisode + 1, true);
   });
 
-  // ── Episode list ────────────────────────────────────────
-  document.querySelectorAll('.episode-item').forEach((item, i) => {
-    item.addEventListener('click', e => {
-      e.preventDefault();
-      document.querySelectorAll('.episode-item').forEach(el => el.classList.remove('active'));
-      item.classList.add('active');
-      const epLabel = document.getElementById('epLabel');
-      if (epLabel) epLabel.textContent = `Episode ${i + 1}`;
-      frame.style.display = 'none';
-      frame.src = '';
-      placeholder.style.display = 'flex';
-    });
-  });
+  loadManifest();
 </script>
 </body>
 </html>

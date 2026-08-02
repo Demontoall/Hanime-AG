@@ -128,7 +128,7 @@
       return;
     }
     searchGrid.innerHTML = matches.map(t => `
-      <a href="${t.url}" class="card" onclick="window._searchClose&&window._searchClose()">
+      <a href="${t.animeSlug ? `watch?slug=${encodeURIComponent(t.animeSlug)}` : t.url}" class="card" onclick="window._searchClose&&window._searchClose()">
         <div class="card-thumb">
           <img ${t.animeSlug ? `data-anime="${t.animeSlug}"` : ''} src="${t.img}" alt="${t.title}" loading="lazy">
           <div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
@@ -176,24 +176,12 @@
     document.querySelector('.hero') && document.querySelector('.hero').addEventListener('mouseenter', () => clearInterval(heroTimer));
   }
 
-  /* ── 7. Watch page — lazy iframe + episode counter ──────── */
-  const videoPlaceholder = document.getElementById('videoPlaceholder');
-  const videoFrame       = document.getElementById('videoFrame');
-  if (videoPlaceholder && videoFrame) {
-    videoPlaceholder.addEventListener('click', () => {
-      videoFrame.src = videoFrame.dataset.src || '';
-      videoPlaceholder.style.display = 'none';
-    });
-  }
-
-  const epLabel = document.getElementById('epLabel');
-  const btnPrev = document.getElementById('btnPrev');
-  const btnNext = document.getElementById('btnNext');
-  if (epLabel && btnPrev && btnNext) {
-    let ep = 1;
-    const update = () => { epLabel.textContent = `Episode ${ep}`; };
-    btnNext.addEventListener('click', () => { ep++; update(); if (videoPlaceholder) videoPlaceholder.style.display='flex'; if(videoFrame) videoFrame.src=''; });
-    btnPrev.addEventListener('click', () => { if (ep > 1) { ep--; update(); } });
-  }
+  /* ── 7. Canonical watch links ─────────────────────────────
+     Every catalogue card passes its own slug to watch so the manifest
+     cannot accidentally load another title's episode source. */
+  document.querySelectorAll('a[href="watch.html"]').forEach(link => {
+    const slug = link.querySelector('[data-anime]')?.dataset.anime;
+    if (slug) link.href = `watch?slug=${encodeURIComponent(slug)}`;
+  });
 
 })();
