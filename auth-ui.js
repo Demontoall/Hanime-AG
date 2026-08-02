@@ -2,6 +2,7 @@
 import { auth } from './firebase-config.js';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { addFavourite, removeFavourite, getFavouriteSlugs } from './favorites-client.js';
+import { getUnreadNotificationCount } from './notifications-client.js';
 
 /* ── Helpers ─────────────────────────────────────────────── */
 function getInitials(name) {
@@ -25,6 +26,35 @@ function updateHeaderBtns(user) {
   document.querySelectorAll('.profile-icon-btn, .profile-btn').forEach(btn => {
     btn.innerHTML = user ? avatarHTML(user) : '<i class="fa-solid fa-circle-user"></i>';
   });
+}
+
+function addNotificationLink() {
+  const header = document.querySelector('header.topbar, header.home-header');
+  if (!header || document.querySelector('.notification-link')) return;
+  const link = document.createElement('a');
+  link.href = 'notifications.html';
+  link.className = 'notification-link';
+  link.setAttribute('aria-label', 'Notifications');
+  link.innerHTML = '<i class="fa-regular fa-bell"></i><span class="notification-count" hidden></span>';
+  const profile = header.querySelector('.profile-icon-btn, .profile-btn');
+  profile ? header.insertBefore(link, profile) : header.appendChild(link);
+}
+
+async function refreshNotificationCount(user) {
+  const badge = document.querySelector('.notification-count');
+  if (!badge) return;
+  if (!user) {
+    badge.hidden = true;
+    return;
+  }
+  try {
+    const count = await getUnreadNotificationCount(user.uid);
+    badge.textContent = count > 99 ? '99+' : String(count);
+    badge.hidden = count === 0;
+  } catch (err) {
+    console.warn('[HAG] Notification count unavailable:', err);
+    badge.hidden = true;
+  }
 }
 
 /* ── Toast notification ──────────────────────────────────── */
@@ -59,8 +89,43 @@ function injectHeartButtons() {
     btn.innerHTML = '<i class="fa-regular fa-heart"></i>';
     btn.addEventListener('click', onHeartClick);
     thumb.appendChild(btn);
+
+    const playlistBtn = document.createElement('button');
+    playlistBtn.className = 'card-playlist';
+    playlistBtn.dataset.slug = img.dataset.anime;
+    playlistBtn.setAttribute('aria-label', 'Add to playlist');
+    playlistBtn.title = 'Add to playlist';
+    playlistBtn.innerHTML = '<i class="fa-solid fa-list"></i>';
+    playlistBtn.addEventListener('click', onPlaylistClick);
+    thumb.appendChild(playlistBtn);
   });
   refreshHeartStates();
+}
+
+function onPlaylistClick(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  const btn = e.currentTarget;
+  const card = btn.closest('.card, .movie-card');
+  const title = card?.querySelector('h3')?.textContent?.trim() || btn.dataset.slug;
+  const img = btn.closest('.card-thumb')?.querySelector('img')?.src || '';
+  const params = new URLSearchParams({ add: btn.dataset.slug, title, img });
+  window.location.href = `playlists.html?${params}`;
+}
+
+function refreshPlaylistButtons() {
+  document.querySelectorAll('.card-thumb').forEach(thumb => {
+    const img = thumb.querySelector('img[data-anime]');
+    if (!img || thumb.querySelector('.card-playlist')) return;
+    const btn = document.createElement('button');
+    btn.className = 'card-playlist';
+    btn.dataset.slug = img.dataset.anime;
+    btn.setAttribute('aria-label', 'Add to playlist');
+    btn.title = 'Add to playlist';
+    btn.innerHTML = '<i class="fa-solid fa-list"></i>';
+    btn.addEventListener('click', onPlaylistClick);
+    thumb.appendChild(btn);
+  });
 }
 
 function refreshHeartStates() {
@@ -119,6 +184,7 @@ async function onHeartClick(e) {
 onAuthStateChanged(auth, async (user) => {
   _user = user;
   updateHeaderBtns(user);
+  addNotificationLink();
 
   if (user) {
     try { _favs = await getFavouriteSlugs(user.uid); }
@@ -128,10 +194,11 @@ onAuthStateChanged(auth, async (user) => {
   }
 
   refreshHeartStates();
+  refreshNotificationCount(user);
 });
 
 /* ── Inject on DOM ready + re-inject after search renders ── */
-const _inject = () => injectHeartButtons();
+const _inject = () => { injectHeartButtons(); refreshPlaylistButtons(); addNotificationLink(); };
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', _inject);
 } else {
@@ -142,5 +209,5 @@ if (document.readyState === 'loading') {
 const _prevRun = window._animeImagesRun;
 window._animeImagesRun = function () {
   _prevRun?.();
-  setTimeout(injectHeartButtons, 80);
+  setTimeout(() => { injectHeartButtons(); refreshPlaylistButtons(); }, 80);
 };

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Browse Hanime AG by genre.">
+  <title>Genres — Hanime AG</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="genre-header" role="banner">
+    <a href="index.html" class="back-btn-inline"><i class="fa-solid fa-arrow-left"></i> Back</a>
+    <h1>Browse by <span class="accent">Genre</span></h1>
+    <p>Find your next favorite story by mood, world, or adventure.</p>
+  </header>
+  <main class="page-content" role="main">
+    <div class="genre-toolbar" aria-label="Genre filters">
+      <select id="genreFilter" aria-label="Filter by genre">
+        <option>All</option><option>Action</option><option>Adventure</option><option>Fantasy</option>
+        <option>Romance</option><option>Comedy</option><option>Drama</option><option>Horror</option>
+        <option>Supernatural</option><option>Historical</option><option>Cultivation</option><option>Xianxia</option>
+      </select>
+      <input id="genreSearch" type="search" placeholder="Search titles…" aria-label="Search titles">
+    </div>
+    <div class="movie-grid" id="genreContentGrid"></div>
+  </main>
+  <script src="app.js"></script>
+  <script src="anime-images.js"></script>
+  <script src="footer.js"></script>
+  <script type="module" src="auth-ui.js"></script>
+  <script src="genres.js"></script>
+</body>
+</html>

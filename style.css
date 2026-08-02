@@ -206,6 +206,22 @@ header.home-header.scrolled {
 }
 .profile-icon-btn:hover { color:var(--accent); background:rgba(255,255,255,.07); }
 
+.notification-link {
+  position:relative;
+  width:38px; height:38px;
+  display:flex; align-items:center; justify-content:center;
+  color:var(--text-sub); font-size:19px; border-radius:50%;
+  transition:color .2s, background .2s;
+}
+.notification-link:hover { color:var(--accent); background:rgba(255,255,255,.07); }
+.notification-count {
+  position:absolute; top:2px; right:1px;
+  min-width:16px; height:16px; padding:0 4px;
+  display:flex; align-items:center; justify-content:center;
+  background:var(--accent); color:#fff; border:2px solid var(--bg);
+  border-radius:50px; font-size:9px; font-weight:800; line-height:1;
+}
+
 /* ── Topbar (sub-pages) ────────────────────────────────────── */
 header.topbar {
   position:fixed; top:0; left:0; right:0;
@@ -1418,6 +1434,18 @@ header.genre-header p { color:var(--text-sub); font-size:14px; }
 .card-heart.active { color: #ff4d6d; }
 .card-heart.active:hover { background: rgba(220,50,50,.7); }
 
+.card-playlist {
+  position:absolute; top:8px; left:8px; z-index:3;
+  width:30px; height:30px; border-radius:50%;
+  background:rgba(0,0,0,.65); backdrop-filter:blur(6px);
+  border:1px solid rgba(255,255,255,.12); color:rgba(255,255,255,.8);
+  font-size:12px; display:flex; align-items:center; justify-content:center;
+  opacity:0; transform:scale(.8);
+  transition:opacity .22s, transform .22s, background .22s, color .22s;
+}
+.card:hover .card-playlist, .card-playlist:focus { opacity:1; transform:scale(1); }
+.card-playlist:hover { background:var(--accent); color:#fff; border-color:transparent; }
+
 /* ══════════════════════════════════════════════════════════
    ACCOUNT PAGE — ADDITIONS
 ══════════════════════════════════════════════════════════ */
@@ -1481,6 +1509,87 @@ header.genre-header p { color:var(--text-sub); font-size:14px; }
   color: var(--accent);
 }
 .auth-btn-cta-outline:hover { background: rgba(255,107,0,.1); transform: scale(1.03); }
+
+/* ══════════════════════════════════════════════════════════
+   SHARED FOOTER
+══════════════════════════════════════════════════════════ */
+.site-footer {
+  margin-top:48px; padding:28px 16px 18px;
+  border-top:1px solid var(--border);
+  background:linear-gradient(180deg, rgba(24,24,24,.55), rgba(13,13,13,.95));
+  color:var(--text-sub);
+}
+.site-footer-inner {
+  max-width:1100px; margin:auto; display:flex; align-items:center;
+  justify-content:space-between; gap:24px; flex-wrap:wrap;
+}
+.site-footer-brand { min-width:190px; }
+.site-footer-logo { display:inline-flex; align-items:center; gap:8px; color:var(--text); font-weight:800; font-size:17px; }
+.site-footer-logo span { display:flex; align-items:center; justify-content:center; width:26px; height:26px; background:var(--accent); color:#fff; border-radius:7px; font-size:13px; }
+.site-footer-brand p { margin-top:5px; font-size:11px; color:var(--text-dim); }
+.site-footer-links { display:flex; flex-wrap:wrap; gap:8px 18px; justify-content:center; font-size:12px; }
+.site-footer-links a, .site-footer-social a { transition:color .2s; }
+.site-footer-links a:hover, .site-footer-social a:hover { color:var(--accent); }
+.site-footer-social { display:flex; gap:9px; }
+.site-footer-social a { width:32px; height:32px; display:flex; align-items:center; justify-content:center; border:1px solid var(--border); border-radius:50%; }
+.site-footer-bottom { max-width:1100px; margin:24px auto 0; padding-top:14px; border-top:1px solid var(--border); display:flex; justify-content:space-between; gap:12px; font-size:10px; color:var(--text-dim); }
+
+/* ══════════════════════════════════════════════════════════
+   GENRES / SETTINGS / PLAYLISTS / NOTIFICATIONS
+══════════════════════════════════════════════════════════ */
+.genre-toolbar, .settings-card, .playlist-card, .notification-card {
+  background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+}
+.genre-toolbar { margin:8px 16px 22px; padding:12px; display:flex; gap:10px; flex-wrap:wrap; }
+.genre-toolbar select, .genre-toolbar input, .settings-form input, .settings-form textarea, .playlist-form input, .playlist-form textarea {
+  width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:10px;
+  color:var(--text); padding:11px 13px; font:inherit; font-size:13px; outline:none;
+}
+.genre-toolbar select { flex:0 1 190px; }
+.genre-toolbar input { flex:1 1 220px; }
+.genre-toolbar select:focus, .genre-toolbar input:focus, .settings-form input:focus, .settings-form textarea:focus, .playlist-form input:focus, .playlist-form textarea:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(255,107,0,.1); }
+.genre-content-card h3 { padding-bottom:2px; }
+.genre-card-meta { padding:0 12px 13px; font-size:11px; color:var(--text-dim); }
+.genre-no-results { grid-column:1/-1; }
+.settings-card, .playlist-card, .notification-card { max-width:760px; margin:0 16px 18px; padding:20px; }
+.settings-card h3, .playlist-card h3 { font-size:16px; margin-bottom:4px; }
+.settings-card > p, .playlist-card > p { color:var(--text-sub); font-size:12px; margin-bottom:18px; }
+.settings-form, .playlist-form { display:grid; gap:12px; }
+.settings-form label, .playlist-form label { display:grid; gap:6px; color:var(--text-sub); font-size:12px; font-weight:600; }
+.settings-form textarea, .playlist-form textarea { resize:vertical; min-height:70px; }
+.settings-form input[type=file] { padding:8px; color:var(--text-sub); }
+.form-actions { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+.form-message { font-size:12px; color:var(--text-sub); min-height:18px; }
+.form-message.success { color:var(--success, #22c55e); }
+.form-message.error { color:#ff8080; }
+.playlist-list { display:grid; gap:12px; padding:0 16px 40px; }
+.playlist-card { margin:0; max-width:none; }
+.playlist-card-header { display:flex; justify-content:space-between; gap:14px; align-items:flex-start; }
+.playlist-card-header h3 { margin:0; }
+.playlist-card-header p { color:var(--text-sub); font-size:12px; margin-top:4px; }
+.playlist-card-actions { display:flex; gap:6px; flex-shrink:0; }
+.small-icon-btn { width:32px; height:32px; border:1px solid var(--border); background:var(--surface2); color:var(--text-sub); border-radius:50%; }
+.small-icon-btn:hover { color:var(--accent); border-color:var(--accent); }
+.playlist-items { display:flex; flex-wrap:wrap; gap:7px; margin-top:16px; }
+.playlist-item-chip { display:flex; align-items:center; gap:7px; padding:6px 8px; background:var(--surface2); border-radius:8px; font-size:11px; color:var(--text-sub); }
+.playlist-item-chip img { width:25px; height:34px; object-fit:cover; border-radius:4px; }
+.playlist-item-chip button { color:var(--text-dim); background:none; font-size:11px; }
+.playlist-item-chip button:hover { color:#ff8080; }
+.playlist-add-select {
+  flex:1 1 190px; min-width:150px;
+  background:var(--surface2); border:1px solid var(--border);
+  border-radius:50px; color:var(--text); padding:10px 14px;
+  font:inherit; font-size:12px; outline:none;
+}
+.playlist-add-select:focus { border-color:var(--accent); }
+.notification-list { display:grid; gap:10px; padding:0 16px 40px; }
+.notification-card { max-width:none; margin:0; display:flex; gap:13px; align-items:flex-start; padding:16px; }
+.notification-card.unread { border-color:rgba(255,107,0,.45); background:linear-gradient(90deg, rgba(255,107,0,.1), var(--surface)); }
+.notification-icon { width:34px; height:34px; flex-shrink:0; display:flex; align-items:center; justify-content:center; border-radius:50%; background:rgba(255,107,0,.15); color:var(--accent); }
+.notification-card h3 { font-size:13px; margin-bottom:3px; }
+.notification-card p { font-size:12px; color:var(--text-sub); line-height:1.5; }
+.notification-card time { display:block; margin-top:6px; color:var(--text-dim); font-size:10px; }
+.notification-actions { padding:0 16px 18px; display:flex; justify-content:flex-end; }
 
 /* ══════════════════════════════════════════════════════════
    FAVOURITES — REMOVE BUTTON

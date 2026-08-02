@@ -39,6 +39,15 @@
         <a href="favorite.html" class="account-item">
           <i class="fa-solid fa-heart"></i> Favourites
         </a>
+        <a href="playlists.html" class="account-item">
+          <i class="fa-solid fa-list"></i> Playlists
+        </a>
+        <a href="notifications.html" class="account-item">
+          <i class="fa-regular fa-bell"></i> Notifications
+        </a>
+        <a href="#accountSettings" class="account-item">
+          <i class="fa-solid fa-gear"></i> Account Settings
+        </a>
         <a href="history.html" class="account-item">
           <i class="fa-solid fa-clock-rotate-left"></i> Watch History
         </a>
@@ -59,6 +68,16 @@
       <button class="auth-btn-signout" id="signOutBtn">
         <i class="fa-solid fa-right-from-bracket"></i> Sign Out
       </button>
+
+      <section class="settings-card" id="accountSettings" style="margin:28px auto 0;text-align:left">
+        <h3>Account settings</h3>
+        <p>Update the name and avatar shown across Hanime AG.</p>
+        <form id="profileForm" class="settings-form">
+          <label>Display name <input id="profileDisplayName" required maxlength="60" autocomplete="name"></label>
+          <label>Avatar <input id="profileAvatarFile" type="file" accept="image/png,image/jpeg,image/webp"></label>
+          <div class="form-actions"><button class="auth-btn-cta" id="saveProfileBtn" type="submit"><i class="fa-solid fa-check"></i> Save changes</button><span id="profileMessage" class="form-message" role="status"></span></div>
+        </form>
+      </section>
 
     </div>
   </div>
@@ -104,8 +123,10 @@
 </main>
 
 <script src="app.js"></script>
+<script src="footer.js"></script>
+<script type="module" src="auth-ui.js"></script>
 <script type="module">
-  import { auth, logOut, onAuthStateChanged } from './auth.js';
+  import { auth, logOut, onAuthStateChanged, updateAccountProfile } from './auth.js';
 
   function getInitials(name) {
     if (!name) return '?';
@@ -133,6 +154,7 @@
 
       document.getElementById('accountName').textContent  = user.displayName || 'Anime Fan';
       document.getElementById('accountEmail').textContent = user.email || '';
+      document.getElementById('profileDisplayName').value = user.displayName || '';
 
       // Badge: Google users get a "Google Account" label
       if (user.providerData?.[0]?.providerId === 'google.com') {
@@ -142,6 +164,28 @@
       document.getElementById('signedInView').hidden = true;
       document.getElementById('guestView').hidden = false;
     }
+  });
+
+  document.getElementById('profileForm')?.addEventListener('submit', async event => {
+    event.preventDefault();
+    const button = document.getElementById('saveProfileBtn');
+    const status = document.getElementById('profileMessage');
+    const displayName = document.getElementById('profileDisplayName').value.trim();
+    const avatarFile = document.getElementById('profileAvatarFile').files[0];
+    if (!displayName || !auth.currentUser) return;
+    button.disabled = true;
+    status.textContent = 'Saving…';
+    status.className = 'form-message';
+    try {
+      await updateAccountProfile(auth.currentUser, { displayName, avatarFile });
+      status.textContent = 'Profile updated.';
+      status.className = 'form-message success';
+      document.getElementById('profileAvatarFile').value = '';
+    } catch (err) {
+      console.error('[HAG] Profile update error:', err);
+      status.textContent = err.code === 'storage/unauthorized' ? 'Avatar upload is not enabled yet.' : 'Could not update profile.';
+      status.className = 'form-message error';
+    } finally { button.disabled = false; }
   });
 
   document.getElementById('signOutBtn')?.addEventListener('click', async () => {
