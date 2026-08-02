@@ -41,7 +41,7 @@
     });
 
     grid.innerHTML = items.length ? items.map(([slug, title, category, genre, img]) => `
-      <a href="watch.html?slug=${slug}" class="movie-card genre-content-card">
+      <a href="watch?slug=${slug}" class="movie-card genre-content-card">
         <div class="card-thumb">
           <img data-anime="${slug}" src="${img}" alt="${title}" loading="lazy">
           <div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div>

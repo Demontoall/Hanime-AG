@@ -114,7 +114,7 @@
         ? anime.description.replace(/<[^>]*>/g, '').trim()
         : '';
       const a = document.createElement('a');
-      a.href      = `watch.html?slug=${encodeURIComponent(anime.slug || item.slug)}`;
+      a.href      = `watch?slug=${encodeURIComponent(anime.slug || item.slug)}`;
       a.className = 'movie-card';
       a.innerHTML = `
         <div class="card-thumb">

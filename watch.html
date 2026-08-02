@@ -174,7 +174,7 @@
   favBtn.addEventListener('click', async () => {
     if (!_user) {
       window._hagToast?.('Sign in to save favourites ✨');
-      setTimeout(() => { window.location.href = `login.html?returnTo=${encodeURIComponent(location.pathname + location.search)}`; }, 900);
+      setTimeout(() => { window.location.href = `login?returnTo=${encodeURIComponent(location.pathname + location.search)}`; }, 900);
       return;
     }
     const wasOn = _isFav;

@@ -78,7 +78,7 @@ async function addPendingToPlaylist() {
     slug: params.get('add'),
     title: params.get('title') || params.get('add'),
     img: params.get('img') || '',
-    url: `watch.html?slug=${encodeURIComponent(params.get('add'))}`
+    url: `watch?slug=${encodeURIComponent(params.get('add'))}`
   };
   setMessage(`Choose a playlist below to add “${pending.title}”.`);
   const select = document.createElement('select');

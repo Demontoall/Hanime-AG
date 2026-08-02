@@ -7,7 +7,9 @@ import {
 
 // ── Favourites ────────────────────────────────────────────
 function detailsUrl(slug) {
-  return `watch.html?slug=${encodeURIComponent(slug)}`;
+  // serve's clean-URL redirect drops query strings from .html paths.
+  // Use the canonical extensionless route so the slug survives navigation.
+  return `watch?slug=${encodeURIComponent(slug)}`;
 }
 
 function titleFromMetadata(slug, metadata, fallbackTitle) {

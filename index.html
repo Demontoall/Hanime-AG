@@ -304,11 +304,11 @@
 <script src="anime-images.js"></script>
 <script src="footer.js"></script>
 
-<!-- Auto-upgrade card links with slug param so watch.html can track history -->
+<!-- Auto-upgrade card links with slug param so the canonical watch route can track history -->
 <script>
   document.querySelectorAll('a.card[href="watch.html"]').forEach(card => {
     const slug = card.querySelector('img[data-anime]')?.dataset.anime;
-    if (slug) card.setAttribute('href', 'watch.html?slug=' + slug);
+    if (slug) card.setAttribute('href', 'watch?slug=' + slug);
   });
 </script>
 

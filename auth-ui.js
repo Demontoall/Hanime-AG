@@ -146,7 +146,7 @@ async function onHeartClick(e) {
   if (!_user) {
     showToast('Sign in to save favourites ✨');
     setTimeout(() => {
-      window.location.href = `login.html?returnTo=${encodeURIComponent(location.pathname + location.search)}`;
+      window.location.href = `login?returnTo=${encodeURIComponent(location.pathname + location.search)}`;
     }, 900);
     return;
   }
