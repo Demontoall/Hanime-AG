@@ -1,5 +1,5 @@
 // auth.js — Authentication operations (ES module)
-import { auth, db, googleProvider, storage } from './firebase-config.js';
+import { auth, db, googleProvider } from './firebase-config.js';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -11,9 +11,6 @@ import {
   updateProfile,
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import {
-  ref, uploadBytes, getDownloadURL
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 import {
   doc, setDoc, getDoc, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -93,14 +90,9 @@ export async function resetPassword(email) {
   await sendPasswordResetEmail(auth, email);
 }
 
-export async function updateAccountProfile(user, { displayName, photoURL, avatarFile }) {
+export async function updateAccountProfile(user, { displayName, photoURL }) {
   // Preserve an existing provider/avatar photo when only the display name changes.
   let nextPhotoURL = photoURL === undefined ? (user.photoURL || '') : photoURL.trim();
-  if (avatarFile) {
-    const avatarRef = ref(storage, `users/${user.uid}/avatar`);
-    await uploadBytes(avatarRef, avatarFile, { contentType: avatarFile.type });
-    nextPhotoURL = await getDownloadURL(avatarRef);
-  }
   await updateProfile(user, {
     displayName: displayName.trim(),
     photoURL: nextPhotoURL || null

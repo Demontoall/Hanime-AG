@@ -71,10 +71,9 @@
 
       <section class="settings-card" id="accountSettings" style="margin:28px auto 0;text-align:left">
         <h3>Account settings</h3>
-        <p>Update the name and avatar shown across Hanime AG.</p>
+        <p>Update the name shown across Hanime AG.</p>
         <form id="profileForm" class="settings-form">
           <label>Display name <input id="profileDisplayName" required maxlength="60" autocomplete="name"></label>
-          <label>Avatar <input id="profileAvatarFile" type="file" accept="image/png,image/jpeg,image/webp"></label>
           <div class="form-actions"><button class="auth-btn-cta" id="saveProfileBtn" type="submit"><i class="fa-solid fa-check"></i> Save changes</button><span id="profileMessage" class="form-message" role="status"></span></div>
         </form>
       </section>
@@ -171,19 +170,17 @@
     const button = document.getElementById('saveProfileBtn');
     const status = document.getElementById('profileMessage');
     const displayName = document.getElementById('profileDisplayName').value.trim();
-    const avatarFile = document.getElementById('profileAvatarFile').files[0];
     if (!displayName || !auth.currentUser) return;
     button.disabled = true;
     status.textContent = 'Saving…';
     status.className = 'form-message';
     try {
-      await updateAccountProfile(auth.currentUser, { displayName, avatarFile });
+      await updateAccountProfile(auth.currentUser, { displayName });
       status.textContent = 'Profile updated.';
       status.className = 'form-message success';
-      document.getElementById('profileAvatarFile').value = '';
     } catch (err) {
       console.error('[HAG] Profile update error:', err);
-      status.textContent = err.code === 'storage/unauthorized' ? 'Avatar upload is not enabled yet.' : 'Could not update profile.';
+      status.textContent = 'Could not update profile.';
       status.className = 'form-message error';
     } finally { button.disabled = false; }
   });
