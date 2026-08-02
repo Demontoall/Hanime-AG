@@ -1,0 +1,79 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function ownsUser(userId) {
+      return signedIn() && request.auth.uid == userId;
+    }
+
+    function validPlaylist(data) {
+      return data.name is string
+        && data.name.size() > 0
+        && data.name.size() <= 60
+        && data.description is string
+        && data.description.size() <= 160;
+    }
+
+    function validPlaylistItem(data) {
+      return data.slug is string
+        && data.slug.size() > 0
+        && data.slug.size() <= 120
+        && data.title is string
+        && data.title.size() > 0
+        && data.title.size() <= 200
+        && data.img is string
+        && data.img.size() <= 2048
+        && data.url is string
+        && data.url.size() <= 2048;
+    }
+
+    function validNotification(data) {
+      return data.title is string
+        && data.title.size() > 0
+        && data.title.size() <= 160
+        && data.message is string
+        && data.message.size() <= 1000
+        && data.type is string
+        && data.type.size() <= 40
+        && data.read is bool;
+    }
+
+    match /users/{userId} {
+      allow read, write: if ownsUser(userId);
+
+      match /favourites/{favouriteId} {
+        allow read, write: if ownsUser(userId);
+      }
+
+      match /history/{historyId} {
+        allow read, write: if ownsUser(userId);
+      }
+
+      match /playlists/{playlistId} {
+        allow read: if ownsUser(userId);
+        allow create: if ownsUser(userId) && validPlaylist(request.resource.data);
+        allow update: if ownsUser(userId) && validPlaylist(request.resource.data);
+        allow delete: if ownsUser(userId);
+
+        match /items/{itemId} {
+          allow read: if ownsUser(userId);
+          allow create, update: if ownsUser(userId) && validPlaylistItem(request.resource.data);
+          allow delete: if ownsUser(userId);
+        }
+      }
+
+      match /notifications/{notificationId} {
+        allow read: if ownsUser(userId);
+        allow create: if ownsUser(userId) && validNotification(request.resource.data);
+        allow update: if ownsUser(userId)
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read', 'readAt'])
+          && request.resource.data.read is bool;
+        allow delete: if ownsUser(userId);
+      }
+    }
+  }
+}
