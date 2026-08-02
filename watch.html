@@ -114,7 +114,7 @@
 
 <script type="module">
   import { auth, onAuthStateChanged } from './auth.js';
-  import { addFavourite, removeFavourite, getFavouriteSlugs, addToHistory } from './favorites-client.js';
+  import { addFavourite, removeFavourite, getFavouriteSlugs, addToHistory, buildFavouriteRecord } from './favorites-client.js';
 
   // ── Slug → title map (compact) ──────────────────────────
   const TITLES = {
@@ -185,9 +185,7 @@
         await removeFavourite(_user.uid, slug);
         window._hagToast?.('Removed from favourites');
       } else {
-        const img = document.querySelector(`img[data-anime="${slug}"]`)?.src
-                 || `https://picsum.photos/seed/${slug}/300/420`;
-        await addFavourite(_user.uid, slug, { title, img, url: `watch.html?slug=${slug}` });
+        await addFavourite(_user.uid, slug, { title });
         window._hagToast?.('Added to favourites ❤');
       }
     } catch (err) {
@@ -211,8 +209,13 @@
     // Log to watch history once per page load
     if (!historyLogged && _user) {
       historyLogged = true;
-      const img = `https://picsum.photos/seed/${slug}/300/420`;
-      addToHistory(_user.uid, slug, { title, img, url: `watch.html?slug=${slug}` })
+      buildFavouriteRecord(slug, { title }).then(record =>
+        addToHistory(_user.uid, slug, {
+          title: record.title,
+          img: record.cover,
+          url: record.url
+        })
+      )
         .catch(e => console.error('[HAG] History error:', e));
     }
   }

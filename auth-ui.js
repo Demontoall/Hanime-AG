@@ -166,8 +166,7 @@ async function onHeartClick(e) {
       const title = card?.querySelector('h3')?.textContent?.trim() || slug;
       const imgEl = btn.closest('.card-thumb')?.querySelector('img');
       const img   = imgEl?.src || '';
-      const url   = card?.getAttribute('href') || 'watch.html';
-      await addFavourite(_user.uid, slug, { title, img, url });
+      await addFavourite(_user.uid, slug, { title, img });
       _favs.add(slug);
       showToast('Added to favourites ❤');
     }

@@ -234,6 +234,55 @@ async function searchOne(slug) {
   return meta;
 }
 
+/* ── Public metadata loaders ────────────────────────────────────
+   Favourites and other user-scoped features can request complete
+   metadata without manufacturing a placeholder card first. */
+async function loadSlugs(slugs) {
+  const uniqueSlugs = [...new Set(slugs.filter(Boolean))];
+  const result = new Map();
+  const idsToFetch = [];
+  const idToSlugs = new Map();
+  const unknownSlugs = [];
+
+  for (const slug of uniqueSlugs) {
+    const alId = AL[slug] || (+ss.get(MID_PFX + slug) || null);
+    if (!alId) {
+      unknownSlugs.push(slug);
+      continue;
+    }
+
+    const cached = fromCache(alId);
+    if (cached) {
+      result.set(slug, cached);
+    } else {
+      idsToFetch.push(alId);
+      if (!idToSlugs.has(alId)) idToSlugs.set(alId, []);
+      idToSlugs.get(alId).push(slug);
+    }
+  }
+
+  if (idsToFetch.length) {
+    const fetched = await batchFetchIds([...new Set(idsToFetch)]);
+    for (const [alId, meta] of fetched) {
+      for (const slug of idToSlugs.get(alId) || []) result.set(slug, meta);
+    }
+  }
+
+  for (const slug of unknownSlugs) {
+    const cachedId = +ss.get(MID_PFX + slug) || null;
+    const cached = cachedId ? fromCache(cachedId) : null;
+    const meta = cached || await searchOne(slug);
+    if (meta) result.set(slug, meta);
+    if (!cached && unknownSlugs.length > 1) await wait(700);
+  }
+
+  return result;
+}
+
+async function loadSlug(slug) {
+  return (await loadSlugs([slug])).get(slug) || null;
+}
+
 /* ── Apply metadata to DOM elements for one slug ─────────────── */
 function applyMeta(slug, meta) {
   if (!meta) return;
@@ -345,6 +394,8 @@ async function run() {
 
 /* ── Public API ─────────────────────────────────────────────── */
 window._animeImagesRun = run;
+window._animeImagesLoad = loadSlug;
+window._animeImagesLoadMany = loadSlugs;
 
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', run);

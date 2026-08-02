@@ -786,6 +786,32 @@ header.genre-header p { color:var(--text-sub); font-size:14px; }
   font-size:13px; font-weight:700;
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
+.favourite-meta {
+  padding:0 12px 5px;
+  color:var(--accent);
+  font-size:11px;
+  text-transform:capitalize;
+}
+.favourite-description {
+  padding:0 12px 13px;
+  color:var(--text-sub);
+  font-size:11px;
+  line-height:1.45;
+  display:-webkit-box;
+  -webkit-line-clamp:3;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+.card-no-cover {
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--text-dim);
+  background:linear-gradient(145deg, #242424, #111);
+  font-size:28px;
+}
 
 /* ══════════════════════════════════════════════════════════
    WATCH PAGE
