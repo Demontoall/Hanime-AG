@@ -42,8 +42,59 @@ service cloud.firestore {
         && data.read is bool;
     }
 
+    function isAdmin() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    function validProgress(data) {
+      return data.contentId is string
+        && data.contentId.size() > 0
+        && data.slug is string
+        && data.slug.size() > 0
+        && data.episodeNumber is int
+        && data.episodeNumber > 0
+        && data.position is number
+        && data.position >= 0
+        && data.duration is number
+        && data.duration >= 0
+        && data.percent is number
+        && data.percent >= 0
+        && data.percent <= 100
+        && data.completed is bool;
+    }
+
+    function validCatalog(data) {
+      return data.contentId is string
+        && data.contentId.size() > 0
+        && data.slug is string
+        && data.slug.size() > 0
+        && data.title is string
+        && data.title.size() > 0
+        && data.title.size() <= 200;
+    }
+
+    function validEpisode(data) {
+      return data.episodeNumber is int
+        && data.episodeNumber > 0
+        && data.title is string
+        && data.title.size() > 0
+        && (!('videoUrl' in data) || data.videoUrl == null || data.videoUrl is string)
+        && (!('thumbnail' in data) || data.thumbnail == null || data.thumbnail is string);
+    }
+
+    function validUserCreate(data) {
+      return !('role' in data);
+    }
+
     match /users/{userId} {
-      allow read, write: if ownsUser(userId);
+      allow read: if ownsUser(userId);
+      allow create: if ownsUser(userId) && validUserCreate(request.resource.data);
+      allow update: if ownsUser(userId)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'displayName', 'email', 'photoURL', 'createdAt'
+        ]);
 
       match /favourites/{favouriteId} {
         allow read, write: if ownsUser(userId);
@@ -51,6 +102,11 @@ service cloud.firestore {
 
       match /history/{historyId} {
         allow read, write: if ownsUser(userId);
+      }
+
+      match /progress/{progressId} {
+        allow read, create, update: if ownsUser(userId) && validProgress(request.resource.data);
+        allow delete: if ownsUser(userId);
       }
 
       match /playlists/{playlistId} {
@@ -73,6 +129,18 @@ service cloud.firestore {
           && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read', 'readAt'])
           && request.resource.data.read is bool;
         allow delete: if ownsUser(userId);
+      }
+    }
+
+    match /catalog/{contentId} {
+      allow read: if true;
+      allow create, update: if isAdmin() && validCatalog(request.resource.data);
+      allow delete: if isAdmin();
+
+      match /episodes/{episodeId} {
+        allow read: if true;
+        allow create, update: if isAdmin() && validEpisode(request.resource.data);
+        allow delete: if isAdmin();
       }
     }
   }

@@ -1,0 +1,48 @@
+Yes. Proceed with this additive architecture. Do not rebuild or replace completed systems—extend them while maintaining backward compatibility and preserving the existing design language.
+The implementation order should be:
+Phase 1 – Shared Data & Navigation
+Complete the shared content catalogue.
+Standardize content IDs and slugs.
+Eliminate all placeholder routes.
+Ensure every title, season, and episode resolves correctly.
+Phase 2 – Playback Progress
+Save playback position.
+Resume from last position.
+Track completed episodes.
+Maintain Continue Watching.
+Display watch progress across the UI.
+Sync progress with authenticated users.
+Phase 3 – Player Architecture
+Implement a provider abstraction so the player can support multiple video sources in the future.
+Keep videoUrl optional.
+Gracefully handle unavailable videos.
+Prepare for HLS, subtitles, quality selection, multiple servers, playback speed, Picture-in-Picture, fullscreen improvements, skip intro/outro, and automatic next episode.
+Ensure adding licensed streaming URLs later requires only updating the catalogue or admin panel, not changing the player architecture.
+Phase 4 – Admin Dashboard
+Build a complete content management system for anime, seasons, episodes, metadata, artwork, banners, featured content, categories, and future video sources.
+Remove dependence on manually editing JSON files wherever practical.
+Phase 5 – Production Polish
+Complete SEO.
+Add Open Graph metadata.
+Generate sitemap and robots.txt.
+Add structured data.
+Configure canonical URLs.
+Phase 6 – Performance & Accessibility
+Optimize Core Web Vitals.
+Improve lazy loading and image optimization.
+Ensure responsive layouts across mobile, tablet, and desktop.
+Complete keyboard navigation and accessibility compliance.
+Phase 7 – Testing
+Add automated tests for authentication, routing, playlists, favourites, playback progress, watch flow, notifications, and Firestore security rules.
+Phase 8 – PWA & Deployment
+Complete manifest.
+Configure service worker.
+Add app icons.
+Verify production Firebase configuration.
+Prepare monitoring, backups, logging, and production deployment.
+Important Requirements
+Preserve the existing Netflix-inspired UI and design language.
+Do not remove or rewrite completed features unless absolutely necessary.
+Maintain modular, scalable architecture.
+Keep the project production-ready so that once licensed streaming URLs become available, enabling playback only requires adding the URLs through the catalogue or admin dashboard without architectural changes.
+Deliver each phase fully before beginning the next, and ensure the application remains functional after every completed phase.

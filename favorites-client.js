@@ -143,9 +143,13 @@ export async function hydrateFavourite(uid, item) {
 }
 
 // ── Watch History ─────────────────────────────────────────
-export async function addToHistory(uid, slug, { title, img, url }) {
+export async function addToHistory(uid, slug, { title, img, url, contentId, episodeNumber, progress, duration, completed } = {}) {
   await setDoc(doc(db, 'users', uid, 'history', slug), {
-    slug, title, img, url,
+    slug, title, img, url, contentId: contentId || slug,
+    episodeNumber: Number(episodeNumber) || 1,
+    progress: Number(progress) || 0,
+    duration: Number(duration) || 0,
+    completed: Boolean(completed),
     lastWatched: serverTimestamp()
   }, { merge: true });
 }

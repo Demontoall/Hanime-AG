@@ -10,7 +10,19 @@
         { "episodeNumber": 3, "title": "Shadows and Light", "duration": "25 min", "thumbnail": null, "videoUrl": null, "subtitles": [], "quality": [], "server": null },
         { "episodeNumber": 4, "title": "The Awakening", "duration": "22 min", "thumbnail": null, "videoUrl": null, "subtitles": [], "quality": [], "server": null },
         { "episodeNumber": 5, "title": "Final Confrontation", "duration": "28 min", "thumbnail": null, "videoUrl": null, "subtitles": [], "quality": [], "server": null }
-      ]
+      ],
+      "seasons": {
+        "2": {
+          "season": 2,
+          "episodes": [
+            { "episodeNumber": 1, "title": "The New Monarch", "duration": null, "thumbnail": null, "videoUrl": null, "subtitles": [], "quality": [], "server": null },
+            { "episodeNumber": 2, "title": "A New Threat", "duration": null, "thumbnail": null, "videoUrl": null, "subtitles": [], "quality": [], "server": null },
+            { "episodeNumber": 3, "title": "The Raid", "duration": null, "thumbnail": null, "videoUrl": null, "subtitles": [], "quality": [], "server": null },
+            { "episodeNumber": 4, "title": "The Gate", "duration": null, "thumbnail": null, "videoUrl": null, "subtitles": [], "quality": [], "server": null },
+            { "episodeNumber": 5, "title": "The Final Battle", "duration": null, "thumbnail": null, "videoUrl": null, "subtitles": [], "quality": [], "server": null }
+          ]
+        }
+      }
     },
     "jujutsu-kaisen": { "title": "Jujutsu Kaisen", "season": 1, "episodeCount": 5, "episodes": [] },
     "demon-slayer": { "title": "Demon Slayer", "season": 1, "episodeCount": 5, "episodes": [] },

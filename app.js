@@ -184,4 +184,11 @@
     if (slug) link.href = `watch?slug=${encodeURIComponent(slug)}`;
   });
 
+  // Keep legacy cards and search/category templates from falling back to the
+  // default title when a slug is present in their image metadata.
+  document.querySelectorAll('a[href="watch.html"]').forEach(link => {
+    const slug = link.querySelector('[data-anime]')?.dataset.anime;
+    if (slug) link.setAttribute('href', `watch?slug=${encodeURIComponent(slug)}&episode=1`);
+  });
+
 })();

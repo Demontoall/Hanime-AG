@@ -3,3 +3,4 @@
 - [Firebase feature rules](firebase-feature-rules.md) — New user-scoped Firestore collections need matching Firebase console security rules; Storage is intentionally deferred.
 - [Clean URL query parameters](clean-url-query-params.md) — Use extensionless routes for query-bearing links because the static server drops queries during `.html` redirects.
 - [Streaming episode manifest](streaming-manifest.md) — Episode playback reads per-anime, per-episode sources from episodes.json; missing URLs show an unavailable state.
+- [Catalogue overrides](catalogue-overrides.md) — Firestore content overrides extend the static catalogue after Auth resolves; JSON remains the public fallback.

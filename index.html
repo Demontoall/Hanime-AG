@@ -96,6 +96,15 @@
   </div>
 </section>
 
+<!-- Continue Watching — populated from local progress or Firestore -->
+<section class="section reveal continue-section" id="continueWatchingSection" hidden>
+  <div class="section-header">
+    <h2 class="section-title"><i class="fa-solid fa-clock-rotate-left" style="color:var(--accent)"></i> Continue Watching</h2>
+    <a href="history.html" class="section-see-all">View history →</a>
+  </div>
+  <div class="continue-grid" id="continueWatchingGrid"></div>
+</section>
+
 <!-- Trending Now -->
 <section class="section reveal">
   <div class="section-header">
@@ -104,7 +113,7 @@
   </div>
   <div class="horizontal" role="list">
 
-    <a href="watch.html" class="card" role="listitem">
+    <a href="watch?slug=solo-leveling&episode=1" class="card" role="listitem">
       <div class="card-thumb">
         <img data-anime="solo-leveling" src="https://picsum.photos/seed/sl2024/300/420" alt="Solo Leveling" loading="lazy">
         <div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
@@ -114,7 +123,7 @@
       <div class="card-info"><h3>Solo Leveling</h3><p class="card-meta">Anime · Ep 12</p></div>
     </a>
 
-    <a href="watch.html" class="card" role="listitem">
+    <a href="watch?slug=jujutsu-kaisen&episode=1" class="card" role="listitem">
       <div class="card-thumb">
         <img data-anime="jujutsu-kaisen" src="https://picsum.photos/seed/jjk2024/300/420" alt="Jujutsu Kaisen" loading="lazy">
         <div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
@@ -124,7 +133,7 @@
       <div class="card-info"><h3>Jujutsu Kaisen</h3><p class="card-meta">Anime · Ep 24</p></div>
     </a>
 
-    <a href="watch.html" class="card" role="listitem">
+    <a href="watch?slug=demon-slayer&episode=1" class="card" role="listitem">
       <div class="card-thumb">
         <img data-anime="demon-slayer" src="https://picsum.photos/seed/demonslayer/300/420" alt="Demon Slayer" loading="lazy">
         <div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
@@ -133,7 +142,7 @@
       <div class="card-info"><h3>Demon Slayer</h3><p class="card-meta">Anime · Ep 26</p></div>
     </a>
 
-    <a href="watch.html" class="card" role="listitem">
+    <a href="watch?slug=attack-on-titan&episode=1" class="card" role="listitem">
       <div class="card-thumb">
         <img data-anime="attack-on-titan" src="https://picsum.photos/seed/aot2024/300/420" alt="Attack on Titan" loading="lazy">
         <div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
@@ -142,7 +151,7 @@
       <div class="card-info"><h3>Attack on Titan</h3><p class="card-meta">Anime · Ep 87</p></div>
     </a>
 
-    <a href="watch.html" class="card" role="listitem">
+    <a href="watch?slug=vinland-saga&episode=1" class="card" role="listitem">
       <div class="card-thumb">
         <img data-anime="vinland-saga" src="https://picsum.photos/seed/vinland/300/420" alt="Vinland Saga" loading="lazy">
         <div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
@@ -151,7 +160,7 @@
       <div class="card-info"><h3>Vinland Saga</h3><p class="card-meta">Anime · Ep 48</p></div>
     </a>
 
-    <a href="watch.html" class="card" role="listitem">
+    <a href="watch?slug=bleach-tybw&episode=1" class="card" role="listitem">
       <div class="card-thumb">
         <img data-anime="bleach-tybw" src="https://picsum.photos/seed/bleachtybw/300/420" alt="Bleach: TYBW" loading="lazy">
         <div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
@@ -199,7 +208,7 @@
       <div class="card-info"><h3>Blue Sky</h3><p class="card-meta">Donghua · Ep 1</p></div>
     </a>
 
-    <a href="watch.html" class="card" role="listitem">
+    <a href="watch?slug=chainsaw-man&episode=1" class="card" role="listitem">
       <div class="card-thumb">
         <img data-anime="chainsaw-man" src="https://picsum.photos/seed/chainsawman/300/420" alt="Chainsaw Man" loading="lazy">
         <div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
@@ -208,7 +217,7 @@
       <div class="card-info"><h3>Chainsaw Man</h3><p class="card-meta">Anime · Ep 12</p></div>
     </a>
 
-    <a href="watch.html" class="card" role="listitem">
+    <a href="watch?slug=overflow&episode=1" class="card" role="listitem">
       <div class="card-thumb">
         <img data-anime="overflow" src="https://picsum.photos/seed/overflow-anime/300/420" alt="Overflow" loading="lazy">
         <div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
@@ -227,7 +236,7 @@
   </div>
   <div class="horizontal" role="list">
 
-    <a href="watch.html" class="card" role="listitem">
+    <a href="watch?slug=your-name&episode=1" class="card" role="listitem">
       <div class="card-thumb">
         <img data-anime="your-name" src="https://picsum.photos/seed/yourname2016/300/420" alt="Your Name" loading="lazy">
         <div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
@@ -236,7 +245,7 @@
       <div class="card-info"><h3>Your Name</h3><p class="card-meta">Movie · 2016</p></div>
     </a>
 
-    <a href="watch.html" class="card" role="listitem">
+    <a href="watch?slug=suzume&episode=1" class="card" role="listitem">
       <div class="card-thumb">
         <img data-anime="suzume" src="https://picsum.photos/seed/suzume2022/300/420" alt="Suzume" loading="lazy">
         <div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
@@ -245,7 +254,7 @@
       <div class="card-info"><h3>Suzume</h3><p class="card-meta">Movie · 2022</p></div>
     </a>
 
-    <a href="watch.html" class="card" role="listitem">
+    <a href="watch?slug=a-silent-voice&episode=1" class="card" role="listitem">
       <div class="card-thumb">
         <img data-anime="a-silent-voice" src="https://picsum.photos/seed/silentvoice/300/420" alt="A Silent Voice" loading="lazy">
         <div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
@@ -254,7 +263,7 @@
       <div class="card-info"><h3>A Silent Voice</h3><p class="card-meta">Movie · 2016</p></div>
     </a>
 
-    <a href="watch.html" class="card" role="listitem">
+    <a href="watch?slug=spirited-away&episode=1" class="card" role="listitem">
       <div class="card-thumb">
         <img data-anime="spirited-away" src="https://picsum.photos/seed/spiritedaway/300/420" alt="Spirited Away" loading="lazy">
         <div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
@@ -263,7 +272,7 @@
       <div class="card-info"><h3>Spirited Away</h3><p class="card-meta">Movie · 2001</p></div>
     </a>
 
-    <a href="watch.html" class="card" role="listitem">
+    <a href="watch?slug=princess-mononoke&episode=1" class="card" role="listitem">
       <div class="card-thumb">
         <img data-anime="princess-mononoke" src="https://picsum.photos/seed/mononoke/300/420" alt="Princess Mononoke" loading="lazy">
         <div class="card-play-overlay"><i class="fa-solid fa-circle-play"></i></div>
@@ -313,5 +322,6 @@
 </script>
 
 <script type="module" src="auth-ui.js"></script>
+<script type="module" src="continue-watching.js"></script>
 </body>
 </html>

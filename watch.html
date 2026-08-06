@@ -32,6 +32,19 @@
       <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
       <p>Loading episode…</p>
     </div>
+    <button type="button" class="skip-control skip-intro" id="skipIntro" hidden>Skip intro <i class="fa-solid fa-forward"></i></button>
+    <button type="button" class="skip-control skip-outro" id="skipOutro" hidden>Skip outro <i class="fa-solid fa-forward"></i></button>
+  </div>
+  <div class="player-tools" aria-label="Player options">
+    <label>Server <select id="serverSelect" disabled><option>Default server</option></select></label>
+    <label>Quality <select id="qualitySelect" disabled><option>Auto</option></select></label>
+    <label>Speed <select id="speedSelect" aria-label="Playback speed">
+      <option value="0.5">0.5×</option><option value="0.75">0.75×</option><option value="1" selected>1×</option>
+      <option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="2">2×</option>
+    </select></label>
+    <button type="button" class="player-tool-btn" id="pipBtn" title="Picture in picture" aria-label="Picture in picture">
+      <i class="fa-solid fa-clone"></i> PiP
+    </button>
   </div>
 
   <!-- Info -->
@@ -45,6 +58,7 @@
     </div>
     <p class="watch-episode-label" id="epLabel">Episode 1</p>
     <p class="watch-desc" id="watchDesc">Choose an episode to start watching.</p>
+    <p class="watch-progress-summary" id="progressSummary" aria-live="polite"></p>
   </div>
 
   <!-- Navigation Buttons -->
@@ -73,6 +87,10 @@
 <script type="module">
   import { auth, onAuthStateChanged } from './auth.js';
   import { addFavourite, removeFavourite, getFavouriteSlugs, addToHistory, buildFavouriteRecord } from './favorites-client.js';
+  import { contentIdForSlug, getContentBySlug } from './content-catalog.js';
+  import { getPlaybackProgress, savePlaybackProgress } from './playback-progress.js';
+  import { mountVideoSource, normalizeEpisodeSources } from './video-sources.js';
+  import { loadManagedEpisodeManifest } from './content-service.js';
 
   // ── Slug → title map (compact) ──────────────────────────
   const TITLES = {
@@ -98,6 +116,7 @@
   // ── Read slug from URL ──────────────────────────────────
   const params = new URLSearchParams(location.search);
   const slug  = params.get('slug') || 'solo-leveling';
+  const requestedSeason = Math.max(1, Number.parseInt(params.get('season') || '1', 10) || 1);
   const requestedEpisode = Number.parseInt(params.get('episode') || '1', 10);
   const title = TITLES[slug] || slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 
@@ -122,6 +141,7 @@
       _isFav = false;
       updateFavBtn();
     }
+    if (_user && currentEpisodeData) await logHistory();
   });
 
   function updateFavBtn() {
@@ -164,10 +184,22 @@
   const sectionTitle = document.getElementById('episodeSectionTitle');
   const btnPrev = document.getElementById('btnPrev');
   const btnNext = document.getElementById('btnNext');
+  const serverSelect = document.getElementById('serverSelect');
+  const qualitySelect = document.getElementById('qualitySelect');
+  const speedSelect = document.getElementById('speedSelect');
+  const pipBtn = document.getElementById('pipBtn');
+  const progressSummary = document.getElementById('progressSummary');
+  const skipIntro = document.getElementById('skipIntro');
+  const skipOutro = document.getElementById('skipOutro');
   let manifestEntry = null;
+  let content = null;
   let episodes = [];
   let currentEpisode = 1;
-  let historyLogged = false;
+  let currentEpisodeData = null;
+  let currentSources = [];
+  let cleanupSource = null;
+  let lastProgressSave = 0;
+  let restoredPosition = 0;
 
   function showVideoState(message, icon = 'fa-circle-exclamation', action = '') {
     videoState.innerHTML = `<i class="fa-solid ${icon}" aria-hidden="true"></i><p>${message}</p>${action}`;
@@ -176,6 +208,8 @@
 
   function clearVideo() {
     video.pause();
+    cleanupSource?.();
+    cleanupSource = null;
     video.removeAttribute('src');
     video.load();
     video.style.display = 'none';
@@ -189,6 +223,8 @@
     const next = new URL(location.href);
     next.pathname = next.pathname.replace(/\/?watch(?:\.html)?$/, '/watch');
     next.searchParams.set('slug', slug);
+    if (requestedSeason > 1) next.searchParams.set('season', String(requestedSeason));
+    else next.searchParams.delete('season');
     next.searchParams.set('episode', String(number));
     history.replaceState({ slug, episode: number }, '', next);
   }
@@ -220,48 +256,129 @@
     btnNext.disabled = currentEpisode >= episodes.length;
   }
 
-  function logHistory() {
-    if (!_user || historyLogged) return;
-    historyLogged = true;
+  async function logHistory() {
+    if (!_user) return;
     buildFavouriteRecord(slug, { title }).then(record =>
       addToHistory(_user.uid, slug, {
         title: record.title,
         img: record.cover,
-        url: `watch?slug=${encodeURIComponent(slug)}&episode=${currentEpisode}`
+        url: `watch?slug=${encodeURIComponent(slug)}&episode=${currentEpisode}`,
+        contentId: content?.contentId || contentIdForSlug(slug),
+        episodeNumber: currentEpisode
       })
     ).catch(error => console.error('[HAG] History error:', error));
   }
 
-  function loadEpisode(number, autoplay = false) {
+  function setOptions(select, values, fallback) {
+    const unique = [...new Set(values.filter(Boolean))];
+    select.innerHTML = unique.length
+      ? unique.map(value => `<option value="${String(value).replace(/"/g, '&quot;')}">${String(value)}</option>`).join('')
+      : `<option>${fallback}</option>`;
+    select.disabled = unique.length < 2;
+  }
+
+  async function saveProgress(completed = false) {
+    if (!currentEpisodeData || !content) return;
+    const duration = Number.isFinite(video.duration) ? video.duration : Number(currentEpisodeData.durationSeconds) || 0;
+    const position = Number.isFinite(video.currentTime) ? video.currentTime : 0;
+    if (position <= 0 && !completed) return;
+    lastProgressSave = Date.now();
+    const record = await savePlaybackProgress(_user, {
+      contentId: content.contentId || contentIdForSlug(slug),
+      slug, title: content.title || title, episodeNumber: currentEpisode,
+      position, duration, completed, img: content.poster || null,
+      url: `watch?slug=${encodeURIComponent(slug)}&episode=${currentEpisode}`
+    });
+    const label = record.completed ? 'Watched' : `${record.percent}% watched`;
+    progressSummary.textContent = `${label} · Episode ${currentEpisode}`;
+  }
+
+  async function restoreProgress() {
+    restoredPosition = 0;
+    if (!content) return;
+    const record = await getPlaybackProgress(_user, content.contentId || contentIdForSlug(slug), currentEpisode);
+    if (!record) {
+      progressSummary.textContent = 'Not started';
+      return;
+    }
+    restoredPosition = record.completed ? 0 : record.position;
+    progressSummary.textContent = record.completed ? 'Watched' : `${record.percent}% watched · Resume available`;
+  }
+
+  function prepareSourceOptions() {
+    const servers = currentSources.map(source => source.server);
+    const qualities = currentSources.map(source => source.quality);
+    setOptions(serverSelect, servers, 'No server configured');
+    setOptions(qualitySelect, qualities, 'Auto');
+  }
+
+  async function mountCurrentSource(autoplay) {
+    const source = currentSources.find(item =>
+      item.server === serverSelect.value && item.quality === qualitySelect.value
+    ) || currentSources[0];
+    if (!source) {
+      showVideoState('Video unavailable', 'fa-video-slash');
+      return;
+    }
+    try {
+      cleanupSource?.();
+      cleanupSource = await mountVideoSource(video, source);
+      video.style.display = 'block';
+      videoState.style.display = 'none';
+      if (restoredPosition > 0) {
+        video.addEventListener('loadedmetadata', () => {
+          if (restoredPosition < video.duration) video.currentTime = restoredPosition;
+        }, { once: true });
+      }
+      if (autoplay) video.play().catch(() => {});
+    } catch (error) {
+      console.error('[HAG] Source mount error:', error);
+      video.style.display = 'none';
+      showVideoState('Video unavailable', 'fa-video-slash', '<button type="button" class="video-retry" id="videoRetry">Retry</button>');
+      document.getElementById('videoRetry')?.addEventListener('click', () => mountCurrentSource(true), { once: true });
+    }
+  }
+
+  async function loadEpisode(number, autoplay = false) {
     const episode = episodeFor(number);
     if (!episode) return;
     currentEpisode = number;
+    currentEpisodeData = episode;
     updateUrl(number);
     updateEpisodeControls();
     clearVideo();
     videoState.style.display = 'none';
+    skipIntro.hidden = true;
+    skipOutro.hidden = true;
+    currentSources = normalizeEpisodeSources(episode);
+    prepareSourceOptions();
+    await restoreProgress();
 
-    if (!episode.videoUrl) {
+    if (!currentSources.length) {
       showVideoState('Video unavailable', 'fa-video-slash');
       watchDesc.textContent = 'This episode does not have a streaming source yet.';
+      await logHistory();
       return;
     }
 
-    watchDesc.textContent = episode.server ? `Streaming from ${episode.server}.` : 'Ready to play.';
-    video.type = episode.type || (String(episode.videoUrl).includes('.m3u8') ? 'application/x-mpegURL' : 'video/mp4');
-    video.src = episode.videoUrl;
-    video.style.display = 'block';
-    video.load();
-    if (autoplay) video.play().catch(() => {});
-    logHistory();
+    watchDesc.textContent = currentSources[0].server ? `Streaming from ${currentSources[0].server}.` : 'Ready to play.';
+    if (episode.skipIntro?.start != null && episode.skipIntro?.end != null) {
+      skipIntro.hidden = false;
+      skipIntro.dataset.end = episode.skipIntro.end;
+    }
+    if (episode.skipOutro?.start != null && episode.skipOutro?.end != null) {
+      skipOutro.hidden = false;
+      skipOutro.dataset.start = episode.skipOutro.start;
+    }
+    await mountCurrentSource(autoplay);
+    await logHistory();
   }
 
   async function loadManifest() {
     try {
-      const response = await fetch('episodes.json', { cache: 'no-store' });
-      if (!response.ok) throw new Error(`Manifest request failed: ${response.status}`);
-      const manifest = await response.json();
-      manifestEntry = manifest.anime?.[slug] || null;
+      const managed = await loadManagedEpisodeManifest(slug, requestedSeason);
+      manifestEntry = managed.manifest;
+      content = managed.content;
       if (!manifestEntry) {
         episodes = [];
         episodeList.innerHTML = '<p class="video-manifest-message">No episodes are configured for this title.</p>';
@@ -310,12 +427,31 @@
   btnNext.addEventListener('click', () => {
     if (currentEpisode < episodes.length) loadEpisode(currentEpisode + 1, true);
   });
+  serverSelect.addEventListener('change', () => mountCurrentSource(Boolean(!video.paused)));
+  qualitySelect.addEventListener('change', () => mountCurrentSource(Boolean(!video.paused)));
+  speedSelect.addEventListener('change', () => { video.playbackRate = Number(speedSelect.value); });
+  pipBtn.addEventListener('click', async () => {
+    try {
+      if (document.pictureInPictureElement) await document.exitPictureInPicture();
+      else if (document.pictureInPictureEnabled) await video.requestPictureInPicture();
+    } catch (error) { console.warn('[HAG] PiP unavailable:', error); }
+  });
+  skipIntro.addEventListener('click', () => { video.currentTime = Number(skipIntro.dataset.end) || video.currentTime; skipIntro.hidden = true; });
+  skipOutro.addEventListener('click', () => { video.currentTime = Number(skipOutro.dataset.start) || video.currentTime; skipOutro.hidden = true; });
+  video.addEventListener('timeupdate', () => {
+    if (video.currentTime - lastProgressSave > 10 || Date.now() - lastProgressSave > 15000) saveProgress();
+    if (currentEpisodeData?.skipIntro && video.currentTime >= currentEpisodeData.skipIntro.start && video.currentTime < currentEpisodeData.skipIntro.end) skipIntro.hidden = false;
+    if (currentEpisodeData?.skipOutro && video.duration && video.currentTime >= video.duration - currentEpisodeData.skipOutro.duration) skipOutro.hidden = false;
+  });
+  video.addEventListener('pause', () => saveProgress());
+  video.addEventListener('pagehide', () => saveProgress());
   video.addEventListener('error', () => {
     video.style.display = 'none';
     showVideoState('Video unavailable', 'fa-video-slash', '<button type="button" class="video-retry" id="videoRetry">Retry</button>');
     document.getElementById('videoRetry')?.addEventListener('click', () => loadEpisode(currentEpisode, true));
   });
   video.addEventListener('ended', () => {
+    saveProgress(true);
     if (currentEpisode < episodes.length) loadEpisode(currentEpisode + 1, true);
   });
 

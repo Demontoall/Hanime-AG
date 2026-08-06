@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "contents": [
+    { "contentId": "151807", "slug": "solo-leveling", "title": "Solo Leveling", "category": "Anime", "genres": ["Action", "Fantasy"], "featured": true },
+    { "contentId": "113415", "slug": "jujutsu-kaisen", "title": "Jujutsu Kaisen", "category": "Anime", "genres": ["Supernatural", "Action"] },
+    { "contentId": "101922", "slug": "demon-slayer", "title": "Demon Slayer", "category": "Anime", "genres": ["Action", "Fantasy"] },
+    { "contentId": "16498", "slug": "attack-on-titan", "title": "Attack on Titan", "category": "Anime", "genres": ["Drama", "Action"] },
+    { "contentId": "101348", "slug": "vinland-saga", "title": "Vinland Saga", "category": "Anime", "genres": ["Historical", "Drama"] },
+    { "contentId": "116674", "slug": "bleach-tybw", "title": "Bleach: TYBW", "category": "Anime", "genres": ["Action", "Supernatural"] },
+    { "contentId": "127230", "slug": "chainsaw-man", "title": "Chainsaw Man", "category": "Anime", "genres": ["Action", "Horror"] },
+    { "contentId": "21", "slug": "one-piece", "title": "One Piece", "category": "Anime", "genres": ["Adventure", "Action"] },
+    { "contentId": "1735", "slug": "naruto-shippuden", "title": "Naruto Shippuden", "category": "Anime", "genres": ["Action", "Adventure"] },
+    { "contentId": "21459", "slug": "my-hero-academia", "title": "My Hero Academia", "category": "Anime", "genres": ["Action", "Superhero"] },
+    { "contentId": "113417", "slug": "overflow", "title": "Overflow", "category": "Hanime", "genres": ["Romance"] },
+    { "contentId": "21519", "slug": "your-name", "title": "Your Name", "category": "Movies", "genres": ["Romance", "Fantasy"] },
+    { "contentId": "142770", "slug": "suzume", "title": "Suzume", "category": "Movies", "genres": ["Fantasy", "Adventure"] },
+    { "contentId": "20954", "slug": "a-silent-voice", "title": "A Silent Voice", "category": "Movies", "genres": ["Drama", "Romance"] },
+    { "contentId": "199", "slug": "spirited-away", "title": "Spirited Away", "category": "Movies", "genres": ["Fantasy"] },
+    { "contentId": "164", "slug": "princess-mononoke", "title": "Princess Mononoke", "category": "Movies", "genres": ["Fantasy", "Adventure"] },
+    { "contentId": "106286", "slug": "weathering-with-you", "title": "Weathering with You", "category": "Movies", "genres": ["Romance", "Fantasy"] },
+    { "contentId": "109979", "slug": "boy-and-the-heron", "title": "The Boy and the Heron", "category": "Movies", "genres": ["Fantasy"] },
+    { "contentId": "local-battle-through-heavens", "slug": "battle-through-heavens", "title": "Battle Through the Heavens", "category": "Donghua", "genres": ["Cultivation"] },
+    { "contentId": "101920", "slug": "soul-land", "title": "Soul Land", "category": "Donghua", "genres": ["Fantasy"] },
+    { "contentId": "local-perfect-world", "slug": "perfect-world", "title": "Perfect World", "category": "Donghua", "genres": ["Xianxia"] },
+    { "contentId": "98861", "slug": "kings-avatar", "title": "The King's Avatar", "category": "Donghua", "genres": ["Action"] },
+    { "contentId": "105626", "slug": "stellar-transformations", "title": "Stellar Transformations", "category": "Donghua", "genres": ["Xianxia"] },
+    { "contentId": "101916", "slug": "tales-of-demons-and-gods", "title": "Tales of Demons and Gods", "category": "Donghua", "genres": ["Cultivation"] },
+    { "contentId": "118166", "slug": "isekai-harem-monogatari", "title": "Isekai Harem Monogatari", "category": "Hanime", "genres": ["Fantasy"] },
+    { "contentId": "local-night-world", "slug": "night-world", "title": "Night World", "category": "Anime", "genres": ["Dark Fantasy"] },
+    { "contentId": "local-shadow-hero", "slug": "shadow-hero", "title": "Shadow Hero", "category": "Anime", "genres": ["Action"] },
+    { "contentId": "local-blue-sky", "slug": "blue-sky", "title": "Blue Sky", "category": "Donghua", "genres": ["Xianxia"] }
+  ]
+}

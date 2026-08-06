@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Manage Hanime AG catalogue content and episode sources.">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Admin — Hanime AG</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar" role="banner">
+    <a href="account.html" class="back-btn" aria-label="Back to account"><i class="fa-solid fa-arrow-left"></i></a>
+    <h2>Content Admin</h2>
+    <a href="account.html" class="profile-btn" aria-label="My account"><i class="fa-solid fa-circle-user"></i></a>
+  </header>
+  <main class="page-content admin-page" role="main">
+    <div id="adminGate" class="empty-state">
+      <i class="fa-solid fa-shield-halved"></i>
+      <h3>Checking administrator access…</h3>
+      <p>Only accounts with an administrator role can manage catalogue data.</p>
+    </div>
+    <section id="adminPanel" hidden>
+      <div class="admin-heading">
+        <div><p class="watch-series-name">CATALOGUE MANAGEMENT</p><h1>Content and episodes</h1></div>
+        <button class="auth-btn-cta" id="newContentBtn" type="button"><i class="fa-solid fa-plus"></i> New title</button>
+      </div>
+      <p class="admin-note">Changes are stored in Firestore. The checked-in JSON manifest remains the fallback until managed records are created.</p>
+      <div class="admin-layout">
+        <section class="admin-card">
+          <h2>Titles</h2>
+          <div id="contentList" class="admin-content-list"></div>
+        </section>
+        <section class="admin-card">
+      <h2 id="editorTitle">Select a title</h2>
+          <form id="contentForm" class="admin-form" hidden>
+            <label>Stable content ID<input id="contentId" required maxlength="120"></label>
+            <label>Slug<input id="contentSlug" required maxlength="120"></label>
+            <label>Title<input id="contentTitle" required maxlength="200"></label>
+            <label>Category<input id="contentCategory" required maxlength="80" placeholder="Anime, Movies, Donghua"></label>
+            <label>Genres<input id="contentGenres" maxlength="300" placeholder="Action, Fantasy"></label>
+            <label>Poster URL<input id="contentPoster" type="url" maxlength="2048"></label>
+            <label>Banner URL<input id="contentBanner" type="url" maxlength="2048"></label>
+            <label>Description<textarea id="contentDescription" maxlength="4000"></textarea></label>
+            <label class="admin-check"><input id="contentFeatured" type="checkbox"> Featured content</label>
+            <div class="form-actions"><button class="auth-btn-cta" type="submit">Save title</button><span id="contentMessage" class="form-message" role="status"></span></div>
+          </form>
+          <div id="episodeEditor" hidden>
+            <div class="admin-subheading"><h3>Episodes</h3><button type="button" class="small-icon-btn" id="newEpisodeBtn" aria-label="Add episode"><i class="fa-solid fa-plus"></i></button></div>
+            <div id="episodeListAdmin"></div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+  <script src="app.js"></script>
+  <script src="footer.js"></script>
+  <script type="module" src="auth-ui.js"></script>
+  <script type="module" src="admin.js"></script>
+</body>
+</html>
