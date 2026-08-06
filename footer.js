@@ -6,7 +6,7 @@
 
   // Shared runtime metadata keeps every existing page indexable without
   // requiring a framework or replacing its hand-authored head section.
-  const origin = window.HAG_PUBLIC_ORIGIN || window.location.origin;
+  const origin = window.HAG_PUBLIC_ORIGIN || 'https://hanime-ag--yilanad92.replit.app';
   const canonical = new URL(window.location.pathname.replace(/\.html$/, ''), origin);
   canonical.search = window.location.search;
   if (!document.querySelector('link[rel="canonical"]')) {

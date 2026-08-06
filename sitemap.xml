@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>/</loc></url>
-  <url><loc>/anime</loc></url>
-  <url><loc>/donghua</loc></url>
-  <url><loc>/hanime</loc></url>
-  <url><loc>/movies</loc></url>
-  <url><loc>/series</loc></url>
-  <url><loc>/trending</loc></url>
-  <url><loc>/genres</loc></url>
-  <url><loc>/favorite</loc></url>
-  <url><loc>/watch?slug=solo-leveling&amp;episode=1</loc></url>
-  <url><loc>/watch?slug=one-piece&amp;episode=1</loc></url>
-  <url><loc>/watch?slug=naruto-shippuden&amp;episode=1</loc></url>
-  <url><loc>/watch?slug=bleach-tybw&amp;episode=1</loc></url>
+  <url><loc>https://hanime-ag--yilanad92.replit.app/</loc></url>
+  <url><loc>https://hanime-ag--yilanad92.replit.app/anime</loc></url>
+  <url><loc>https://hanime-ag--yilanad92.replit.app/donghua</loc></url>
+  <url><loc>https://hanime-ag--yilanad92.replit.app/hanime</loc></url>
+  <url><loc>https://hanime-ag--yilanad92.replit.app/movies</loc></url>
+  <url><loc>https://hanime-ag--yilanad92.replit.app/series</loc></url>
+  <url><loc>https://hanime-ag--yilanad92.replit.app/trending</loc></url>
+  <url><loc>https://hanime-ag--yilanad92.replit.app/genres</loc></url>
+  <url><loc>https://hanime-ag--yilanad92.replit.app/favorite</loc></url>
+  <url><loc>https://hanime-ag--yilanad92.replit.app/watch?slug=solo-leveling&amp;episode=1</loc></url>
+  <url><loc>https://hanime-ag--yilanad92.replit.app/watch?slug=one-piece&amp;episode=1</loc></url>
+  <url><loc>https://hanime-ag--yilanad92.replit.app/watch?slug=naruto-shippuden&amp;episode=1</loc></url>
+  <url><loc>https://hanime-ag--yilanad92.replit.app/watch?slug=bleach-tybw&amp;episode=1</loc></url>
 </urlset>

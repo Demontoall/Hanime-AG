@@ -7,4 +7,4 @@ Disallow: /login.html
 Disallow: /signup.html
 Disallow: /forgot-password.html
 
-Sitemap: /sitemap.xml
+Sitemap: https://hanime-ag--yilanad92.replit.app/sitemap.xml
