@@ -18,6 +18,28 @@ let selected = null;
 const field = id => document.getElementById(id);
 const clean = value => String(value || '').trim();
 const safeText = value => clean(value).replace(/[<>&"]/g, char => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' }[char]));
+const slugify = value => clean(value)
+  .toLowerCase()
+  .normalize('NFKD')
+  .replace(/[\u0300-\u036f]/g, '')
+  .replace(/[^a-z0-9]+/g, '-')
+  .replace(/^-+|-+$/g, '')
+  .slice(0, 120);
+
+function showMessage(text, type = '') {
+  message.textContent = text;
+  message.className = `form-message${type ? ` ${type}` : ''}`;
+}
+
+function firestoreError(error) {
+  if (error?.code === 'permission-denied') {
+    return 'Save blocked by Firebase rules. Confirm this account has role: admin and that the latest rules are deployed.';
+  }
+  if (error?.code === 'failed-precondition') {
+    return 'Firebase is not ready yet. Check the Firestore database and try again.';
+  }
+  return error?.message ? `Could not save: ${error.message}` : 'Could not save. Please try again.';
+}
 
 async function isAdmin(user) {
   if (!user) return false;
@@ -96,15 +118,26 @@ async function saveEpisode(event, row) {
   event.preventDefault();
   const data = Object.fromEntries(new FormData(row));
   const id = row.dataset.episodeId || `episode-${data.episodeNumber}`;
-  await setDoc(doc(db, 'catalog', selected.contentId, 'episodes', id), {
-    episodeNumber: Number(data.episodeNumber) || 1,
-    season: Number(data.season) || 1,
-    title: clean(data.title) || `Episode ${data.episodeNumber}`,
-    videoUrl: clean(data.videoUrl) || null,
-    thumbnail: clean(data.thumbnail) || null,
-    updatedAt: serverTimestamp()
-  }, { merge: true });
-  await renderEpisodes();
+  const submit = row.querySelector('button[type="submit"]');
+  if (submit) submit.disabled = true;
+  showMessage('Saving episode…');
+  try {
+    await setDoc(doc(db, 'catalog', selected.contentId, 'episodes', id), {
+      episodeNumber: Number(data.episodeNumber) || 1,
+      season: Number(data.season) || 1,
+      title: clean(data.title) || `Episode ${data.episodeNumber}`,
+      videoUrl: clean(data.videoUrl) || null,
+      thumbnail: clean(data.thumbnail) || null,
+      updatedAt: serverTimestamp()
+    }, { merge: true });
+    showMessage('Episode saved', 'success');
+    await renderEpisodes();
+  } catch (error) {
+    console.error('[HAG] Episode save error:', error);
+    showMessage(firestoreError(error), 'error');
+  } finally {
+    if (submit) submit.disabled = false;
+  }
 }
 
 async function deleteEpisode(id) {
@@ -115,11 +148,24 @@ async function deleteEpisode(id) {
 
 form.addEventListener('submit', async event => {
   event.preventDefault();
+  const title = clean(field('contentTitle').value);
+  const normalizedId = slugify(field('contentId').value || title);
+  const normalizedSlug = slugify(field('contentSlug').value || title);
+  if (!title || !normalizedId || !normalizedSlug) {
+    showMessage('Enter a title, stable ID, and slug before saving.', 'error');
+    return;
+  }
+
+  // Keep stable IDs and routes safe even when a user types "Solo Leveling"
+  // into the ID or slug field on a phone.
+  field('contentId').value = normalizedId;
+  field('contentSlug').value = normalizedSlug;
+
   const data = {
-    contentId: clean(field('contentId').value),
-    slug: clean(field('contentSlug').value),
-    title: clean(field('contentTitle').value),
-    category: clean(field('contentCategory').value),
+    contentId: normalizedId,
+    slug: normalizedSlug,
+    title,
+    category: clean(field('contentCategory').value) || 'Anime',
     genres: clean(field('contentGenres').value).split(',').map(clean).filter(Boolean),
     poster: clean(field('contentPoster').value) || null,
     banner: clean(field('contentBanner').value) || null,
@@ -127,13 +173,21 @@ form.addEventListener('submit', async event => {
     featured: field('contentFeatured').checked,
     updatedAt: serverTimestamp()
   };
-  if (!data.contentId || !data.slug || !data.title) return;
-  await setDoc(doc(db, 'catalog', data.contentId), data, { merge: true });
-  selected = data;
-  message.textContent = 'Saved';
-  message.className = 'form-message success';
-  await loadContents();
-  await selectContent(data.contentId);
+  const submit = form.querySelector('button[type="submit"]');
+  if (submit) submit.disabled = true;
+  showMessage('Saving title…');
+  try {
+    await setDoc(doc(db, 'catalog', data.contentId), data, { merge: true });
+    selected = data;
+    showMessage('Title saved', 'success');
+    await loadContents();
+    await selectContent(data.contentId);
+  } catch (error) {
+    console.error('[HAG] Title save error:', error);
+    showMessage(firestoreError(error), 'error');
+  } finally {
+    if (submit) submit.disabled = false;
+  }
 });
 
 document.getElementById('newContentBtn').addEventListener('click', () => {
@@ -146,12 +200,23 @@ document.getElementById('newContentBtn').addEventListener('click', () => {
 });
 document.getElementById('newEpisodeBtn').addEventListener('click', async () => {
   if (!selected) return;
-  const snapshot = await getDocs(collection(db, 'catalog', selected.contentId, 'episodes'));
-  const next = snapshot.docs.length + 1;
-  await setDoc(doc(db, 'catalog', selected.contentId, 'episodes', `episode-${next}`), {
-    season: 1, episodeNumber: next, title: `Episode ${next}`, videoUrl: null, thumbnail: null, createdAt: serverTimestamp()
-  });
-  await renderEpisodes();
+  const button = document.getElementById('newEpisodeBtn');
+  button.disabled = true;
+  showMessage('Adding episode…');
+  try {
+    const snapshot = await getDocs(collection(db, 'catalog', selected.contentId, 'episodes'));
+    const next = snapshot.docs.length + 1;
+    await setDoc(doc(db, 'catalog', selected.contentId, 'episodes', `episode-${next}`), {
+      season: 1, episodeNumber: next, title: `Episode ${next}`, videoUrl: null, thumbnail: null, createdAt: serverTimestamp()
+    });
+    showMessage('Episode added', 'success');
+    await renderEpisodes();
+  } catch (error) {
+    console.error('[HAG] Episode create error:', error);
+    showMessage(firestoreError(error), 'error');
+  } finally {
+    button.disabled = false;
+  }
 });
 
 onAuthStateChanged(auth, async user => {
